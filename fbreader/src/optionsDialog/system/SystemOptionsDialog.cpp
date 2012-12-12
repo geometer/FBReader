@@ -49,7 +49,7 @@ void TimeoutEntry::onAccept(int value) {
 }
 
 
-SystemOptionsDialog::SystemOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("SystemOptionsDialog"), true) {
+SystemOptionsDialog::SystemOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("SystemOptionsDialog")) {
 	ZLOptionsDialog &dialog = this->dialog();
 
 	ZLDialogContent &encodingTab = dialog.createTab(ZLResourceKey("Language"));

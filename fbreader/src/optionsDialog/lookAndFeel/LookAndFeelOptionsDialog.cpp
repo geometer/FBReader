@@ -36,7 +36,7 @@
 #include "../../options/FBOptions.h"
 
 
-LookAndFeelOptionsDialog::LookAndFeelOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("LookAndFeelOptionsDialog"), true) {
+LookAndFeelOptionsDialog::LookAndFeelOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("LookAndFeelOptionsDialog")) {
 	FBReader &fbreader = FBReader::Instance();
 	FBOptions &options = FBOptions::Instance();
 

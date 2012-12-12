@@ -27,7 +27,7 @@
 #include "../../network/NetworkLinkCollection.h"
 
 
-LibraryOptionsDialog::LibraryOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("LibraryOptionsDialog"), true) {
+LibraryOptionsDialog::LibraryOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("LibraryOptionsDialog")) {
 
 	ZLDialogContent &libraryTab = dialog().createTab(ZLResourceKey("Library"));
 

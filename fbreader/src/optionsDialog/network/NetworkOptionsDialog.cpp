@@ -60,7 +60,7 @@ void NetworkLinkBooleanOptionEntry::onAccept(bool state) {
 
 
 
-NetworkOptionsDialog::NetworkOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("NetworkOptionsDialog"), true) {
+NetworkOptionsDialog::NetworkOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("NetworkOptionsDialog")) {
 	FBReader &fbreader = FBReader::Instance();
 
 	ZLDialogContent &connectionTab = dialog().createTab(ZLResourceKey("Connection"));

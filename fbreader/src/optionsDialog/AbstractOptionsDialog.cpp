@@ -39,8 +39,8 @@ void OptionsApplyRunnable::run() {
 }
 
 
-AbstractOptionsDialog::AbstractOptionsDialog(const ZLResourceKey &key, bool showApplyButton) {
-	myDialog = ZLDialogManager::Instance().createOptionsDialog(key, new OptionsApplyRunnable(), showApplyButton);
+AbstractOptionsDialog::AbstractOptionsDialog(const ZLResourceKey &key) {
+	myDialog = ZLDialogManager::Instance().createOptionsDialog(key, new OptionsApplyRunnable());
 }
 
 void AbstractOptionsDialog::storeTemporaryOption(ZLOption *option) {

@@ -20,6 +20,8 @@
 #include <QtGui/QApplication>
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QLayout>
+#include <QtGui/QListWidget>
+#include <QtGui/QDialogButtonBox>
 #include <QtGui/QPushButton>
 #include <QtGui/QButtonGroup>
 #include <QtGui/QResizeEvent>
@@ -29,36 +31,29 @@
 #include "ZLQtOptionsDialog.h"
 #include "ZLQtDialogContent.h"
 #include "ZLQtUtil.h"
+#include "../util/ZLQtImageUtil.h"
 
-ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) : QDialog(qApp->activeWindow()), ZLDesktopOptionsDialog(resource, applyAction) {
+ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction) : QDialog(qApp->activeWindow()), ZLDesktopOptionsDialog(resource, applyAction) {
 	setModal(true);
 	setWindowTitle(::qtString(caption()));
-	QVBoxLayout *layout = new QVBoxLayout(this);
 
 	myTabWidget = new QTabWidget(this);
-	layout->addWidget(myTabWidget);
 
-	QWidget *group = new QWidget(this);
-	layout->addWidget(group);
-	QGridLayout *buttonLayout = new QGridLayout(group);
-	buttonLayout->setColumnStretch(0, 3);
+	QDialogButtonBox *buttonBox = new QDialogButtonBox(
+		QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel
+	);
 
-	QPushButton *okButton = new QPushButton(group);
+	QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
 	okButton->setText(::qtButtonName(ZLDialogManager::OK_BUTTON));
-	buttonLayout->addWidget(okButton, 0, 1);
 	connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
 
-	QPushButton *cancelButton = new QPushButton(group);
+	QPushButton *cancelButton = buttonBox->button(QDialogButtonBox::Cancel);
 	cancelButton->setText(::qtButtonName(ZLDialogManager::CANCEL_BUTTON));
-	buttonLayout->addWidget(cancelButton, 0, 2);
 	connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
 
-	if (showApplyButton) {
-		QPushButton *applyButton = new QPushButton(group);
-		applyButton->setText(::qtButtonName(ZLDialogManager::APPLY_BUTTON));
-		buttonLayout->addWidget(applyButton, 0, 3);
-		connect(applyButton, SIGNAL(clicked()), this, SLOT(apply()));
-	}
+	QPushButton *applyButton = buttonBox->button(QDialogButtonBox::Apply);
+	applyButton->setText(::qtButtonName(ZLDialogManager::APPLY_BUTTON));
+	connect(applyButton, SIGNAL(clicked()), this, SLOT(apply()));
 
 	if (parent() == 0) {
 		QDesktopWidget *desktop = qApp->desktop();
@@ -66,6 +61,23 @@ ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRu
 			move((desktop->width() - width()) / 2, (desktop->height() - height()) / 2);
 		}
 	}
+
+	QListWidget *categoryList = new QListWidget(this);
+	QPixmap pixmap = ZLQtImageUtil::pixmap("fbreader.png");
+	categoryList->setIconSize(pixmap.size());
+	for (int i = 0; i < 4; ++i) {
+		QListWidgetItem *item = new QListWidgetItem(categoryList);
+		item->setIcon(QIcon(pixmap));
+		item->setText("Category");
+		categoryList->addItem(item);
+	}
+
+	QGridLayout *layout = new QGridLayout(this);
+	layout->addWidget(categoryList, 0, 0, 1, 1);
+	layout->addWidget(myTabWidget,  0, 1, 1, 1);
+	layout->addWidget(buttonBox,    1, 0, 1, 2);
+	layout->setColumnStretch(1, 4);
+	setLayout(layout);
 }
 
 void ZLQtOptionsDialog::apply() {
