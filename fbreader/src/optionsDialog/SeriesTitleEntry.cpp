@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <algorithm>
+
 #include "OptionsDialog.h"
 #include "AuthorDisplayNameEntry.h"
 #include "SeriesIndexEntry.h"

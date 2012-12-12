@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <algorithm>
-
 #include <ZLFile.h>
 #include <ZLDialogManager.h>
 #include <ZLOptionsDialog.h>

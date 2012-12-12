@@ -448,6 +448,6 @@ void BookTextView::paintHeader() const {
 	ZLStringUtil::appendNumber(rightText, 1 + sizeOfTextBeforeCursor(textArea().endCursor()) / 2048);
 	rightText += '/';
 	ZLStringUtil::appendNumber(rightText, 1 + sizeOfTextBeforeParagraph(endTextIndex()) / 2048);
-	const size_t rightTextWidth = context().stringWidth(rightText.c_str(), rightText.length(), false);
+	const std::size_t rightTextWidth = context().stringWidth(rightText.c_str(), rightText.length(), false);
 	context().drawString(right - rightTextWidth, bottom - unit, rightText.c_str(), rightText.length(), false);
 }
