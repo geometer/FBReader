@@ -25,8 +25,8 @@
 	<binding key="Ctrl+Left" action="previousTOCSection"/>
 	<binding key="Ctrl+Z" action="undo"/>
 	<binding key="Ctrl+Shift+Z" action="redo"/>
+	<binding key="Ctrl+," action="preferences"/>
 <!--
-	<binding key="&lt;O&gt;" action="preferences"/>
 	<binding key="&lt;C&gt;" action="toc"/>
 	<binding key="&lt;G&gt;" action="gotoPageNumber"/>
 	<binding key="&lt;Z&gt;" action="debugNL"/>

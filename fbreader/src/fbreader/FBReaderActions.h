@@ -34,7 +34,7 @@ public:
 	static const std::string RECENT_BOOKS;
 	static const std::string SHOW_NETWORK_LIBRARY;
 	static const std::string SHOW_TOC;
-	static const std::string SHOW_HELP;
+	static const std::string ABOUT;
 	static const std::string SHOW_OPTIONS_DIALOG;
 	static const std::string SHOW_BOOK_INFO_DIALOG;
 	static const std::string SHOW_LIBRARY_OPTIONS_DIALOG;
@@ -110,7 +110,7 @@ private:
 	FBReader::ViewMode myModeToSet;
 };
 
-class ShowHelpAction : public ZLApplication::Action {
+class ShowAboutDialogAction : public ZLApplication::Action {
 
 public:
 	void run();

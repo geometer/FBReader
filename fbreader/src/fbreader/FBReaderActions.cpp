@@ -64,19 +64,8 @@ void SetModeAction::run() {
 	FBReader::Instance().setMode(myModeToSet);
 }
 
-void ShowHelpAction::run() {
-	FBReader &fbreader = FBReader::Instance();
-	shared_ptr<Book> book = BooksDBUtil::getBook(fbreader.helpFileName(ZLibrary::Language()));
-	if (book.isNull()) {
-		book = BooksDBUtil::getBook(fbreader.helpFileName("en"));
-	}
-	if (!book.isNull()) {
-		fbreader.openBook(book);
-		fbreader.setMode(FBReader::BOOK_TEXT_MODE);
-		fbreader.refreshWindow();
-	} else {
-		ZLDialogManager::Instance().errorBox(ZLResourceKey("noHelpBox"));
-	}
+void ShowAboutDialogAction::run() {
+	// TODO: implement
 }
 
 void ShowOptionsDialogAction::run() {

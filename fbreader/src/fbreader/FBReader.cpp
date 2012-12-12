@@ -150,7 +150,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ActionCode::QUIT, new QuitAction());
 	addAction(ActionCode::FORCE_QUIT, new ForceQuitAction());
 	addAction(ActionCode::OPEN_PREVIOUS_BOOK, new OpenPreviousBookAction());
-	addAction(ActionCode::SHOW_HELP, new ShowHelpAction());
+	addAction(ActionCode::ABOUT, new ShowAboutDialogAction());
 	addAction(ActionCode::GOTO_NEXT_TOC_SECTION, new GotoNextTOCSectionAction());
 	addAction(ActionCode::GOTO_PREVIOUS_TOC_SECTION, new GotoPreviousTOCSectionAction());
 	addAction(ActionCode::COPY_SELECTED_TEXT_TO_CLIPBOARD, new CopySelectedTextAction());
