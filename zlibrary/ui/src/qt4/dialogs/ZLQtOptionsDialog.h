@@ -26,6 +26,8 @@
 
 #include "../../../../core/src/desktop/dialogs/ZLDesktopOptionsDialog.h"
 
+class QStackedLayout;
+
 class ZLQtOptionsDialog : public QDialog, public ZLDesktopOptionsDialog {
 	Q_OBJECT
 
@@ -44,8 +46,10 @@ protected:
 
 private Q_SLOTS:
 	void apply();
+	void selectPage(int index);
 
 private:
+	QStackedLayout *myStack;
 	QTabWidget *myTabWidget;
 };
 

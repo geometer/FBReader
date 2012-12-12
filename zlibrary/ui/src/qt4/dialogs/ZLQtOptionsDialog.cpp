@@ -20,6 +20,7 @@
 #include <QtGui/QApplication>
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QLayout>
+#include <QtGui/QStackedLayout>
 #include <QtGui/QListWidget>
 #include <QtGui/QDialogButtonBox>
 #include <QtGui/QPushButton>
@@ -37,7 +38,14 @@ ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRu
 	setModal(true);
 	setWindowTitle(::qtString(caption()));
 
+	myStack = new QStackedLayout();
 	myTabWidget = new QTabWidget(this);
+	myStack->addWidget(myTabWidget);
+	myStack->addWidget(new QWidget(this));
+	myStack->addWidget(new QWidget(this));
+	myStack->addWidget(new QWidget(this));
+	myStack->setMargin(0);
+	myStack->setCurrentIndex(0);
 
 	QDialogButtonBox *buttonBox = new QDialogButtonBox(
 		QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel
@@ -72,13 +80,18 @@ ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRu
 		item->setText(categories[i]);
 		categoryList->addItem(item);
 	}
+	connect(categoryList, SIGNAL(currentRowChanged(int)), this, SLOT(selectPage(int)));
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(categoryList, 0, 0, 1, 1);
-	layout->addWidget(myTabWidget,  0, 1, 1, 1);
+	layout->addLayout(myStack,      0, 1, 1, 1);
 	layout->addWidget(buttonBox,    1, 0, 1, 2);
 	layout->setColumnStretch(1, 4);
 	setLayout(layout);
+}
+
+void ZLQtOptionsDialog::selectPage(int index) {
+	myStack->setCurrentIndex(index);
 }
 
 void ZLQtOptionsDialog::apply() {
