@@ -164,6 +164,7 @@ OptionsDialog::OptionsDialog(shared_ptr<Book> book) : myBook(book) {
 	myDialog = ZLDialogManager::Instance().createOptionsDialog(ZLResourceKey("Preferences"), new ApplyAction(*this));
 
 	FBReader &fbreader = FBReader::Instance();
+	FBOptions &options = FBOptions::Instance();
 	Library &library = Library::Instance();
 	PluginCollection &pluginCollection = PluginCollection::Instance();
 
@@ -174,6 +175,39 @@ OptionsDialog::OptionsDialog(shared_ptr<Book> book) : myBook(book) {
 	libraryTab.addOption(ZLResourceKey("collectBooksWithNoMetainfo"), library.CollectAllBooksOption);
 	libraryTab.addOption(ZLResourceKey("downloadDirectory"), NetworkLinkCollection::Instance().DirectoryOption);
 	// ---- directories page ----
+
+	// ++++ text properties page ++++
+	ZLDialogContent &marginTab = myDialog->createTab(ZLResourceKey("text"), ZLResourceKey("Margins"));
+	marginTab.addOptions(
+		ZLResourceKey("left"), new ZLSimpleSpinOptionEntry(options.LeftMarginOption, 1),
+		ZLResourceKey("right"), new ZLSimpleSpinOptionEntry(options.RightMarginOption, 1)
+	);
+	marginTab.addOptions(
+		ZLResourceKey("top"), new ZLSimpleSpinOptionEntry(options.TopMarginOption, 1),
+		ZLResourceKey("bottom"), new ZLSimpleSpinOptionEntry(options.BottomMarginOption, 1)
+	);
+
+	myFormatPage = new FormatOptionsPage(myDialog->createTab(ZLResourceKey("text"), ZLResourceKey("Format")));
+	myStylePage = new StyleOptionsPage(myDialog->createTab(ZLResourceKey("text"), ZLResourceKey("Styles")), *fbreader.context());
+
+	ZLDialogContent &colorsTab = myDialog->createTab(ZLResourceKey("text"), ZLResourceKey("Colors"));
+	ZLResourceKey colorKey("colorFor");
+	const ZLResource &resource = colorsTab.resource(colorKey);
+	ZLColorOptionBuilder builder;
+	const std::string BACKGROUND = resource["background"].value();
+	builder.addOption(BACKGROUND, options.BackgroundColorOption);
+	builder.addOption(resource["selectionBackground"].value(), options.colorOption(ZLTextStyle::SELECTION_BACKGROUND));
+	builder.addOption(resource["text"].value(), options.RegularTextColorOption);
+	builder.addOption(resource["internalLink"].value(), options.colorOption("internal"));
+	builder.addOption(resource["externalLink"].value(), options.colorOption("external"));
+	builder.addOption(resource["bookLink"].value(), options.colorOption("book"));
+	builder.addOption(resource["highlighted"].value(), options.colorOption(ZLTextStyle::HIGHLIGHTED_TEXT));
+	builder.addOption(resource["treeLines"].value(), options.colorOption(ZLTextStyle::TREE_LINES));
+	builder.addOption(resource["indicator"].value(), (FBView::commonIndicatorInfo().ColorOption));
+	builder.setInitial(BACKGROUND);
+	colorsTab.addOption(colorKey, builder.comboEntry());
+	colorsTab.addOption("", "", builder.colorEntry());
+	// ---- text properties page ----
 
 	// ++++ look & feel page ++++
 	ZLDialogContent &scrollingTab = myDialog->createTab(ZLResourceKey("lookAndFeel"), ZLResourceKey("Scrolling"));
@@ -208,41 +242,8 @@ OptionsDialog::OptionsDialog(shared_ptr<Book> book) : myBook(book) {
 
 	createKeyBindingsTab();
 
-	FBOptions &options = FBOptions::Instance();
-
 	ZLDialogContent &cssTab = myDialog->createTab(ZLResourceKey("lookAndFeel"), ZLResourceKey("CSS"));
 	cssTab.addOption(ZLResourceKey("overrideSpecifiedFonts"), ZLTextStyleCollection::Instance().OverrideSpecifiedFontsOption);
-
-	ZLDialogContent &marginTab = myDialog->createTab(ZLResourceKey("lookAndFeel"), ZLResourceKey("Margins"));
-	marginTab.addOptions(
-		ZLResourceKey("left"), new ZLSimpleSpinOptionEntry(options.LeftMarginOption, 1),
-		ZLResourceKey("right"), new ZLSimpleSpinOptionEntry(options.RightMarginOption, 1)
-	);
-	marginTab.addOptions(
-		ZLResourceKey("top"), new ZLSimpleSpinOptionEntry(options.TopMarginOption, 1),
-		ZLResourceKey("bottom"), new ZLSimpleSpinOptionEntry(options.BottomMarginOption, 1)
-	);
-
-	myFormatPage = new FormatOptionsPage(myDialog->createTab(ZLResourceKey("lookAndFeel"), ZLResourceKey("Format")));
-	myStylePage = new StyleOptionsPage(myDialog->createTab(ZLResourceKey("lookAndFeel"), ZLResourceKey("Styles")), *fbreader.context());
-
-	ZLDialogContent &colorsTab = myDialog->createTab(ZLResourceKey("lookAndFeel"), ZLResourceKey("Colors"));
-	ZLResourceKey colorKey("colorFor");
-	const ZLResource &resource = colorsTab.resource(colorKey);
-	ZLColorOptionBuilder builder;
-	const std::string BACKGROUND = resource["background"].value();
-	builder.addOption(BACKGROUND, options.BackgroundColorOption);
-	builder.addOption(resource["selectionBackground"].value(), options.colorOption(ZLTextStyle::SELECTION_BACKGROUND));
-	builder.addOption(resource["text"].value(), options.RegularTextColorOption);
-	builder.addOption(resource["internalLink"].value(), options.colorOption("internal"));
-	builder.addOption(resource["externalLink"].value(), options.colorOption("external"));
-	builder.addOption(resource["bookLink"].value(), options.colorOption("book"));
-	builder.addOption(resource["highlighted"].value(), options.colorOption(ZLTextStyle::HIGHLIGHTED_TEXT));
-	builder.addOption(resource["treeLines"].value(), options.colorOption(ZLTextStyle::TREE_LINES));
-	builder.addOption(resource["indicator"].value(), (FBView::commonIndicatorInfo().ColorOption));
-	builder.setInitial(BACKGROUND);
-	colorsTab.addOption(colorKey, builder.comboEntry());
-	colorsTab.addOption("", "", builder.colorEntry());
 	// ---- look & feel page ----
 
 	// ++++ network page ++++

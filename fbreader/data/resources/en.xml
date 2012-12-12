@@ -4,6 +4,7 @@
 		<node name="title" value="FBReader preferences"/>
 		<node name="pages">
 			<node name="directories" value="Directories"/>
+			<node name="text" value="Text properties"/>
 			<node name="lookAndFeel" value="Look &amp; feel"/>
 			<node name="network" value="Network"/>
 			<node name="language" value="Language"/>
