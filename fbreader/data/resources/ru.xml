@@ -388,36 +388,15 @@
 		</node>
 		<node name="library">
 			<node name="label" value="Библиотека"/>
-			<node name="tooltip" value="Библиотека"/>
-			<node name="popup" value="Недавно прочитанные книги"/>
-		</node>
-		<node name="recent">
-			<node name="label" value="История"/>
-			<node name="tooltip" value="Недавно прочитанные книги"/>
-		</node>
-		<node name="byAuthor">
-			<node name="label" value="По авторам"/>
-			<node name="tooltip" value="По авторам"/>
-		</node>
-		<node name="byTag">
-			<node name="label" value="По категориям"/>
-			<node name="tooltip" value="По категориям"/>
+			<node name="tooltip" value="Дерево библиотека"/>
 		</node>
 		<node name="addBook">
 			<node name="label" value="Добавить"/>
 			<node name="tooltip" value="Добавить файл в библиотеку"/>
 		</node>
-		<node name="showNetLibrary">
-			<node name="label" value="Сеть"/>
-			<node name="tooltip" value="Доступ к сетевым библиотекам"/>
-		</node>
-		<node name="searchOnNetwork">
-			<node name="label" value="Быстрый поиск"/>
-			<node name="tooltip" value="Быстрый поиск в сети"/>
-		</node>
-		<node name="advancedSearchOnNetwork">
-			<node name="label" value="Поиск"/>
-			<node name="tooltip" value="Поиск в сети"/>
+		<node name="networkLibrary">
+			<node name="label" value="Сетевая библиотека"/>
+			<node name="tooltip" value="Открыть окно сетевой библиотеки"/>
 		</node>
 		<node name="gotoHome">
 			<node name="label" value="В начало"/>

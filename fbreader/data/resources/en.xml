@@ -27,13 +27,13 @@
 				<node name="pageHeader" value="Page header"/>
 				<node name="none" value="Don't show"/>
 			</node>
-			<node name="height" value="Indicator Height"/>
-			<node name="offset" value="Offset from Text"/>
-			<node name="pageNumber" value="Show Position as Numbers"/>
-			<node name="time" value="Show Time"/>
-			<node name="fontSize" value="Font Size"/>
-			<node name="tocMarks" value="Show TOC Marks"/>
-			<node name="navigation" value="Enable Navigation"/>
+			<node name="height" value="Indicator height"/>
+			<node name="offset" value="Offset from text"/>
+			<node name="pageNumber" value="Show position as numbers"/>
+			<node name="time" value="Show time"/>
+			<node name="fontSize" value="Font size"/>
+			<node name="tocMarks" value="Show TOC marks"/>
+			<node name="navigation" value="Enable navigation"/>
 		</node>
 		<node name="Rotation" value="Rotation">
 			<node name="direction" value="Rotation Type">
@@ -365,41 +365,20 @@
 	</node>
 	<node name="toolbar">
 		<node name="showReading">
-			<node name="label" value="Read Book"/>
-			<node name="tooltip" value="Show Reading Mode"/>
+			<node name="label" value="Read book"/>
+			<node name="tooltip" value="Reading mode"/>
 		</node>
 		<node name="library">
 			<node name="label" value="Library"/>
-			<node name="tooltip" value="Show Library Tree"/>
-			<node name="popup" value="Show Recent Books List"/>
-		</node>
-		<node name="recent">
-			<node name="label" value="Recent Books"/>
-			<node name="tooltip" value="Show Recent Books List"/>
-		</node>
-		<node name="byAuthor">
-			<node name="label" value="By Author"/>
-			<node name="tooltip" value="Organize Books by Author"/>
-		</node>
-		<node name="byTag">
-			<node name="label" value="By Tag"/>
-			<node name="tooltip" value="Organize Books by Tag"/>
+			<node name="tooltip" value="Library tree"/>
 		</node>
 		<node name="addBook">
-			<node name="label" value="Add File"/>
-			<node name="tooltip" value="Add File to Library"/>
+			<node name="label" value="Add file"/>
+			<node name="tooltip" value="Add file to library"/>
 		</node>
-		<node name="showNetLibrary">
-			<node name="label" value="Network"/>
-			<node name="tooltip" value="Search in Network Libraries"/>
-		</node>
-		<node name="searchOnNetwork">
-			<node name="label" value="Simple Search"/>
-			<node name="tooltip" value="Network Search"/>
-		</node>
-		<node name="advancedSearchOnNetwork">
-			<node name="label" value="Search"/>
-			<node name="tooltip" value="Advanced Network Search"/>
+		<node name="networkLibrary">
+			<node name="label" value="Network library"/>
+			<node name="tooltip" value="Open network library window"/>
 		</node>
 		<node name="gotoHome">
 			<node name="label" value="Go to Start"/>
