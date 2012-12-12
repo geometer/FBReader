@@ -177,7 +177,7 @@ OptionsDialog::OptionsDialog(shared_ptr<Book> book) : myBook(book) {
 	// ---- directories page ----
 
 	// ++++ text properties page ++++
-	ZLDialogContent &marginTab = myDialog->createTab(ZLResourceKey("text"), ZLResourceKey("Margins"));
+	ZLDialogContent &marginTab = myDialog->createTab(ZLResourceKey("text"), ZLResourceKey("margins"));
 	marginTab.addOptions(
 		ZLResourceKey("left"), new ZLSimpleSpinOptionEntry(options.LeftMarginOption, 1),
 		ZLResourceKey("right"), new ZLSimpleSpinOptionEntry(options.RightMarginOption, 1)

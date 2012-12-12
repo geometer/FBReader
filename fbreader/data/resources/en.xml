@@ -94,11 +94,11 @@
 		<node name="CSS" value="CSS">
 			<node name="overrideSpecifiedFonts" value="Always Use My Own Fonts"/>
 		</node>
-		<node name="Margins" value="Margins">
-			<node name="left" value="Left Margin"/>
-			<node name="right" value="Right Margin"/>
-			<node name="top" value="Top Margin"/>
-			<node name="bottom" value="Bottom Margin"/>
+		<node name="margins" value="Margins">
+			<node name="left" value="Left"/>
+			<node name="right" value="Right"/>
+			<node name="top" value="Top"/>
+			<node name="bottom" value="Bottom"/>
 		</node>
 		<node name="Format" value="Format">
 			<node name="optionsFor" value="Options for"/>
@@ -144,8 +144,8 @@
 			</node>
 		</node>
 		<node name="directoriesLibrary" value="Library">
-			<node name="bookPath" value="Book path"/>
-			<node name="lookInSubdirectories" value="Look for books in subdirectories"/>
+			<node name="bookPath" value="Look for books in"/>
+			<node name="lookInSubdirectories" value="Include subdirectories"/>
 			<node name="collectBooksWithNoMetainfo" value="Collect books in plain text formats"/>
 			<node name="downloadDirectory" value="Where to store downloaded books"/>
 		</node>
