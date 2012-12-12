@@ -327,22 +327,15 @@
 			<node name="title" value="FBReader - System Options"/>
 			<node name="tab">
 				<node name="Language" value="Language">
-					<node name="autoDetect" value="Automatically Detect Language and Encoding"/>
-					<node name="defaultLanguage" value="Default Language"/>
-					<node name="defaultEncodingSet" value="Default Encoding Set"/>
-					<node name="defaultEncoding" value="Default Encoding"/>
-					<node name="useWindows1252Hack" value="Use windows-1252 instead of iso-8859-1"/>
+					<node name="defaultLanguage" value="Default book language"/>
+					<node name="defaultEncodingSet" value="Default book encoding set"/>
+					<node name="defaultEncoding" value="Default book encoding"/>
 				</node>
 				<node name="Dictionary" value="Dictionary">
 					<node name="enableIntegration" value="Enable Integration with %s"/>
 					<node name="defaultText" value="Enable Integration with Dictionary"/>
 					<node name="choice" value="Integrate with"/>
 					<node name="singleClickOpen" value="Open by Single Click"/>
-				</node>
-				<node name="Maemo" value="Maemo">
-					<node name="keyActionOnRelease" value="Action on Key Release, not on Key Press"/>
-					<node name="minStylusPressure" value="Minimal Stylus Pressure"/>
-					<node name="maxStylusPressure" value="Maximal Stylus Pressure"/>
 				</node>
 			</node>
 		</node>

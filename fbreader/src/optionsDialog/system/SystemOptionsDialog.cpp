@@ -53,7 +53,6 @@ SystemOptionsDialog::SystemOptionsDialog() : AbstractOptionsDialog(ZLResourceKey
 	ZLOptionsDialog &dialog = this->dialog();
 
 	ZLDialogContent &encodingTab = dialog.createTab(ZLResourceKey("Language"));
-	encodingTab.addOption(ZLResourceKey("autoDetect"), new ZLSimpleBooleanOptionEntry(PluginCollection::Instance().LanguageAutoDetectOption));
 	encodingTab.addOption(ZLResourceKey("defaultLanguage"), new ZLLanguageOptionEntry(PluginCollection::Instance().DefaultLanguageOption, ZLLanguageList::languageCodes()));
 	EncodingEntry *encodingEntry = new EncodingEntry(PluginCollection::Instance().DefaultEncodingOption);
 	EncodingSetEntry *encodingSetEntry = new EncodingSetEntry(*encodingEntry);

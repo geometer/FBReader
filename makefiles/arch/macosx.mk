@@ -15,7 +15,7 @@ ZLSHARED = no
 CCACHE = $(shell if which ccache > /dev/null; then echo "ccache"; fi) #if ccache is not installed, do not use it
 CC = $(CCACHE) gcc
 AR = ar rsu
-LD = g++
+LD = g++ -headerpad_max_install_names
 
 ARCH_FLAGS = -arch x86_64 -mmacosx-version-min=10.5
 CFLAGS = $(ARCH_FLAGS) -pipe -fno-exceptions -Wall -Wno-ctor-dtor-privacy -W
