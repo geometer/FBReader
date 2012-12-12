@@ -17,18 +17,15 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLQTTOOLBARBUTTON_H__
-#define __ZLQTTOOLBARBUTTON_H__
+#ifndef __ZLQTIMAGEUTIL_H__
+#define __ZLQTIMAGEUTIL_H__
 
-#include <QtGui/QPushButton>
 #include <QtGui/QPixmap>
 
-class QWidget;
-
-class ZLQtToolbarButton : public QPushButton {
+class ZLQtImageUtil {
 
 public:
-	ZLQtToolbarButton(const std::string &iconName, QWidget *parent = 0);
+	static QPixmap pixmap(const std::string &iconName);
 };
 
-#endif /* __ZLQTTOOLBARBUTTON_H__ */
+#endif /* __ZLQTIMAGEUTIL_H__ */

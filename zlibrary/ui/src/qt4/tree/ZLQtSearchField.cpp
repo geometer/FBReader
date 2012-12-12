@@ -22,13 +22,12 @@
 #include <QtGui/QCompleter>
 #include <QtGui/QStringListModel>
 
-#include <ZLibrary.h>
-#include <ZLFile.h>
 #include <ZLResource.h>
 #include <ZLOptions.h>
 #include <ZLStringUtil.h>
 
 #include "ZLQtSearchField.h"
+#include "../util/ZLQtImageUtil.h"
 
 ZLQtSearchField::ZLQtSearchField(QWidget *parent) : QLineEdit(parent) {
 	//TODO somehow make it feathered
@@ -42,10 +41,9 @@ ZLQtSearchField::ZLQtSearchField(QWidget *parent) : QLineEdit(parent) {
 	myWaitingIcon->setSpeed(2);
 
 	mySearchIcon = new QLabel(this);
-	static std::string iconPath = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + "search_icon.png";
-	QPixmap searchIcon = QPixmap(ZLFile(iconPath).path().c_str());
-	mySearchIcon->setPixmap(searchIcon);
-	mySearchIcon->setFixedSize(searchIcon.size());
+	QPixmap pixmap = ZLQtImageUtil::pixmap("search_icon.png");
+	mySearchIcon->setPixmap(pixmap);
+	mySearchIcon->setFixedSize(pixmap.size());
 
 	setFixedSize(155,25);
 

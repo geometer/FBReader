@@ -27,13 +27,13 @@
 #include <QtGui/QWheelEvent>
 
 #include <ZLibrary.h>
-#include <ZLFile.h>
 #include <ZLPopupData.h>
 #include <ZLKeyBindings.h>
 
 #include "ZLQtApplicationWindow.h"
 #include "../view/ZLQtViewWidget.h"
 #include "../util/ZLQtKeyUtil.h"
+#include "../util/ZLQtImageUtil.h"
 #include "../util/ZLQtToolbarButton.h"
 
 ZLQtApplicationWindow *ZLQtApplicationWindow::ourInstance = 0;
@@ -51,9 +51,7 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	mySearchBoxAction(0),
 	myCursorIsHyperlink(false) {
 
-	const std::string iconFileName = ZLibrary::ImageDirectory() + ZLibrary::FileNameDelimiter + ZLibrary::ApplicationName() + ".png";
-	QPixmap icon(iconFileName.c_str());
-	setWindowIcon(icon);
+	setWindowIcon(ZLQtImageUtil::pixmap(ZLibrary::ApplicationName() + ".png"));
 
 	menuBar()->hide();
 
