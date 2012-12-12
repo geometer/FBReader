@@ -234,9 +234,11 @@ OptionsDialog::OptionsDialog(shared_ptr<Book> book) : myBook(book) {
 
 	createIndicatorTab();
 
+/*
 	ZLDialogContent &rotationTab = myDialog->createTab(ZLResourceKey("lookAndFeel"), ZLResourceKey("Rotation"));
 	ZLResourceKey directionKey("direction");
 	rotationTab.addOption(directionKey, new RotationTypeEntry(rotationTab.resource(directionKey), fbreader.RotationAngleOption));
+*/
 
 	createKeyBindingsTab();
 
