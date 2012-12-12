@@ -11,9 +11,5 @@
 	<separator/>
 	<button id="toc"/>
 	<separator/>
-	<button id="search"/>
-	<button id="findPrevious"/>
-	<button id="findNext"/>
-	<separator/>
 	<button id="preferences"/>
 </toolbar>
