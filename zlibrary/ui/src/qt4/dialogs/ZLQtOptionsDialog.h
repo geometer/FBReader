@@ -20,8 +20,6 @@
 #ifndef __ZLQTOPTIONSDIALOG_H__
 #define __ZLQTOPTIONSDIALOG_H__
 
-#include <map>
-
 #include <QtGui/QDialog>
 
 #include <ZLOptionsDialog.h>
@@ -29,7 +27,6 @@
 #include "../util/ZLQtGeometryOptions.h"
 
 class QListWidget;
-class QTabWidget;
 class QStackedLayout;
 
 class ZLQtOptionsDialog : public QDialog, public ZLOptionsDialog {
@@ -46,12 +43,13 @@ protected:
 private Q_SLOTS:
 	void apply();
 	void selectPage(int index);
+	void selectTab(int index);
 
 private:
 	QListWidget *myCategoryList;
 	QStackedLayout *myStack;
-	std::map<std::string,QTabWidget*> myTabWidgets;
 	ZLQtGeometryOptions myGeometryOptions;
+	ZLStringOption mySelectedTabOption;
 };
 
 #endif /* __ZLQTOPTIONSDIALOG_H__ */
