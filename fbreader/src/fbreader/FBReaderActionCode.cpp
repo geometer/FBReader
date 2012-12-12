@@ -25,13 +25,7 @@ const std::string ActionCode::RECENT_BOOKS = "recent";
 const std::string ActionCode::SHOW_NETWORK_LIBRARY = "networkLibrary";
 const std::string ActionCode::SHOW_TOC = "toc";
 const std::string ActionCode::ABOUT = "about";
-const std::string ActionCode::SHOW_BOOK_INFO_DIALOG = "bookInfo";
-const std::string ActionCode::SHOW_OPTIONS_DIALOG = "preferences";
-const std::string ActionCode::SHOW_LIBRARY_OPTIONS_DIALOG = "libraryOptions";
-const std::string ActionCode::SHOW_NETWORK_OPTIONS_DIALOG = "networkOptions";
-const std::string ActionCode::SHOW_SYSTEM_OPTIONS_DIALOG = "systemOptions";
-const std::string ActionCode::SHOW_READING_OPTIONS_DIALOG = "readingOptions";
-const std::string ActionCode::SHOW_LOOKANDFEEL_OPTIONS_DIALOG = "lookAndFeelOptions";
+const std::string ActionCode::SHOW_PREFERENCES_DIALOG = "preferences";
 const std::string ActionCode::UNDO = "undo";
 const std::string ActionCode::REDO = "redo";
 

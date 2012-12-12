@@ -34,7 +34,7 @@ public:
 void OptionsApplyRunnable::run() {
 	FBReader &fbreader = FBReader::Instance();
 	fbreader.grabAllKeys(fbreader.KeyboardControlOption.value());
-	fbreader.clearTextCaches();
+	//fbreader.clearTextCaches();
 	fbreader.refreshWindow();
 }
 

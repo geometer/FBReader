@@ -27,8 +27,8 @@
 
 #include "FormatOptionsPage.h"
 
-#include "../../options/FBTextStyle.h"
-#include "../../bookmodel/FBTextKind.h"
+#include "../options/FBTextStyle.h"
+#include "../bookmodel/FBTextKind.h"
 
 static const ZLResourceKey KEY_STYLE("style");
 static const ZLResourceKey KEY_BASE("Base");

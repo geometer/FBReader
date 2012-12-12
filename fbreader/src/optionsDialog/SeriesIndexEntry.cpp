@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2004-2012 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,16 +17,20 @@
  * 02110-1301, USA.
  */
 
-#ifndef __NETWORKOPTIONSDIALOG_H__
-#define __NETWORKOPTIONSDIALOG_H__
+#include "OptionsDialog.h"
+#include "SeriesIndexEntry.h"
 
-#include "../AbstractOptionsDialog.h"
+#include "../library/Book.h"
 
+SeriesIndexEntry::SeriesIndexEntry(OptionsDialog &dialog) : myInfoDialog(dialog) {
+}
 
-class NetworkOptionsDialog : public AbstractOptionsDialog {
+const std::string &SeriesIndexEntry::initialValue() const {
+	return myInfoDialog.myBook->indexInSeries().value();
+}
 
-public:
-	NetworkOptionsDialog();
-};
-
-#endif /* __NETWORKOPTIONSDIALOG_H__ */
+void SeriesIndexEntry::onAccept(const std::string &value) {
+	Book &book = *myInfoDialog.myBook;
+	//TODO implement validation
+	book.setSeries(book.seriesTitle(), Number(value));
+}

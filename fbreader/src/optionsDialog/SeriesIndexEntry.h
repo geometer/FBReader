@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2004-2012 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,16 +17,25 @@
  * 02110-1301, USA.
  */
 
-#ifndef __SYSTEMOPTIONSDIALOG_H__
-#define __SYSTEMOPTIONSDIALOG_H__
+#ifndef __SERIESINDEXENTRY_H__
+#define __SERIESINDEXENTRY_H__
 
-#include "../AbstractOptionsDialog.h"
+#include <string>
 
+#include <ZLOptionEntry.h>
 
-class SystemOptionsDialog: public AbstractOptionsDialog {
+class OptionsDialog;
+
+class SeriesIndexEntry : public ZLStringOptionEntry {
 
 public:
-	SystemOptionsDialog();
+	SeriesIndexEntry(OptionsDialog &dialog);
+
+	const std::string &initialValue() const;
+	void onAccept(const std::string &value);
+
+private:
+	OptionsDialog &myInfoDialog;
 };
 
-#endif /* __SYSTEMOPTIONSDIALOG_H__ */
+#endif /* __SERIESINDEXENTRY_H__ */

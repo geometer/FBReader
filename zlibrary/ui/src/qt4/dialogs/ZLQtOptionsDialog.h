@@ -20,12 +20,14 @@
 #ifndef __ZLQTOPTIONSDIALOG_H__
 #define __ZLQTOPTIONSDIALOG_H__
 
-#include <QtGui/QWidget>
-#include <QtGui/QTabWidget>
+#include <map>
+
 #include <QtGui/QDialog>
 
 #include "../../../../core/src/desktop/dialogs/ZLDesktopOptionsDialog.h"
 
+class QListWidget;
+class QTabWidget;
 class QStackedLayout;
 
 class ZLQtOptionsDialog : public QDialog, public ZLDesktopOptionsDialog {
@@ -33,11 +35,11 @@ class ZLQtOptionsDialog : public QDialog, public ZLDesktopOptionsDialog {
 
 public:
 	ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction);
-	ZLDialogContent &createTab(const ZLResourceKey &key);
+	ZLDialogContent &createTab(const ZLResourceKey &pageKey, const ZLResourceKey &tabKey);
 
 protected:
-	const std::string &selectedTabKey() const;
-	void selectTab(const ZLResourceKey &key);
+	//const std::string &selectedTabKey() const;
+	//void selectTab(const ZLResourceKey &key);
 	bool runInternal();
 
 	void setSize(int width, int height) { QDialog::resize(width, height); }
@@ -49,8 +51,9 @@ private Q_SLOTS:
 	void selectPage(int index);
 
 private:
+	QListWidget *myCategoryList;
 	QStackedLayout *myStack;
-	QTabWidget *myTabWidget;
+	std::map<std::string,QTabWidget*> myTabWidgets;
 };
 
 #endif /* __ZLQTOPTIONSDIALOG_H__ */

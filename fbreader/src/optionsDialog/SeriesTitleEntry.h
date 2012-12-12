@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2004-2012 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,20 +17,34 @@
  * 02110-1301, USA.
  */
 
-#ifndef __READINGOPTIONSDIALOG_H__
-#define __READINGOPTIONSDIALOG_H__
+#ifndef __SERIESTITLEENTRY_H__
+#define __SERIESTITLEENTRY_H__
 
-#include "../AbstractOptionsDialog.h"
+#include <set>
+#include <vector>
+#include <string>
 
+#include <ZLOptionEntry.h>
 
-class ReadingOptionsDialog : public AbstractOptionsDialog {
+class OptionsDialog;
 
-private:
-	void createIndicatorTab();
-	void createKeyBindingsTab();
+class SeriesTitleEntry : public ZLComboOptionEntry {
 
 public:
-	ReadingOptionsDialog();
+	SeriesTitleEntry(OptionsDialog &dialog);
+
+	const std::string &initialValue() const;
+	const std::vector<std::string> &values() const;
+	void onAccept(const std::string &value);
+
+	bool useOnValueEdited() const;
+	void onValueEdited(const std::string &value);
+	void onValueSelected(int index);
+
+private:
+	OptionsDialog &myInfoDialog;
+	std::set<std::string> myOriginalValuesSet;
+	mutable std::vector<std::string> myValues;
 };
 
-#endif /* __READINGOPTIONSDIALOG_H__ */
+#endif /* __SERIESTITLEENTRY_H__ */

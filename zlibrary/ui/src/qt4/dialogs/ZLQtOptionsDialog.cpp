@@ -39,13 +39,6 @@ ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRu
 	setWindowTitle(::qtString(caption()));
 
 	myStack = new QStackedLayout();
-	myTabWidget = new QTabWidget(this);
-	myStack->addWidget(myTabWidget);
-	myStack->addWidget(new QWidget(this));
-	myStack->addWidget(new QWidget(this));
-	myStack->addWidget(new QWidget(this));
-	myStack->setMargin(0);
-	myStack->setCurrentIndex(0);
 
 	QDialogButtonBox *buttonBox = new QDialogButtonBox(
 		QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel
@@ -70,22 +63,15 @@ ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRu
 		}
 	}
 
-	QListWidget *categoryList = new QListWidget(this);
+	myCategoryList = new QListWidget(this);
 	QPixmap pixmap = ZLQtImageUtil::pixmap("fbreader.png");
-	categoryList->setIconSize(pixmap.size());
-	QString categories[] = { "Look & feel", "Language", "Library", "Current book" };
-	for (int i = 0; i < 4; ++i) {
-		QListWidgetItem *item = new QListWidgetItem(categoryList);
-		item->setIcon(QIcon(pixmap));
-		item->setText(categories[i]);
-		categoryList->addItem(item);
-	}
-	connect(categoryList, SIGNAL(currentRowChanged(int)), this, SLOT(selectPage(int)));
+	myCategoryList->setIconSize(pixmap.size());
+	connect(myCategoryList, SIGNAL(currentRowChanged(int)), this, SLOT(selectPage(int)));
 
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addWidget(categoryList, 0, 0, 1, 1);
-	layout->addLayout(myStack,      0, 1, 1, 1);
-	layout->addWidget(buttonBox,    1, 0, 1, 2);
+	layout->addWidget(myCategoryList, 0, 0, 1, 1);
+	layout->addLayout(myStack,        0, 1, 1, 1);
+	layout->addWidget(buttonBox,      1, 0, 1, 2);
 	layout->setColumnStretch(1, 4);
 	setLayout(layout);
 }
@@ -98,13 +84,28 @@ void ZLQtOptionsDialog::apply() {
 	ZLOptionsDialog::accept();
 }
 
-ZLDialogContent &ZLQtOptionsDialog::createTab(const ZLResourceKey &key) {
-	ZLQtDialogContent *tab = new ZLQtDialogContent(new QWidget(myTabWidget), tabResource(key));
-	myTabWidget->addTab(tab->widget(), ::qtString(tab->displayName()));
+ZLDialogContent &ZLQtOptionsDialog::createTab(const ZLResourceKey &pageKey, const ZLResourceKey &tabKey) {
+	QTabWidget *page;
+	std::map<std::string,QTabWidget*>::const_iterator it = myTabWidgets.find(pageKey.Name);
+	if (it != myTabWidgets.end()) {
+		page = it->second;
+	} else {
+		page = new QTabWidget(this);
+		myStack->addWidget(page);
+		myTabWidgets[pageKey.Name] = page;
+
+		QListWidgetItem *item = new QListWidgetItem(myCategoryList);
+		item->setIcon(ZLQtImageUtil::pixmap("fbreader.png"));
+		item->setText(QString::fromUtf8(myResource["pages"][pageKey].value().c_str()));
+		myCategoryList->addItem(item);
+	}
+	ZLQtDialogContent *tab = new ZLQtDialogContent(new QWidget(page), myResource[tabKey]);
+	page->addTab(tab->widget(), ::qtString(tab->displayName()));
 	myTabs.push_back(tab);
 	return *tab;
 }
 
+/*
 const std::string &ZLQtOptionsDialog::selectedTabKey() const {
 	return myTabs[myTabWidget->currentIndex()]->key();
 }
@@ -117,8 +118,10 @@ void ZLQtOptionsDialog::selectTab(const ZLResourceKey &key) {
 		}
 	}
 }
+*/
 
 bool ZLQtOptionsDialog::runInternal() {
+	myStack->setCurrentIndex(0);
 	for (std::vector<shared_ptr<ZLDialogContent> >::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
 		((ZLQtDialogContent&)**it).close();
 	}

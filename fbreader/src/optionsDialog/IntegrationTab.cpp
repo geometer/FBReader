@@ -112,7 +112,7 @@ void AbstractOptionsDialog::createIntegrationTab(shared_ptr<ProgramCollection> c
 	if (!collection.isNull()) {
 		const std::vector<std::string> &programNames = collection->names();
 		if (!programNames.empty()) {
-			ZLDialogContent &tab = myDialog->createTab(key);
+			ZLDialogContent &tab = myDialog->createTab(ZLResourceKey("undefined"), key);
 			std::string optionName;
 			if (programNames.size() == 1) {
 				optionName = ZLStringUtil::printf(tab.value(ZLResourceKey("enableIntegration")), programNames[0]);

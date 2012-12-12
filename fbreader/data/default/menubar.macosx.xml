@@ -10,7 +10,6 @@
 		<separator/>
 		<item id="about"/>
 		<item id="preferences"/>
-		<submenu id="preferences"/>
 	</submenu>
 	<submenu id="view">
 		<item id="toggleFullscreen"/>

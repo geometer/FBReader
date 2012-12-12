@@ -66,8 +66,8 @@ static void changeActionNames() {
 	oldToNewNames["21"] = ActionCode::SHOW_HIDE_POSITION_INDICATOR;
 	oldToNewNames["22"] = ActionCode::TOGGLE_FULLSCREEN;
 	oldToNewNames["27"] = ActionCode::ROTATE_SCREEN;
-	oldToNewNames["2"] = ActionCode::SHOW_OPTIONS_DIALOG;
-	oldToNewNames["25"] = ActionCode::SHOW_BOOK_INFO_DIALOG;
+	oldToNewNames["2"] = ActionCode::SHOW_PREFERENCES_DIALOG;
+	oldToNewNames["25"] = ActionCode::SHOW_PREFERENCES_DIALOG;
 	oldToNewNames["24"] = ActionCode::ADD_BOOK;
 	oldToNewNames["18"] = ActionCode::CANCEL;
 	oldToNewNames["29"] = ActionCode::QUIT;

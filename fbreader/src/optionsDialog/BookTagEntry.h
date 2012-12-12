@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2004-2012 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,27 +17,38 @@
  * 02110-1301, USA.
  */
 
-#ifndef __PREFERENCESPOPUPDATA_H__
-#define __PREFERENCESPOPUPDATA_H__
+#ifndef __BOOKTAGENTRY_H__
+#define __BOOKTAGENTRY_H__
 
-#include <string>
 #include <vector>
+#include <string>
 
-#include <ZLPopupData.h>
+#include <ZLOptionEntry.h>
 
-class PreferencesPopupData: public ZLPopupData {
+class OptionsDialog;
+
+class BookTagEntry : public ZLComboOptionEntry {
 
 public:
-	PreferencesPopupData();
+	BookTagEntry(OptionsDialog &dialog, std::string initialTag, bool &visible);
+
+	const std::string &initialValue() const;
+	const std::vector<std::string> &values() const;
+	void onAccept(const std::string &value);
+
+	bool useOnValueEdited() const;
+	void onValueEdited(const std::string &value);
+	void onValueSelected(int index);
 
 private:
-	std::size_t generation() const;
-	std::size_t count() const;
-	const std::string text(std::size_t index);
-	void run(std::size_t index);
+	void onValueChanged(const std::string &value);
 
 private:
-	std::vector<std::string> myActionIds;
+	OptionsDialog &myInfoDialog;
+	std::string myInitialValue;
+	bool myEmpty;
+
+	mutable std::vector<std::string> myValues;
 };
 
-#endif /* __PREFERENCESPOPUPDATA_H__ */
+#endif /* __BOOKTAGENTRY_H__ */

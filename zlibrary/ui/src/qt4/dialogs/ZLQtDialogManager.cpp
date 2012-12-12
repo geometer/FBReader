@@ -50,7 +50,7 @@ shared_ptr<ZLDialog> ZLQtDialogManager::createDialog(const ZLResourceKey &key) c
 
 shared_ptr<ZLOptionsDialog> ZLQtDialogManager::createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction) const {
 	myStoredWindow = qApp->activeWindow();
-	return new ZLQtOptionsDialog(resource()[key], applyAction);
+	return new ZLQtOptionsDialog(ZLResource::resource(key), applyAction);
 }
 
 shared_ptr<ZLOpenFileDialog> ZLQtDialogManager::createOpenFileDialog(const ZLResourceKey &key, const std::string &directoryPath, const std::string &filePath, const ZLOpenFileDialog::Filter &filter) const {
