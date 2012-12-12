@@ -325,7 +325,7 @@
 			<node name="networkLibrary" value="Network library…"/>
 			<node name="addBook" value="Open file…"/>
 			<node name="about" value="About FBReader"/>
-			<node name="preferences" value="Preferences"/>
+			<node name="preferences" value="Preferences…"/>
 		</node>
 		<node name="navigation" value="Navigation">
 			<node name="gotoHome" value="Start of document"/>

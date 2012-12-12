@@ -259,6 +259,13 @@ ZLQtAction *ZLQtApplicationWindow::getAction(const std::string &actionId) {
 		return it->second;
 	}
 	ZLQtAction *action = new ZLQtAction(application(), actionId);
+	if (actionId == "about") {
+		action->setMenuRole(QAction::AboutRole);
+	} else if (actionId == "preferences") {
+		action->setMenuRole(QAction::PreferencesRole);
+	} else {
+		action->setMenuRole(QAction::NoRole);
+	}
 	addAction(action);
 	myActions[actionId] = action;
 	return action;
