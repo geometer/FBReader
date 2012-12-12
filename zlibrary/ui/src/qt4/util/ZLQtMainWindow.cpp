@@ -17,22 +17,15 @@
  * 02110-1301, USA.
  */
 
-#include <QtGui/QApplication>
-#include <QtGui/QDesktopWidget>
 #include <QtGui/QToolBar>
 
 #include "ZLQtMainWindow.h"
 
-static const std::string OPTIONS = "Options";
-
 ZLQtMainWindow::ZLQtMainWindow(QWidget *parent, const std::string &windowName) :
 	QMainWindow(parent),
 	myOptionPrefix(windowName.empty() ? windowName : windowName + "_"),
-	myWindowStateOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, myOptionPrefix + "WindowSizeState", NORMAL),
-	myXOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, myOptionPrefix + "XPosition", 0, QApplication::desktop()->width() - 10, 10),
-	myYOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, myOptionPrefix + "YPosition", 0, QApplication::desktop()->height() - 10, 10),
-	myWidthOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, myOptionPrefix + "Width", 10, QApplication::desktop()->width(), QApplication::desktop()->width() / 2),
-	myHeightOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, myOptionPrefix + "Height", 10, QApplication::desktop()->height(), QApplication::desktop()->height() / 2)
+	myWindowStateOption(ZLCategoryKey::LOOK_AND_FEEL, "Options", myOptionPrefix + "WindowSizeState", NORMAL),
+	myGeometryOptions(myOptionPrefix)
 	{
 	setUnifiedTitleAndToolBarOnMac(true);
 	myToolbar = new QToolBar(this);
@@ -40,17 +33,7 @@ ZLQtMainWindow::ZLQtMainWindow(QWidget *parent, const std::string &windowName) :
 	myToolbar->setMovable(false);
 	addToolBar(myToolbar);
 
-	const int x = myXOption.value();
-	const int y = myYOption.value();
-	const int w = myWidthOption.value();
-	const int h = myHeightOption.value();
-	setGeometry(x, y, w, h);
-	QPoint position = pos();
-	const int deltaX = x - pos().x();
-	const int deltaY = y - pos().y();
-	const int deltaW = w - width();
-	const int deltaH = h - height();
-	setGeometry(x + deltaX, y + deltaY, w + deltaW, h + deltaH);
+	myGeometryOptions.setToWidget(*this);
 }
 
 ZLQtMainWindow::~ZLQtMainWindow() {
@@ -89,15 +72,6 @@ void ZLQtMainWindow::saveWindowGeometry() {
 		myWindowStateOption.setValue(MAXIMIZED);
 	} else {
 		myWindowStateOption.setValue(NORMAL);
-
-		QPoint position = pos();
-		if (position.x() != -1) {
-			myXOption.setValue(position.x());
-		}
-		if (position.y() != -1) {
-			myYOption.setValue(position.y());
-		}
-		myWidthOption.setValue(width());
-		myHeightOption.setValue(height());
+		myGeometryOptions.getFromWidget(*this);
 	}
 }

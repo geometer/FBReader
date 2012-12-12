@@ -34,7 +34,7 @@
 #include "ZLQtUtil.h"
 #include "../util/ZLQtImageUtil.h"
 
-ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction) : QDialog(qApp->activeWindow()), ZLDesktopOptionsDialog(resource, applyAction) {
+ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction) : QDialog(qApp->activeWindow()), ZLOptionsDialog(resource, applyAction), myGeometryOptions("Preferences_") {
 	setModal(true);
 	setWindowTitle(::qtString(caption()));
 
@@ -55,13 +55,6 @@ ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRu
 	QPushButton *applyButton = buttonBox->button(QDialogButtonBox::Apply);
 	applyButton->setText(::qtButtonName(ZLDialogManager::APPLY_BUTTON));
 	connect(applyButton, SIGNAL(clicked()), this, SLOT(apply()));
-
-	if (parent() == 0) {
-		QDesktopWidget *desktop = qApp->desktop();
-		if (desktop != 0) {
-			move((desktop->width() - width()) / 2, (desktop->height() - height()) / 2);
-		}
-	}
 
 	myCategoryList = new QListWidget(this);
 	QPixmap pixmap = ZLQtImageUtil::pixmap("fbreader.png");
@@ -120,10 +113,16 @@ void ZLQtOptionsDialog::selectTab(const ZLResourceKey &key) {
 }
 */
 
-bool ZLQtOptionsDialog::runInternal() {
+bool ZLQtOptionsDialog::run() {
+	myGeometryOptions.setToWidget(*this);
 	myStack->setCurrentIndex(0);
 	for (std::vector<shared_ptr<ZLDialogContent> >::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
 		((ZLQtDialogContent&)**it).close();
 	}
 	return exec() == QDialog::Accepted;
+}
+
+void ZLQtOptionsDialog::resizeEvent(QResizeEvent* event) {
+	QDialog::resizeEvent(event);
+	myGeometryOptions.getFromWidget(*this);
 }

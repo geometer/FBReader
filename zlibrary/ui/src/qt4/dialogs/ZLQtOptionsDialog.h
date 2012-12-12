@@ -24,13 +24,15 @@
 
 #include <QtGui/QDialog>
 
-#include "../../../../core/src/desktop/dialogs/ZLDesktopOptionsDialog.h"
+#include <ZLOptionsDialog.h>
+
+#include "../util/ZLQtGeometryOptions.h"
 
 class QListWidget;
 class QTabWidget;
 class QStackedLayout;
 
-class ZLQtOptionsDialog : public QDialog, public ZLDesktopOptionsDialog {
+class ZLQtOptionsDialog : public QDialog, public ZLOptionsDialog {
 	Q_OBJECT
 
 public:
@@ -38,13 +40,8 @@ public:
 	ZLDialogContent &createTab(const ZLResourceKey &pageKey, const ZLResourceKey &tabKey);
 
 protected:
-	//const std::string &selectedTabKey() const;
-	//void selectTab(const ZLResourceKey &key);
-	bool runInternal();
-
-	void setSize(int width, int height) { QDialog::resize(width, height); }
-	int width() const { return QDialog::width(); }
-	int height() const { return QDialog::height(); }
+	void resizeEvent(QResizeEvent* event);
+	bool run();
 
 private Q_SLOTS:
 	void apply();
@@ -54,6 +51,7 @@ private:
 	QListWidget *myCategoryList;
 	QStackedLayout *myStack;
 	std::map<std::string,QTabWidget*> myTabWidgets;
+	ZLQtGeometryOptions myGeometryOptions;
 };
 
 #endif /* __ZLQTOPTIONSDIALOG_H__ */
