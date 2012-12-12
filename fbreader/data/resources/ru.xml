@@ -322,19 +322,38 @@
 		<node name="extraLinks" value="Ссылки"/>
 	</node>
 	<node name="menu">
-		<node name="books" value="Книги">
-			<node name="recent" value="Недавние"/>
-			<node name="library" value="Библиотека"/>
-			<node name="networkLibrary" value="Сетевая библиотека"/>
-			<node name="addBook" value="Открыть файл…"/>
-			<node name="about" value="О программе FBReader"/>
-			<node name="preferences" value="Настройки…"/>
-		</node>
-		<node name="navigation" value="Navigation" toBeTranslated="true">
-			<node name="toc" value="Table of Contents" toBeTranslated="true"/>
-		</node>
+		<node name="FBReader" value="FBReader"/>
+		<node name="about" value="О программе FBReader"/>
+		<node name="visitHomeSite" value="Посетить fbreader.org…"/>
+		<node name="preferences" value="Настройки…"/>
+		<node name="books" value="Книги"/>
+		<node name="recent" value="Недавние"/>
+		<node name="library" value="Библиотека"/>
+		<node name="networkLibrary" value="Сетевая библиотека…"/>
+		<node name="addBook" value="Открыть файл…"/>
+		<node name="navigation" value="Навигация"/>
+		<node name="gotoHome" value="В начало книги"/>
+		<node name="gotoPageNumber" value="На страницу…"/>
+		<node name="gotoSectionStart" value="В начало раздела"/>
+		<node name="gotoSectionEnd" value="В конец раздела"/>
+		<node name="toc" value="Оглавление"/>
+		<node name="nextTOCSection" value="К следующей главе"/>
+		<node name="previousTOCSection" value="К предыдущей главе"/>
+		<node name="undo" value="Назад"/>
+		<node name="redo" value="Вперед"/>
+		<node name="view" value="Внешний вид"/>
+		<node name="rotate" value="Повернуть"/>
+		<node name="toggleFullscreen" value="Полноэкранный режим"/>
+		<node name="clearSelection" value="Убрать пометку"/>
+		<node name="increaseFont" value="Увеличить размер шрифта"/>
+		<node name="decreaseFont" value="Уменьшить размер шрифта"/>
+		<node name="search" value="Искать…"/>
+		<node name="findNext" value="Искать дальше"/>
+		<node name="findPrevious" value="Искать раньше"/>
+		<node name="clearSearchResults" value="Очистить результаты поиска"/>
+		<node name="quit" value="Выход"/>
+<!--
 		<node name="bookInfo" value="Информация о книге…"/>
-		<node name="toc" value="Содержание"/>
 		<node name="library" value="Открыть библиотеку"/>
 		<node name="showNetLibrary" value="Сетевая библиотека"/>
 		<node name="addBook" value="Открыть файл…"/>
@@ -346,12 +365,6 @@
 			<node name="addBook" value="Добавить файл…"/>
 			<node name="showHelp" value="О программе FBReader"/>
 		</node>
-		<node name="gotoHome" value="В начало книги"/>
-		<node name="gotoPageNumber" value="На страницу…"/>
-		<node name="gotoSectionStart" value="В начало раздела"/>
-		<node name="gotoSectionEnd" value="В конец раздела"/>
-		<node name="nextTOCSection" value="К следующей главе"/>
-		<node name="previousTOCSection" value="К предыдущей главе"/>
 		<node name="navigate" value="Переход">
 			<node name="gotoHome" value="В начало книги"/>
 			<node name="gotoPageNumber" value="На страницу…"/>
@@ -359,26 +372,15 @@
 			<node name="gotoSectionEnd" value="В конец раздела"/>
 			<node name="nextTOCSection" value="К следующей главе"/>
 			<node name="previousTOCSection" value="К предыдущей главе"/>
-			<node name="undo" value="Назад"/>
-			<node name="redo" value="Вперед"/>
 		</node>
 		<node name="selection" value="Пометка">
 			<node name="copyToClipboard" value="Скопировать в буфер"/>
 			<node name="openInDictionary" value="Посмотреть в словаре"/>
-			<node name="clearSelection" value="Убрать пометку"/>
-		</node>
-		<node name="search" value="Поиск">
-			<node name="search" value="Искать…"/>
-			<node name="findNext" value="Искать дальше"/>
-			<node name="findPrevious" value="Искать раньше"/>
 		</node>
 		<node name="view" value="Внешний вид">
-			<node name="rotate" value="Повернуть"/>
-			<node name="toggleFullscreen" value="На весь экран"/>
 			<node name="toggleIndicator" value="Индикатор позиции"/>
 		</node>
-		<node name="preferences" value="Последние настройки…"/>
-		<node name="quit" value="Закрыть"/>
+-->
 	</node>
 	<node name="toolbar">
 		<node name="showReading">

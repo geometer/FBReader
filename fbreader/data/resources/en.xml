@@ -446,10 +446,6 @@
 			<node name="label" value="Filter"/>
 			<node name="tooltip" value="Filter"/>
 		</node>
-		<node name="preferences">
-			<node name="label" value="Last Preferences Dialog"/>
-			<node name="tooltip" value="Show Last Opened Preferences Dialog"/>
-		</node>
 	</node>
 	<node name="dialog">
 		<node name="button">
