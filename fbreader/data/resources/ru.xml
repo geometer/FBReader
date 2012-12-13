@@ -460,7 +460,10 @@
 			<node name="sortKey" value="Сортировать по"/>
 		</node>
 		<node name="addFileDialog">
-			<node name="title" value="FBReader - Добавление книги в библиотеку"/>
+			<node name="title" value="Добавить книгу"/>
+		</node>
+		<node name="openFileDialog">
+			<node name="title" value="Открыть книгу"/>
 		</node>
 		<node name="textSearchDialog">
 			<node name="title" value="Поиск по тексту"/>

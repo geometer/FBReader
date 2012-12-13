@@ -442,7 +442,10 @@
 			<node name="sortKey" value="Author Sort Key"/>
 		</node>
 		<node name="addFileDialog">
-			<node name="title" value="FBReader - Add Book to the Library"/>
+			<node name="title" value="Add book"/>
+		</node>
+		<node name="openFileDialog">
+			<node name="title" value="Open book"/>
 		</node>
 		<node name="textSearchDialog">
 			<node name="title" value="Text Search"/>

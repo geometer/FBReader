@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ExternalPrograms>
-	<section name="Web Browser">
-		<program name="Browser" protocol="openURL">
-			<action name="openLink"/>
-		</program>
-	</section>
-</ExternalPrograms>
