@@ -35,6 +35,7 @@
 #include "../util/ZLQtKeyUtil.h"
 #include "../util/ZLQtImageUtil.h"
 #include "../util/ZLQtToolbarButton.h"
+#include "../tree/ZLQtSearchField.h"
 
 ZLQtApplicationWindow *ZLQtApplicationWindow::ourInstance = 0;
 
@@ -60,9 +61,7 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 
 QLineEdit *ZLQtApplicationWindow::searchBox() {
 	if (mySearchBox == 0) {
-		mySearchBox = new QLineEdit(myToolbar);
-		mySearchBox->setAttribute(Qt::WA_MacShowFocusRect, false);
-		mySearchBox->setStyleSheet("QLineEdit { height:19px; border: 1px solid gray; border-radius: 10px; padding-left: 10px; padding-right:10px }");
+		mySearchBox = new ZLQtSearchField(myToolbar);
 		mySearchBoxAction = myToolbar->addWidget(mySearchBox);
 	}
 	return mySearchBox;

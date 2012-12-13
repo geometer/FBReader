@@ -1,4 +1,4 @@
-/*QLineEdit:focus#search-field { 
+QLineEdit:focus#search-field { 
 	border-style: solid;
 	border-width: 2px; 
 	border-radius: 12px; 
@@ -10,5 +10,4 @@ QLineEdit#search-field {
 	border-width: 1px; 
 	border-radius: 12px; 
 	border-color: #8D8D8D;
-}*/
-
+}
