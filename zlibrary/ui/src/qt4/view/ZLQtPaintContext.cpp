@@ -27,6 +27,7 @@
 
 #include "ZLQtPaintContext.h"
 #include "../image/ZLQtImageManager.h"
+#include "../util/ZLQtUtil.h"
 
 ZLQtPaintContext::ZLQtPaintContext() {
 	myPainter = new QPainter();
@@ -81,7 +82,7 @@ void ZLQtPaintContext::fillFamiliesList(std::vector<std::string> &families) cons
 }
 
 const std::string ZLQtPaintContext::realFontFamilyName(std::string &fontFamily) const {
-	QString fullName = QFontInfo(QFont(QString::fromUtf8(fontFamily.c_str()))).family();
+	QString fullName = QFontInfo(QFont(::qtString(fontFamily))).family();
 	if (fullName.isNull() || fullName.isEmpty()) {
 		return HELVETICA;
 	}
@@ -110,7 +111,7 @@ void ZLQtPaintContext::setFont(const std::string &family, int size, bool bold, b
 			fontChanged = true;
 		}
 
-		if ((font.weight() != (bold ? QFont::Bold : QFont::Normal))) {
+		if (font.weight() != (bold ? QFont::Bold : QFont::Normal)) {
 			font.setWeight(bold ? QFont::Bold : QFont::Normal);
 			fontChanged = true;
 		}

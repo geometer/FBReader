@@ -32,6 +32,7 @@
 
 #include "ZLQtApplicationWindow.h"
 #include "../view/ZLQtViewWidget.h"
+#include "../util/ZLQtUtil.h"
 #include "../util/ZLQtKeyUtil.h"
 #include "../util/ZLQtImageUtil.h"
 #include "../util/ZLQtToolbarButton.h"
@@ -90,7 +91,7 @@ void ZLQtApplicationWindow::init() {
 	for (BindingMap::const_iterator it = bindings.begin(); it != bindings.end(); ++it) {
 		ZLQtAction *action = getAction(it->second);
 		QList<QKeySequence> shortcuts = action->shortcuts();
-		shortcuts.append(QKeySequence(QString::fromStdString(it->first)));
+		shortcuts.append(QKeySequence(::qtString(it->first)));
 		action->setShortcuts(shortcuts);
 	}
 
@@ -130,7 +131,7 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 		ZLToolbar::ButtonItem& buttonItem = (ZLToolbar::ButtonItem&)*item;
 		QAction *action = getAction(buttonItem.actionId());
 		ZLQtToolbarButton *button = new ZLQtToolbarButton(buttonItem.iconName(), myToolbar);
-		button->setToolTip(QString::fromUtf8(buttonItem.tooltip().c_str()));
+		button->setToolTip(::qtString(buttonItem.tooltip()));
 		connect(button, SIGNAL(clicked()), action, SLOT(onActivated()));
 		myToolbarActions[item] = myToolbar->addWidget(button);
 	}
@@ -177,7 +178,7 @@ void ZLQtApplicationWindow::onRefresh() {
 		for (size_t i = 0; i < count; ++i) {
 			ZLQtAction *action = new ZLQtAction(application(), menu->Id, menu);
 			action->setActionIndex(i);
-			action->setText(QString::fromUtf8(data->text(i).c_str()));
+			action->setText(::qtString(data->text(i)));
 			menu->addAction(action);
 		}
 	}
@@ -189,7 +190,7 @@ void ZLQtApplicationWindow::grabAllKeys(bool) {
 }
 
 void ZLQtApplicationWindow::setCaption(const std::string &caption) {
-	QMainWindow::setWindowTitle(QString::fromUtf8(caption.c_str()));
+	QMainWindow::setWindowTitle(::qtString(caption));
 }
 
 void ZLQtApplicationWindow::setHyperlinkCursor(bool hyperlink) {
@@ -212,7 +213,7 @@ void ZLQtApplicationWindow::setFocusToMainWidget() {
 ZLQtApplicationWindow::MenuBuilder::MenuBuilder(ZLQtApplicationWindow &window) : myWindow(window) {
 }
 
-ZLQtMenu::ZLQtMenu(const std::string &id, const std::string &title) : QMenu(QString::fromUtf8(title.c_str())), Id(id), Generation(size_t(-1)) {
+ZLQtMenu::ZLQtMenu(const std::string &id, const std::string &title) : QMenu(::qtString(title)), Id(id), Generation(size_t(-1)) {
 }
 
 void ZLQtApplicationWindow::MenuBuilder::processSubmenuBeforeItems(ZLMenubar::Submenu &submenu) {
@@ -247,7 +248,7 @@ void ZLQtAction::onActivated() {
 
 void ZLQtApplicationWindow::MenuBuilder::processItem(ZLMenubar::PlainItem &item) {
 	ZLQtAction *action = myWindow.getAction(item.actionId());
-	action->setText(QString::fromUtf8(item.name().c_str()));
+	action->setText(::qtString(item.name()));
 	myMenuStack.back()->addAction(action);
 	myWindow.addMenuAction(action);
 }

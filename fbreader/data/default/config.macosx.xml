@@ -8,10 +8,6 @@
     <option name="Delay" value="0"/>
   </group>
   <group name="Options">
-    <option name="LeftMargin" value="50"/>
-    <option name="RightMargin" value="50"/>
-    <option name="TopMargin" value="10"/>
-    <option name="BottomMargin" value="10"/>
     <option name="KeyDelay" value="0"/>
     <option name="BookPath" value="~/FBooks:~/Books"/>
     <option name="DownloadDirectory" value="~/FBooks"/>

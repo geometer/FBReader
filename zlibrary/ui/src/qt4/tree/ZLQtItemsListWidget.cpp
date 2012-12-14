@@ -31,7 +31,7 @@
 #include <ZLFile.h>
 
 #include "../dialogs/ZLQtDialogManager.h"
-
+#include "../util/ZLQtUtil.h"
 #include "../image/ZLQtImageUtils.h"
 
 #include "ZLQtPreviewWidget.h"
@@ -170,8 +170,8 @@ ZLQtTreeItem::ZLQtTreeItem(QWidget *parent) : QFrame(parent), myNode(0), myImage
 void ZLQtTreeItem::fill(ZLTreeTitledNode *node) {
 	clear();
 	myNode = node;
-	myTitle->setText(QString("<b>%1</b>").arg(QString::fromStdString(node->title())));
-	mySubtitle->setText(QString::fromStdString(node->subtitle()));
+	myTitle->setText(QString("<b>%1</b>").arg(::qtString(node->title())));
+	mySubtitle->setText(::qtString(node->subtitle()));
 	fillImage();
 }
 

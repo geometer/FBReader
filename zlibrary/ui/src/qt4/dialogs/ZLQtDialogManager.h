@@ -29,6 +29,8 @@ class ZLQtDialogManager : public ZLDialogManager {
 public:
 	static void createInstance() { ourInstance = new ZLQtDialogManager(); }
 
+	static QString qtButtonText(const ZLResourceKey &key);
+
 private:
 	ZLQtDialogManager() : myStoredWindow(0) {}
 

@@ -29,6 +29,7 @@
 
 #include "../tree/ZLQtItemsListWidget.h"
 #include "../tree/ZLQtPreviewWidget.h"
+#include "../util/ZLQtUtil.h"
 #include "../util/ZLQtToolbarButton.h"
 #include "../application/ZLQtApplicationWindow.h"
 
@@ -39,7 +40,7 @@ static const int DIALOG_WIDTH_HINT = 840;
 ZLQtTreeDialog::ZLQtTreeDialog(const std::string &windowName, const ZLResource &res) :
 	ZLQtMainWindow(ZLQtApplicationWindow::Instance(), windowName),
   ZLTreeDialog(res), myLastClickedNode(0), myLastClickedSearchNode(0) {
-	setWindowTitle(QString::fromStdString(resource().value())); //TODO maybe user resources by other way
+	setWindowTitle(::qtString(resource().value())); //TODO maybe user resources by other way
 	setMinimumSize(400, 260); //minimum sensible size
 
 	myListWidget = new ZLQtItemsListWidget;

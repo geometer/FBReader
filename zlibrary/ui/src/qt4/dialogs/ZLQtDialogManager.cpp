@@ -33,10 +33,10 @@
 #include "ZLQtDialogContent.h"
 #include "ZLQtProgressDialog.h"
 #include "ZLQtTreeDialog.h"
-#include "ZLQtUtil.h"
 
 #include "../application/ZLQtApplicationWindow.h"
 #include "../image/ZLQtImageManager.h"
+#include "../util/ZLQtUtil.h"
 
 void ZLQtDialogManager::showSearchBox() const {
 	QLineEdit *searchBox = ZLQtApplicationWindow::Instance()->searchBox();
@@ -66,7 +66,7 @@ void ZLQtDialogManager::informationBox(const std::string &title, const std::stri
 	if (parent == 0) {
 		parent = myStoredWindow;
 	}
-	QMessageBox::information(parent, ::qtString(title), ::qtString(message), ::qtButtonName(OK_BUTTON));
+	QMessageBox::information(parent, ::qtString(title), ::qtString(message), qtButtonText(OK_BUTTON));
 }
 
 void ZLQtDialogManager::errorBox(const ZLResourceKey &key, const std::string &message) const {
@@ -74,7 +74,7 @@ void ZLQtDialogManager::errorBox(const ZLResourceKey &key, const std::string &me
 	if (parent == 0) {
 		parent = myStoredWindow;
 	}
-	QMessageBox::critical(parent, ::qtString(dialogTitle(key)), ::qtString(message), ::qtButtonName(OK_BUTTON));
+	QMessageBox::critical(parent, ::qtString(dialogTitle(key)), ::qtString(message), qtButtonText(OK_BUTTON));
 }
 
 int ZLQtDialogManager::questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const {
@@ -82,7 +82,7 @@ int ZLQtDialogManager::questionBox(const ZLResourceKey &key, const std::string &
 	if (parent == 0) {
 		parent = myStoredWindow;
 	}
-	return QMessageBox::question(parent, ::qtString(dialogTitle(key)), ::qtString(message), ::qtButtonName(button0), ::qtButtonName(button1), ::qtButtonName(button2));
+	return QMessageBox::question(parent, ::qtString(dialogTitle(key)), ::qtString(message), qtButtonText(button0), qtButtonText(button1), qtButtonText(button2));
 }
 
 shared_ptr<ZLProgressDialog> ZLQtDialogManager::createProgressDialog(const ZLResourceKey &key, bool network) const {
@@ -107,4 +107,11 @@ void ZLQtDialogManager::setClipboardImage(const ZLImageData &imageData, Clipboar
 		*((ZLQtImageData&)imageData).image(),
 		(type == CLIPBOARD_MAIN) ? QClipboard::Clipboard : QClipboard::Selection
 	);
+}
+
+QString ZLQtDialogManager::qtButtonText(const ZLResourceKey &key) {
+	if (key.Name.empty()) {
+		return QString::null;
+	}
+	return ::qtString(buttonText(key));
 }

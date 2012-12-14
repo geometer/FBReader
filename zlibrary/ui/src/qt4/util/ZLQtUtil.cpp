@@ -17,14 +17,10 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLQTUTIL_H__
-#define __ZLQTUTIL_H__
+#include <ZLDialogManager.h>
 
-#include <QtCore/QString>
+#include "ZLQtUtil.h"
 
-#include <ZLResource.h>
-
-QString qtString(const std::string &text);
-QString qtButtonName(const ZLResourceKey &key);
-
-#endif /* __ZLQTUTIL_H__ */
+QString qtString(const std::string &text) {
+	return QString::fromUtf8(text.c_str());
+}

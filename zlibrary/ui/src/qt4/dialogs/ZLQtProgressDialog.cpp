@@ -28,34 +28,34 @@
 
 #include "ZLQtDialogManager.h"
 #include "ZLQtProgressDialog.h"
-#include "ZLQtUtil.h"
 #include "../application/ZLQtApplicationWindow.h"
+#include "../util/ZLQtUtil.h"
 
 ZLQtProgressDialog::ZLQtProgressDialog(const ZLResourceKey &key, bool network) : ZLProgressDialog(key), myIsNetworkRunnable(network), myActiveWindow(0) {
 }
 
 void ZLQtProgressDialog::run(ZLRunnable &runnable) {
-		myActiveWindow = ZLQtApplicationWindow::Instance();
-		if (myActiveWindow != 0) {
-			myActiveWindow->setCursor(Qt::WaitCursor);
-		}
+	myActiveWindow = ZLQtApplicationWindow::Instance();
+	if (myActiveWindow != 0) {
+		myActiveWindow->setCursor(Qt::WaitCursor);
+	}
 
-		ZLQtWaitDialog* dialog = new ZLQtWaitDialog(messageText(), myActiveWindow);
-		dialog->setCursor(Qt::WaitCursor);
+	ZLQtWaitDialog* dialog = new ZLQtWaitDialog(messageText(), myActiveWindow);
+	dialog->setCursor(Qt::WaitCursor);
 
-		if (myIsNetworkRunnable || true) {
-			dialog->show();
-			runnable.run();
-			dialog->hide();
-		} else {
-			ZLQtRunnableWrapper* wrapper = new ZLQtRunnableWrapper(runnable);
-			wrapper->setAutoDelete(true);
-			QObject::connect(wrapper, SIGNAL(finished()), dialog, SLOT(close()), Qt::QueuedConnection);
-			QThreadPool::globalInstance()->start(wrapper);
-			dialog->exec();
-		}
-		dialog->deleteLater();
-		restoreCursor();
+	if (myIsNetworkRunnable || true) {
+		dialog->show();
+		runnable.run();
+		dialog->hide();
+	} else {
+		ZLQtRunnableWrapper* wrapper = new ZLQtRunnableWrapper(runnable);
+		wrapper->setAutoDelete(true);
+		QObject::connect(wrapper, SIGNAL(finished()), dialog, SLOT(close()), Qt::QueuedConnection);
+		QThreadPool::globalInstance()->start(wrapper);
+		dialog->exec();
+	}
+	dialog->deleteLater();
+	restoreCursor();
 }
 
 void ZLQtProgressDialog::restoreCursor() {
@@ -66,7 +66,7 @@ void ZLQtProgressDialog::restoreCursor() {
 
 
 void ZLQtProgressDialog::setMessage(const std::string &message) {
-	//qDebug() << QString::fromStdString(message);
+	//qDebug() << ::qtString(message);
 	//TODO implement
 }
 

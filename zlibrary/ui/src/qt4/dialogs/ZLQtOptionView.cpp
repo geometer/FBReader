@@ -32,11 +32,11 @@
 
 #include <ZLStringUtil.h>
 #include <ZLDialogManager.h>
-#include "../util/ZLQtKeyUtil.h"
 
 #include "ZLQtOptionView.h"
 #include "ZLQtDialogContent.h"
-#include "ZLQtUtil.h"
+#include "../util/ZLQtUtil.h"
+#include "../util/ZLQtKeyUtil.h"
 
 void ZLQtOptionView::_show() {
 	for (std::vector<QWidget*>::iterator it = myWidgets.begin(); it != myWidgets.end(); ++it) {

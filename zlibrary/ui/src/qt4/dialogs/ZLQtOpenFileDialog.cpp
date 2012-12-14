@@ -21,11 +21,13 @@
 
 #include "ZLQtOpenFileDialog.h"
 
+#include "../util/ZLQtUtil.h"
+
 ZLQtOpenFileDialog::ZLQtOpenFileDialog(const std::string &title, const std::string &directoryPath, const std::string &filePath, const Filter &filter) {
 	myDialog = new QFileDialog();
-	myDialog->setWindowTitle(QString::fromUtf8(title.c_str()));
-	myDialog->setDirectory(QString::fromUtf8(directoryPath.c_str()));
-	myDialog->selectFile(QString::fromUtf8(filePath.c_str()));
+	myDialog->setWindowTitle(::qtString(title));
+	myDialog->setDirectory(::qtString(directoryPath));
+	myDialog->selectFile(::qtString(filePath));
 }
 
 ZLQtOpenFileDialog::~ZLQtOpenFileDialog() {

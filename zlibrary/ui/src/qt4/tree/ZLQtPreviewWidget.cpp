@@ -28,6 +28,7 @@
 #include <ZLStringUtil.h>
 
 #include "QtWaitingSpinner.h"
+#include "../util/ZLQtUtil.h"
 #include "../image/ZLQtImageUtils.h"
 
 #include "ZLQtPreviewWidget.h"
@@ -279,23 +280,23 @@ void ZLQtPageWidget::setInfo(const ZLTreePageInfo &info) {
 	static QString colon = "<b>%1</b> %2";
 
 	if (!info.title().empty()) {
-		static QString title = QString::fromStdString(resource["title"].value());
-		myTitleLabel->setText(colon.arg(title, QString::fromStdString(info.title())));
+		static QString title = ::qtString(resource["title"].value());
+		myTitleLabel->setText(colon.arg(title, ::qtString(info.title())));
 	}
 
 	if (info.authors().size() > 0) {
-		static QString label = QString::fromStdString(resource["authors"].value(info.authors().size()));
-		myAuthorLabel->setText(colon.arg(label, QString::fromStdString(ZLStringUtil::join(info.authors(), ", "))));
+		static QString label = ::qtString(resource["authors"].value(info.authors().size()));
+		myAuthorLabel->setText(colon.arg(label, ::qtString(ZLStringUtil::join(info.authors(), ", "))));
 	}
 
 	if (info.tags().size() > 0) {
-		static QString label = QString::fromStdString(resource["tags"].value(info.tags().size()));
-		myCategoriesLabel->setText(colon.arg(label, QString::fromStdString(ZLStringUtil::join(info.tags(), ", "))));
+		static QString label = ::qtString(resource["tags"].value(info.tags().size()));
+		myCategoriesLabel->setText(colon.arg(label, ::qtString(ZLStringUtil::join(info.tags(), ", "))));
 	}
 
 	if (!info.summary().empty()) {
-		static QString annotation = QString::fromStdString(resource["annotation"].value());
-		mySummaryLabel->setText(QString::fromStdString(info.summary()));
+		static QString annotation = ::qtString(resource["annotation"].value());
+		mySummaryLabel->setText(::qtString(info.summary()));
 		mySummaryTitleLabel->setText(QString("<b>%1</b>").arg(annotation));
 //		mySummaryScrollArea->show();
 	}
@@ -310,7 +311,7 @@ void ZLQtPageWidget::setInfo(const ZLTreePageInfo &info) {
 			continue;
 		}
 		QPushButton *actionButton = new ZLQtButtonAction(action);
-		QString text = QString::fromStdString(info.actionText(action));
+		QString text = ::qtString(info.actionText(action));
 		actionButton->setText(text);
 		myActionsWidget->layout()->addWidget(actionButton);
 		connect(actionButton, SIGNAL(clicked()), this, SLOT(onActionActivated()));
@@ -323,7 +324,7 @@ void ZLQtPageWidget::setInfo(const ZLTreePageInfo &info) {
 			continue;
 		}
 		QLabel *actionLabel = new ZLQtLabelAction(action);
-		QString text = QString::fromStdString(info.actionText(action));
+		QString text = ::qtString(info.actionText(action));
 		actionLabel->setText(QString("<big><u>%1</u></big>").arg(text));
 		actionLabel->setWordWrap(true);
 		myRelatedWidget->layout()->addWidget(actionLabel);
@@ -387,10 +388,10 @@ void ZLQtCatalogPageWidget::setInfo(const ZLTreeTitledNode *node) {
 	}
 
 	if (!node->title().empty()) {
-		myTitleLabel->setText(QString("<b>%1</b>").arg(QString::fromStdString(node->title())));
+		myTitleLabel->setText(QString("<b>%1</b>").arg(::qtString(node->title())));
 	}
 	if (!node->subtitle().empty()) {
-		mySubtitleLabel->setText(QString::fromStdString(node->subtitle()));
+		mySubtitleLabel->setText(::qtString(node->subtitle()));
 	}
 
 	foreach(shared_ptr<ZLTreeAction> action, node->actions()) {
@@ -398,7 +399,7 @@ void ZLQtCatalogPageWidget::setInfo(const ZLTreeTitledNode *node) {
 			continue;
 		}
 		QPushButton *actionButton = new ZLQtButtonAction(action);
-		QString text = QString::fromStdString(node->actionText(action));
+		QString text = ::qtString(node->actionText(action));
 		actionButton->setText(text);
 		myActionsWidget->layout()->addWidget(actionButton);
 		connect(actionButton, SIGNAL(clicked()), this, SLOT(onActionActivated()));

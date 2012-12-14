@@ -52,6 +52,11 @@ public:
 	static void run(ZLApplication *application);
 	static void shutdown();
 
+	static bool openUrl(const std::string &url);
+	static std::size_t displayDPI();
+	static std::size_t displayPixelsHeight();
+	static std::size_t displayPixelsWidth();
+
 private:
 	static void initLocale();
 

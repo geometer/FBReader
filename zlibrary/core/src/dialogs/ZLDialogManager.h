@@ -49,7 +49,7 @@ public:
 
 	static const std::string &dialogTitle(const ZLResourceKey &key);
 	static const std::string &dialogMessage(const ZLResourceKey &key);
-	static const std::string &buttonName(const ZLResourceKey &key);
+	static const std::string &buttonText(const ZLResourceKey &key);
 	static const std::string &waitMessageText(const ZLResourceKey &key);
 
 protected:

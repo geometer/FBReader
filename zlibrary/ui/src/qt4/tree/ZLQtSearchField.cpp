@@ -27,6 +27,7 @@
 #include <ZLStringUtil.h>
 
 #include "ZLQtSearchField.h"
+#include "../util/ZLQtUtil.h"
 #include "../util/ZLQtImageUtil.h"
 
 ZLQtSearchField::ZLQtSearchField(QWidget *parent) : QLineEdit(parent) {
@@ -37,17 +38,17 @@ ZLQtSearchField::ZLQtSearchField(QWidget *parent) : QLineEdit(parent) {
 
 	setAttribute(Qt::WA_MacShowFocusRect, false);
 
-	myWaitingIcon = new QtWaitingSpinner(12, 3, 2, 3, this);
-	myWaitingIcon->setSpeed(2);
+	myWaitingIcon = new QtWaitingSpinner(11, 3, 2, 3, this);
+	myWaitingIcon->setSpeed(1);
 
 	mySearchIcon = new QLabel(this);
 	QPixmap pixmap = ZLQtImageUtil::pixmap("search_icon.png");
 	mySearchIcon->setPixmap(pixmap);
 	mySearchIcon->setFixedSize(pixmap.size());
 
-	setFixedSize(155,25);
+	//setFixedSize(155,25);
 
-	setPlaceholderText(QString::fromStdString(ZLResource::resource("networkView")["searchResultNode"]["searchfield"].value()));
+	setPlaceholderText(::qtString(ZLResource::resource("networkView")["searchResultNode"]["searchfield"].value()));
 
 	int frameWidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
 
@@ -95,7 +96,7 @@ void ZLQtSearchField::loadSuggestions() {
 		if (suggestion.empty()) {
 			finished = true;
 		} else {
-			mySuggestions.insert(QString::fromStdString(suggestion));
+			mySuggestions.insert(::qtString(suggestion));
 		}
 	}
 	updateSuggestions();

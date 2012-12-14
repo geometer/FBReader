@@ -56,7 +56,7 @@ const ZLResource &ZLDialogManager::resource() {
 	return ZLResource::resource("dialog");
 }
 
-const std::string &ZLDialogManager::buttonName(const ZLResourceKey &key) {
+const std::string &ZLDialogManager::buttonText(const ZLResourceKey &key) {
 	return resource()["button"][key].value();
 }
 

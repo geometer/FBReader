@@ -27,11 +27,10 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QResizeEvent>
 
-#include <ZLDialogManager.h>
-
 #include "ZLQtOptionsDialog.h"
 #include "ZLQtDialogContent.h"
-#include "ZLQtUtil.h"
+#include "ZLQtDialogManager.h"
+#include "../util/ZLQtUtil.h"
 #include "../util/ZLQtImageUtil.h"
 
 class ZLQtOptionsListItem : public QListWidgetItem {
@@ -70,15 +69,15 @@ ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRu
 	);
 
 	QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
-	okButton->setText(::qtButtonName(ZLDialogManager::OK_BUTTON));
+	okButton->setText(ZLQtDialogManager::qtButtonText(ZLDialogManager::OK_BUTTON));
 	connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
 
 	QPushButton *cancelButton = buttonBox->button(QDialogButtonBox::Cancel);
-	cancelButton->setText(::qtButtonName(ZLDialogManager::CANCEL_BUTTON));
+	cancelButton->setText(ZLQtDialogManager::qtButtonText(ZLDialogManager::CANCEL_BUTTON));
 	connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
 
 	QPushButton *applyButton = buttonBox->button(QDialogButtonBox::Apply);
-	applyButton->setText(::qtButtonName(ZLDialogManager::APPLY_BUTTON));
+	applyButton->setText(ZLQtDialogManager::qtButtonText(ZLDialogManager::APPLY_BUTTON));
 	connect(applyButton, SIGNAL(clicked()), this, SLOT(apply()));
 
 	myCategoryList = new QListWidget(this);
@@ -121,7 +120,7 @@ ZLDialogContent &ZLQtOptionsDialog::createTab(const ZLResourceKey &pageKey, cons
 
 		item = new ZLQtOptionsListItem(myCategoryList, pageKey.Name, page);
 		item->setIcon(ZLQtImageUtil::pixmap("fbreader.png"));
-		item->setText(QString::fromUtf8(myResource["pages"][pageKey].value().c_str()));
+		item->setText(::qtString(myResource["pages"][pageKey].value()));
 		myCategoryList->addItem(item);
 	}
 	ZLQtDialogContent *tab = new ZLQtDialogContent(new QWidget(page), myResource[tabKey]);

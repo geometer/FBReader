@@ -41,6 +41,7 @@
 #include <ZLNetworkUtil.h>
 
 #include "ZLQtNetworkManager.h"
+#include "../util/ZLQtUtil.h"
 
 static QString fixPath(const QString &path) {
 	if (path.startsWith('~')) {
@@ -68,8 +69,8 @@ void ZLQtNetworkManager::createInstance() {
 }
 
 void ZLQtNetworkManager::initPaths() {
-	myCookieJar->setFilePath(fixPath(QString::fromStdString(CookiesPath())));
-	QDir cacheDirectory = fixPath(QString::fromStdString(CacheDirectory()));
+	myCookieJar->setFilePath(fixPath(::qtString(CookiesPath())));
+	QDir cacheDirectory = fixPath(::qtString(CacheDirectory()));
 	if (!cacheDirectory.exists()) {
 		cacheDirectory.mkpath(cacheDirectory.absolutePath());
 	}
@@ -79,7 +80,7 @@ void ZLQtNetworkManager::initPaths() {
 
 std::string ZLQtNetworkManager::perform(const ZLNetworkRequest::Vector &requestsList) const {
 	if (useProxy()) {
-		QString host = QString::fromStdString(proxyHost());
+		QString host = ::qtString(proxyHost());
 		QNetworkProxy proxy(QNetworkProxy::HttpProxy, host, atoi(proxyPort().c_str()));
 		const_cast<QNetworkAccessManager&>(myManager).setProxy(proxy);
 	}
@@ -94,7 +95,7 @@ std::string ZLQtNetworkManager::perform(const ZLNetworkRequest::Vector &requests
 		//ZLNetworkRequest &request = static_cast<ZLNetworkRequest&>(*requestPtr);
 		QNetworkRequest networkRequest;
 		ZLLogger::Instance().println("network", "requesting " + request->url());
-		networkRequest.setUrl(QUrl::fromUserInput(QString::fromStdString(request->url())));
+		networkRequest.setUrl(QUrl::fromUserInput(::qtString(request->url())));
 
 		if (!request->doBefore()) {
 			std::string error = request->errorMessage();
@@ -102,7 +103,7 @@ std::string ZLQtNetworkManager::perform(const ZLNetworkRequest::Vector &requests
 				const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
 				error = ZLStringUtil::printf(errorResource["somethingWrongMessage"].value(), networkRequest.url().host().toStdString());
 			}
-			errors << QString::fromStdString(error);
+			errors << ::qtString(error);
 			continue;
 		}
 
@@ -120,7 +121,7 @@ std::string ZLQtNetworkManager::perform(const ZLNetworkRequest::Vector &requests
 
 std::string ZLQtNetworkManager::performAsync(const ZLNetworkRequest::Vector &requestsList) const {
 	if (useProxy()) {
-		QString host = QString::fromStdString(proxyHost());
+		QString host = ::qtString(proxyHost());
 		QNetworkProxy proxy(QNetworkProxy::HttpProxy, host, atoi(proxyPort().c_str()));
 		const_cast<QNetworkAccessManager&>(myManager).setProxy(proxy);
 	}
@@ -131,7 +132,7 @@ std::string ZLQtNetworkManager::performAsync(const ZLNetworkRequest::Vector &req
 		}
 		QNetworkRequest networkRequest;
 		ZLLogger::Instance().println("network", "async requesting " + request->url());
-		networkRequest.setUrl(QUrl::fromUserInput(QString::fromStdString(request->url())));
+		networkRequest.setUrl(QUrl::fromUserInput(::qtString(request->url())));
 
 		if (!request->doBefore()) {
 			continue;
@@ -152,7 +153,7 @@ void ZLQtNetworkManager::prepareReply(ZLQtNetworkReplyScope &scope, QNetworkRequ
 		QUrl tmp;
 		typedef std::pair<std::string, std::string> string_pair;
 		foreach (const string_pair &pair, scope.request->postParameters()) {
-			tmp.addQueryItem(QString::fromStdString(pair.first), QString::fromStdString(pair.second));
+			tmp.addQueryItem(::qtString(pair.first), ::qtString(pair.second));
 		}
 		data = tmp.encodedQuery();
 		reply = const_cast<QNetworkAccessManager&>(myManager).post(networkRequest, data);
@@ -204,7 +205,7 @@ void ZLQtNetworkManager::onFinished(QNetworkReply *reply) {
 	scope.timeoutTimer->deleteLater();
 
 	if (!scope.request->doAfter(error.toStdString())) {
-		scope.errors->append(QString::fromStdString(scope.request->errorMessage()));
+		scope.errors->append(::qtString(scope.request->errorMessage()));
 	}
 	if (scope.replies->isEmpty()) {
 		scope.eventLoop->quit();
@@ -285,8 +286,8 @@ void ZLQtNetworkManager::onAuthenticationRequired(QNetworkReply *reply, QAuthent
 	}
 
 	scope.timeoutTimer->start(timeoutValue());
-	authenticator->setUser(QString::fromStdString(scope.request->userName()));
-	authenticator->setPassword(QString::fromStdString(scope.request->password()));
+	authenticator->setUser(::qtString(scope.request->userName()));
+	authenticator->setPassword(::qtString(scope.request->password()));
 	scope.authAskedAlready = true;
 	reply->setProperty("scope", qVariantFromValue(scope));
 }
@@ -382,7 +383,7 @@ QString ZLQtNetworkManager::handleErrors(QNetworkReply *reply) {
 			error = reply->errorString().toStdString();
 			break;
 	}
-	return QString::fromStdString(error);
+	return ::qtString(error);
 }
 
 void ZLQtNetworkManager::setHeadersAndSsl(QNetworkRequest &networkRequest) const {
