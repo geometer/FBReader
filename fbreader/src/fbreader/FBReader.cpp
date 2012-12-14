@@ -298,29 +298,18 @@ void FBReader::openBookInternal(shared_ptr<Book> book) {
 	}
 }
 
-void FBReader::openLinkInBrowser(const std::string &url) const {
-	if (url.empty()) {
-		return;
-	}
-	shared_ptr<ProgramCollection> collection = webBrowserCollection();
-	if (collection.isNull()) {
-		return;
-	}
-	shared_ptr<Program> program = collection->currentProgram();
-	if (program.isNull()) {
-		return;
-	}
-	std::string copy = url;
-	NetworkLinkCollection::Instance().rewriteUrl(copy, true);
-	ZLLogger::Instance().println("URL", copy);
-	program->run("openLink", copy);
-}
-
 void FBReader::tryShowFootnoteView(const std::string &id, ZLHyperlinkType type) {
 	switch (type) {
 		case HYPERLINK_EXTERNAL:
-			openLinkInBrowser(id);
+		{
+			const std::string actionPrefix = "fbreader-action:";
+			if (ZLStringUtil::stringStartsWith(id, actionPrefix)) {
+				doAction(id.substr(actionPrefix.length()));
+			} else {
+				ZLibrary::openUrl(id);
+			}
 			break;
+		}
 		case HYPERLINK_INTERNAL:
 			if (myMode == BOOK_TEXT_MODE && !myModel.isNull()) {
 				BookModel::Label label = myModel->label(id);
@@ -516,10 +505,6 @@ void FBReader::openInDictionary(const std::string &word) {
 	shared_ptr<Program> dictionary = dictionaryCollection()->currentProgram();
 	dictionary->run("present", ZLibrary::ApplicationName());
 	dictionary->run("showWord", word);
-}
-
-shared_ptr<ProgramCollection> FBReader::webBrowserCollection() const {
-	return myProgramCollectionMap.collection("Web Browser");
 }
 
 shared_ptr<Book> FBReader::currentBook() const {

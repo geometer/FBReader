@@ -110,9 +110,6 @@ public:
 	bool isDictionarySupported() const;
 	void openInDictionary(const std::string &word);
 
-	shared_ptr<ProgramCollection> webBrowserCollection() const;
-	void openLinkInBrowser(const std::string &url) const;
-
 	void tryShowFootnoteView(const std::string &id, ZLHyperlinkType type);
 	BookTextView &bookTextView() const;
 	void showBookTextView();
