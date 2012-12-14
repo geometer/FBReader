@@ -17,6 +17,7 @@
  * 02110-1301, USA.
  */
 
+#include <ZLibrary.h>
 #include <ZLStringUtil.h>
 #include <ZLExecutionUtil.h>
 
@@ -222,7 +223,7 @@ std::string NetworkCatalogRootTree::TopupAccountAction::text(const ZLResource &r
 }
 
 void NetworkCatalogRootTree::TopupAccountAction::run() {
-	FBReader::Instance().openLinkInBrowser(myManager.topupAccountLink());
+	ZLibrary::openUrl(myManager.topupAccountLink());
 	NetworkLibrary::Instance().refresh();
 }
 

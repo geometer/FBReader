@@ -17,6 +17,7 @@
  * 02110-1301, USA.
  */
 
+#include <ZLibrary.h>
 #include <ZLResource.h>
 #include <ZLFile.h>
 #include <ZLStringUtil.h>
@@ -328,7 +329,7 @@ std::string NetworkBookBuyInBrowserAction::text(const ZLResource &resource) cons
 void NetworkBookBuyInBrowserAction::run() {
 	shared_ptr<BookReference> reference = myBook.reference(BookReference::BUY_IN_BROWSER);
 	if (!reference.isNull()) {
-		FBReader::Instance().openLinkInBrowser(reference->URL);
+		ZLibrary::openUrl(reference->URL);
 	}
 	NetworkLibrary::Instance().refresh();
 }
