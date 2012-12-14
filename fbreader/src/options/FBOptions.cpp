@@ -17,6 +17,10 @@
  * 02110-1301, USA.
  */
 
+#include <algorithm>
+
+#include <ZLibrary.h>
+
 #include "FBOptions.h"
 
 FBOptions* FBOptions::ourInstance = 0;
@@ -25,10 +29,10 @@ static const std::string OPTIONS = "Options";
 static const std::string COLORS = "Colors";
 
 FBOptions::FBOptions() :
-	LeftMarginOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "LeftMargin", 0, 1000, 4),
-	RightMarginOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "RightMargin", 0, 1000, 4),
-	TopMarginOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "TopMargin", 0, 1000, 0),
-	BottomMarginOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "BottomMargin", 0, 1000, 4),
+	LeftMarginOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "LeftMargin", 0, 1000, std::min(ZLibrary::displayDPI() / 2, ZLibrary::displayPixelsWidth() / 40)),
+	RightMarginOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "RightMargin", 0, 1000, std::min(ZLibrary::displayDPI() / 2, ZLibrary::displayPixelsWidth() / 40)),
+	TopMarginOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "TopMargin", 0, 1000, ZLibrary::displayPixelsHeight() / 100),
+	BottomMarginOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "BottomMargin", 0, 1000, ZLibrary::displayPixelsHeight() / 100),
 	BackgroundColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "Background", ZLColor(255, 255, 255)),
 	RegularTextColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "Text", ZLColor(0, 0, 0)) {
 	myColorOptions["internal"] = new ZLColorOption(

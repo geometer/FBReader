@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2004-2012 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,16 +17,13 @@
  * 02110-1301, USA.
  */
 
-#ifndef __SYSTEMOPTIONSDIALOG_H__
-#define __SYSTEMOPTIONSDIALOG_H__
+#include <ZLibrary.h>
+#include <ZLFile.h>
 
-#include "../AbstractOptionsDialog.h"
+#include "ZLQtImageUtil.h"
 
-
-class SystemOptionsDialog: public AbstractOptionsDialog {
-
-public:
-	SystemOptionsDialog();
-};
-
-#endif /* __SYSTEMOPTIONSDIALOG_H__ */
+QPixmap ZLQtImageUtil::pixmap(const std::string &iconName) {
+	const std::string iconPath =
+		ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + iconName;
+	return QPixmap(ZLFile(iconPath).path().c_str());
+}

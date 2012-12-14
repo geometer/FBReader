@@ -26,7 +26,6 @@
 #include "LibraryBookActions.h"
 #include "../library/Book.h"
 #include "../fbreader/FBReader.h"
-#include "../optionsDialog/bookInfo/BookInfoDialog.h"
 
 BookReadAction::BookReadAction(shared_ptr<Book> book) : myBook(book) {
 }
@@ -121,10 +120,13 @@ BookEditInfoAction::BookEditInfoAction(shared_ptr<Book> book) : myBook(book) {
 }
 
 void BookEditInfoAction::run() {
+	// TODO: implement
+	/*
 	if (BookInfoDialog(myBook).dialog().run()) {
 		// TODO: select current node (?) again
 		FBReader::Instance().refreshWindow();
 	}
+	*/
 }
 
 ZLResourceKey BookEditInfoAction::key() const {

@@ -1,5 +1,211 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
+	<node name="Preferences">
+		<node name="title" value="FBReader - настройки"/>
+		<node name="pages">
+			<node name="directories" value="Каталоги"/>
+			<node name="text" value="Параметры текста"/>
+			<node name="lookAndFeel" value="Внешний вид"/>
+			<node name="network" value="Сеть"/>
+			<node name="language" value="Язык"/>
+			<node name="book" value="Текущая книга"/>
+		</node>
+		<node name="scrolling" value="Перелистывание">
+			<node name="keyScrollDelay" value="Задержка между листаниями клавишами"/>
+			<node name="keyLinesToScroll" value="Сколько строк пролистывать за 1 раз"/>
+			<node name="keyLinesToKeep" value="Сколько строк оставлять с предыдущей страницы"/>
+			<node name="enableTapScrolling" value="Включить прокрутку нажатием на экран"/>
+			<node name="fingerOnly" value="Только при нажатии пальцем"/>
+		</node>
+		<node name="Selection" value="Выделение">
+			<node name="enableSelection" value="Разрешить выделение текста"/>
+		</node>
+		<node name="Indicator" value="Индикатор">
+			<node name="type" value="Внешний вид">
+				<node name="osScrollbar" value="полоса прокрутки"/>
+				<node name="pageFooter" value="индикатор внизу"/>
+				<node name="pageHeader" value="колонтитул"/>
+				<node name="none" value="не показывать"/>
+			</node>
+			<node name="height" value="Высота индикатора"/>
+			<node name="offset" value="Отступ от текста"/>
+			<node name="pageNumber" value="Показывать номера страниц"/>
+			<node name="time" value="Показывать текущее время"/>
+			<node name="fontSize" value="Размер шрифта"/>
+			<node name="tocMarks" value="Показывать пометки начала глав"/>
+			<node name="navigation" value="Реагировать на нажатия"/>
+		</node>
+		<node name="Rotation" value="Поворот">
+			<node name="direction" value="Как поворачивать">
+				<node name="disabled" value="Не поворачивать вообще"/>
+				<node name="clockwise" value="На 90 градусов по часовой стрелке"/>
+				<node name="counterclockwise" value="На 90 градусов против часовой стрелки"/>
+				<node name="180" value="На 180 градусов"/>
+				<node name="cycle" value="Переключаться между 4 ориентациями"/>
+			</node>
+		</node>
+		<node name="Keys" value="Клавиши">
+			<node name="grabSystemKeys" value="Перехватывать системные клавиши"/>
+			<node name="separate" value="Свои настройки для каждой ориентации текста"/>
+			<node name="orientation" value="При повороте на:">
+				<node name="degrees0" value="0 градусов"/>
+				<node name="degrees90ccw" value="90 градусов против часовой стрелки"/>
+				<node name="degrees180" value="180 градусов"/>
+				<node name="degrees90cw" value="90 градусов по часовой стрелке"/>
+			</node>
+			<node name="action">
+				<node name="none" value="Никакого действия"/>
+				<node name="library" value="Показать библиотеку"/>
+				<node name="showNetLibrary" value="Сетевые библиотеки"/>
+				<node name="recent" value="Показать прочитанные книги"/>
+				<node name="previousBook" value="Открыть предыдущую книгу"/>
+				<node name="toc" value="Показать оглавление"/>
+				<node name="gotoHome" value="Перейти в начало текста"/>
+				<node name="gotoSectionStart" value="Перейти в начало раздела"/>
+				<node name="gotoSectionEnd" value="Перейти в конец раздела"/>
+				<node name="nextTOCSection" value="Перейти к следующей главе"/>
+				<node name="previousTOCSection" value="Перейти к предыдущей главе"/>
+				<node name="pageForward" value="Пролистнуть страницу вперед"/>
+				<node name="pageBackward" value="Пролистнуть страницу назад"/>
+				<node name="lineForward" value="Пролистнуть строку вперед"/>
+				<node name="lineBackward" value="Пролистнуть строку назад"/>
+				<node name="undo" value="Отменить переход"/>
+				<node name="redo" value="Повторить переход"/>
+				<node name="copyToClipboard" value="Скопировать помеченный текст в буфер"/>
+				<node name="openInDictionary" value="Открыть помеченный текст в словаре"/>
+				<node name="clearSelection" value="Убрать пометку"/>
+				<node name="search" value="Показать диалог поиска"/>
+				<node name="findPrevious" value="Искать назад"/>
+				<node name="findNext" value="Искать вперед"/>
+				<node name="increaseFont" value="Увеличить размер шрифта"/>
+				<node name="decreaseFont" value="Уменьшить размер шрифта"/>
+				<node name="toggleIndicator" value="Показать/спрятать индикатор"/>
+				<node name="toggleFullscreen" value="Включить/выключить полноэкранный режим"/>
+				<node name="rotate" value="Повернуть текст"/>
+				<node name="addBook" value="Добавить файл в библиотеку"/>
+				<node name="cancel" value="Отменить текущий режим"/>
+				<node name="quit" value="Выйти из программы"/>
+				<node name="bookInfo" value="Показать информацию о книге"/>
+				<node name="preferences" value="Показать последний открытый диалог настроек"/>
+			</node>
+			<node name="quitOnCancel" value="Выходить из программы"/>
+			<node name="keyDelay" value="Задержка между нажатиями на клавиши"/>
+		</node>
+		<node name="CSS" value="CSS">
+			<node name="overrideSpecifiedFonts" value="Всегда использовать собственные шрифты"/>
+		</node>
+		<node name="margins" value="Отступы">
+			<node name="left" value="Отступ слева"/>
+			<node name="right" value="Отступ справа"/>
+			<node name="top" value="Отступ сверху"/>
+			<node name="bottom" value="Отступ снизу"/>
+		</node>
+		<node name="Format" value="Форматирование">
+			<node name="optionsFor" value="Настройки для"/>
+			<node name="lineSpacing" value="Интервал">
+				<node name="unchanged" value="&lt;не менять&gt;"/>
+			</node>
+			<node name="firstLineIndent" value="Красная строка"/>
+			<node name="alignment" value="Выравнивание">
+				<node name="left" value="левое"/>
+				<node name="right" value="правое"/>
+				<node name="center" value="по центру"/>
+				<node name="justify" value="по краям"/>
+				<node name="unchanged" value="&lt;не менять&gt;"/>
+			</node>
+			<node name="spaceBefore" value="Пропуск перед"/>
+			<node name="spaceAfter" value="Пропуск после"/>
+			<node name="startIndent" value="Отступ в начале строки"/>
+			<node name="endIndent" value="Отступ в конце строки"/>
+		</node>
+		<node name="Styles" value="Стили">
+			<node name="optionsFor" value="Настройки для"/>
+			<node name="fontFamily" value="Шрифт">
+				<node name="unchanged" value="&lt;не менять&gt;"/>
+			</node>
+			<node name="fontSize" value="Размер"/>
+			<node name="fontSizeDifference" value="Размер"/>
+			<node name="bold" value="Жирный"/>
+			<node name="italic" value="Курсив"/>
+			<node name="allowHyphenations" value="Переносы"/>
+			<node name="autoHyphenations" value="Переносы"/>
+		</node>
+		<node name="Colors" value="Цвета">
+			<node name="colorFor" value="Цвет">
+				<node name="background" value="фона"/>
+				<node name="selectionBackground" value="фона пометки"/>
+				<node name="text" value="обычного текста"/>
+				<node name="internalLink" value="ссылки"/>
+				<node name="externalLink" value="внешней ссылки"/>
+				<node name="bookLink" value="ссылки на книгу"/>
+				<node name="highlighted" value="подсвеченного текста"/>
+				<node name="treeLines" value="линий"/>
+				<node name="indicator" value="индикатора"/>
+			</node>
+		</node>
+		<node name="directoriesLibrary" value="Библиотека">
+			<node name="bookPath" value="Сканировать каталоги из списка"/>
+			<node name="lookInSubdirectories" value="Включая подкаталоги"/>
+			<node name="collectBooksWithNoMetainfo" value="В том числе текстовые файлы"/>
+			<node name="downloadDirectory" value="Сохранять скачанные книги в"/>
+		</node>
+		<node name="connection" value="Connection">
+			<node name="useProxy" value="Использовать прокси-сервер"/>
+			<node name="proxyHost" value="Адрес прокси-сервера"/>
+			<node name="proxyPort" value="Порт прокси-сервера"/>
+			<node name="timeout" value="Максимальное время задержки, секунды"/>
+		</node>
+<!--
+		<node name="Web" value="Web">
+			<node name="enableIntegration" value="Открывать внешние ссылки в %s"/>
+			<node name="defaultText" value="Открывать внешние ссылки в браузере"/>
+			<node name="choice" value="Браузер"/>
+			<node name="command" value="Выполнять команду"/>
+		</node>
+-->
+		<node name="defaultLanguageForBook" value="Книги">
+			<node name="language" value="Язык по умолчанию"/>
+			<node name="encodingSet" value="Набор кодировок по умолчанию"/>
+			<node name="encoding" value="Кодировка по умолчанию"/>
+		</node>
+<!--
+		<node name="Dictionary" value="Словари">
+			<node name="enableIntegration" value="Включить интеграцию с %s"/>
+			<node name="defaultText" value="Включить интеграцию со словарем"/>
+			<node name="choice" value="Использовать"/>
+			<node name="singleClickOpen" value="Открывать словарь по нажатию на слово"/>
+		</node>
+-->
+		<node name="bookGeneral" value="Основная информация">
+			<node name="file" value="Файл"/>
+			<node name="title" value="Название"/>
+			<node name="language" value="Язык"/>
+			<node name="encodingSet" value="Набор кодировок"/>
+			<node name="encoding" value="Кодировка"/>
+		</node>
+		<node name="authors" value="Авторы">
+			<node name="authorDisplayName" value="Имя автора"/>
+		</node>
+		<node name="series" value="Серия">
+			<node name="seriesTitle" value="Название серии"/>
+			<node name="bookIndex" value="Номер книги в серии"/>
+		</node>
+		<node name="tags" value="Категории">
+			<node name="tags" value="Название категории"/>
+		</node>
+		<node name="text" value="Текст">
+			<node name="breakType" value="Новый параграф по"/>
+			<node name="ignoreIndent" value="Игнорировать отступы меньше"/>
+			<node name="buildTOC" value="Строить оглавление"/>
+			<node name="emptyLines" value="Пустых строк между главами"/>
+		</node>
+		<node name="&lt;PRE&gt;" value="&lt;PRE&gt;">
+			<node name="breakType" value="Новый параграф по"/>
+			<node name="ignoreIndent" value="Игнорировать отступы меньше"/>
+			<node name="buildTOC" value="Строить оглавление"/>
+			<node name="emptyLines" value="Пустых строк между главами"/>
+		</node>
+	</node>
 	<node name="libraryView">
 		<node name="authorNode">
 			<node name="expandTree" value="Показать книги"/>
@@ -116,17 +322,37 @@
 		<node name="extraLinks" value="Ссылки"/>
 	</node>
 	<node name="menu">
-		<node name="books" value="Книги">
-			<node name="recent" value="Недавние"/>
-			<node name="library" value="Библиотека"/>
-			<node name="networkLibrary" value="Сетевая библиотека"/>
-			<node name="addBook" value="Открыть файл…"/>
-		</node>
-		<node name="navigation" value="Navigation" toBeTranslated="true">
-			<node name="toc" value="Table of Contents" toBeTranslated="true"/>
-		</node>
+		<node name="FBReader" value="FBReader"/>
+		<node name="about" value="О программе FBReader"/>
+		<node name="preferences" value="Настройки…"/>
+		<node name="books" value="Книги"/>
+		<node name="recent" value="Недавние"/>
+		<node name="library" value="Библиотека"/>
+		<node name="networkLibrary" value="Сетевая библиотека…"/>
+		<node name="addBook" value="Открыть файл…"/>
+		<node name="navigation" value="Навигация"/>
+		<node name="gotoHome" value="В начало книги"/>
+		<node name="gotoPageNumber" value="На страницу…"/>
+		<node name="gotoSectionStart" value="В начало раздела"/>
+		<node name="gotoSectionEnd" value="В конец раздела"/>
+		<node name="toc" value="Оглавление"/>
+		<node name="nextTOCSection" value="К следующей главе"/>
+		<node name="previousTOCSection" value="К предыдущей главе"/>
+		<node name="undo" value="Назад"/>
+		<node name="redo" value="Вперед"/>
+		<node name="view" value="Внешний вид"/>
+		<node name="rotate" value="Повернуть"/>
+		<node name="toggleFullscreen" value="Полноэкранный режим"/>
+		<node name="clearSelection" value="Убрать пометку"/>
+		<node name="increaseFont" value="Увеличить размер шрифта"/>
+		<node name="decreaseFont" value="Уменьшить размер шрифта"/>
+		<node name="search" value="Искать…"/>
+		<node name="findNext" value="Искать дальше"/>
+		<node name="findPrevious" value="Искать раньше"/>
+		<node name="clearSearchResults" value="Очистить результаты поиска"/>
+		<node name="quit" value="Выход"/>
+<!--
 		<node name="bookInfo" value="Информация о книге…"/>
-		<node name="toc" value="Содержание"/>
 		<node name="library" value="Открыть библиотеку"/>
 		<node name="showNetLibrary" value="Сетевая библиотека"/>
 		<node name="addBook" value="Открыть файл…"/>
@@ -138,12 +364,6 @@
 			<node name="addBook" value="Добавить файл…"/>
 			<node name="showHelp" value="О программе FBReader"/>
 		</node>
-		<node name="gotoHome" value="В начало книги"/>
-		<node name="gotoPageNumber" value="На страницу…"/>
-		<node name="gotoSectionStart" value="В начало раздела"/>
-		<node name="gotoSectionEnd" value="В конец раздела"/>
-		<node name="nextTOCSection" value="К следующей главе"/>
-		<node name="previousTOCSection" value="К предыдущей главе"/>
 		<node name="navigate" value="Переход">
 			<node name="gotoHome" value="В начало книги"/>
 			<node name="gotoPageNumber" value="На страницу…"/>
@@ -151,26 +371,15 @@
 			<node name="gotoSectionEnd" value="В конец раздела"/>
 			<node name="nextTOCSection" value="К следующей главе"/>
 			<node name="previousTOCSection" value="К предыдущей главе"/>
-			<node name="undo" value="Назад"/>
-			<node name="redo" value="Вперед"/>
 		</node>
 		<node name="selection" value="Пометка">
 			<node name="copyToClipboard" value="Скопировать в буфер"/>
 			<node name="openInDictionary" value="Посмотреть в словаре"/>
-			<node name="clearSelection" value="Убрать пометку"/>
-		</node>
-		<node name="search" value="Поиск">
-			<node name="search" value="Искать…"/>
-			<node name="findNext" value="Искать дальше"/>
-			<node name="findPrevious" value="Искать раньше"/>
 		</node>
 		<node name="view" value="Внешний вид">
-			<node name="rotate" value="Повернуть"/>
-			<node name="toggleFullscreen" value="На весь экран"/>
 			<node name="toggleIndicator" value="Индикатор позиции"/>
 		</node>
-		<node name="preferences" value="Последние настройки…"/>
-		<node name="quit" value="Закрыть"/>
+-->
 	</node>
 	<node name="toolbar">
 		<node name="showReading">
@@ -179,36 +388,15 @@
 		</node>
 		<node name="library">
 			<node name="label" value="Библиотека"/>
-			<node name="tooltip" value="Библиотека"/>
-			<node name="popup" value="Недавно прочитанные книги"/>
-		</node>
-		<node name="recent">
-			<node name="label" value="История"/>
-			<node name="tooltip" value="Недавно прочитанные книги"/>
-		</node>
-		<node name="byAuthor">
-			<node name="label" value="По авторам"/>
-			<node name="tooltip" value="По авторам"/>
-		</node>
-		<node name="byTag">
-			<node name="label" value="По категориям"/>
-			<node name="tooltip" value="По категориям"/>
+			<node name="tooltip" value="Дерево библиотека"/>
 		</node>
 		<node name="addBook">
 			<node name="label" value="Добавить"/>
 			<node name="tooltip" value="Добавить файл в библиотеку"/>
 		</node>
-		<node name="showNetLibrary">
-			<node name="label" value="Сеть"/>
-			<node name="tooltip" value="Доступ к сетевым библиотекам"/>
-		</node>
-		<node name="searchOnNetwork">
-			<node name="label" value="Быстрый поиск"/>
-			<node name="tooltip" value="Быстрый поиск в сети"/>
-		</node>
-		<node name="advancedSearchOnNetwork">
-			<node name="label" value="Поиск"/>
-			<node name="tooltip" value="Поиск в сети"/>
+		<node name="networkLibrary">
+			<node name="label" value="Сетевая библиотека"/>
+			<node name="tooltip" value="Открыть окно сетевой библиотеки"/>
 		</node>
 		<node name="gotoHome">
 			<node name="label" value="В начало"/>
@@ -254,34 +442,6 @@
 			<node name="label" value="Фильтровать"/>
 			<node name="tooltip" value="Фильтровать"/>
 		</node>
-		<node name="preferences">
-			<node name="label" value="Последний открытый диалог настроек"/>
-			<node name="tooltip" value="Последний открытый диалог настроек"/>
-		</node>
-		<node name="bookInfo">
-			<node name="label" value="О книге"/>
-			<node name="tooltip" value="Информация о книге"/>
-		</node>
-		<node name="libraryOptions">
-			<node name="label" value="Настройки библиотеки"/>
-			<node name="tooltip" value="Показать диалог настроек библиотеки"/>
-		</node>
-		<node name="networkOptions">
-			<node name="label" value="Сетевые настройки"/>
-			<node name="tooltip" value="Показать диалог сетевых настроек"/>
-		</node>
-		<node name="systemOptions">
-			<node name="label" value="Системные настройки"/>
-			<node name="tooltip" value="Показать диалог системных настроек"/>
-		</node>
-		<node name="readingOptions">
-			<node name="label" value="Настройки чтения"/>
-			<node name="tooltip" value="Показать диалог настроек чтения"/>
-		</node>
-		<node name="lookAndFeelOptions">
-			<node name="label" value="Настройки внешнего вида"/>
-			<node name="tooltip" value="Показать диалог настроек внешнего вида"/>
-		</node>
 	</node>
 	<node name="dialog">
 		<node name="button">
@@ -294,246 +454,16 @@
 			<node name="buy" value="&amp;Купить"/>
 			<node name="buyAndDownload" value="Купить и &amp;скачать"/>
 		</node>
-		<node name="LibraryOptionsDialog">
-			<node name="title" value="FBReader - Настройки библиотеки"/>
-			<node name="tab">
-				<node name="Library" value="Библиотека">
-					<node name="bookPath" value="Каталоги с книгами"/>
-					<node name="lookInSubdirectories" value="Искать книги в подкаталогах"/>
-					<node name="collectBooksWithoutMetaInfo" value="Сканировать книги без метаинформации"/>
-					<node name="downloadDirectory" value="Каталог для загружаемых книг"/>
-				</node>
-			</node>
-		</node>
-		<node name="NetworkOptionsDialog">
-			<node name="title" value="FBReader - Сетевые настройки"/>
-			<node name="tab">
-				<node name="NetworkLibrary" value="Поиск в сети">
-				</node>
-				<node name="Connection" value="Connection">
-					<node name="useProxy" value="Использовать прокси-сервер"/>
-					<node name="proxyHost" value="Адрес прокси-сервера"/>
-					<node name="proxyPort" value="Порт прокси-сервера"/>
-					<node name="timeout" value="Максимальное время задержки, секунды"/>
-				</node>
-				<node name="Web" value="Web">
-					<node name="enableIntegration" value="Открывать внешние ссылки в %s"/>
-					<node name="defaultText" value="Открывать внешние ссылки в браузере"/>
-					<node name="choice" value="Браузер"/>
-					<node name="command" value="Выполнять команду"/>
-				</node>
-			</node>
-		</node>
-		<node name="SystemOptionsDialog">
-			<node name="title" value="FBReader - Системные настройки"/>
-			<node name="tab">
-				<node name="Language" value="Язык">
-					<node name="autoDetect" value="Автоматически определять язык и кодировку"/>
-					<node name="defaultLanguage" value="Язык по умолчанию"/>
-					<node name="defaultEncodingSet" value="Набор кодировок по умолчанию"/>
-					<node name="defaultEncoding" value="Кодировка по умолчанию"/>
-					<node name="useWindows1252Hack" value="Использовать windows-1252 вместо iso-8859-1"/>
-				</node>
-				<node name="Config" value="Настройки">
-					<node name="autoSave" value="Автоматически сохранять состояние"/>
-					<node name="timeout" value="Время между сохранениями, секунды"/>
-				</node>
-				<node name="Dictionary" value="Словари">
-					<node name="enableIntegration" value="Включить интеграцию с %s"/>
-					<node name="defaultText" value="Включить интеграцию со словарем"/>
-					<node name="choice" value="Использовать"/>
-					<node name="singleClickOpen" value="Открывать словарь по нажатию на слово"/>
-				</node>
-				<node name="Maemo" value="Maemo">
-					<node name="keyActionOnRelease" value="Реагировать на отпускание клавиши, а не на нажатие"/>
-					<node name="minStylusPressure" value="Минимальное давление стилуса"/>
-					<node name="maxStylusPressure" value="Максимальное давление стилуса"/>
-				</node>
-			</node>
-		</node>
-		<node name="ReadingOptionsDialog">
-			<node name="title" value="FBReader - Настройки чтения"/>
-			<node name="tab">
-				<node name="Scrolling" value="Перелистывание">
-					<node name="keyScrollDelay" value="Задержка между листаниями клавишами"/>
-					<node name="keyLinesToScroll" value="Сколько строк пролистывать за 1 раз"/>
-					<node name="keyLinesToKeep" value="Сколько строк оставлять с предыдущей страницы"/>
-					<node name="enableTapScrolling" value="Включить прокрутку нажатием на экран"/>
-					<node name="fingerOnly" value="Только при нажатии пальцем"/>
-				</node>
-				<node name="Selection" value="Выделение">
-					<node name="enableSelection" value="Разрешить выделение текста"/>
-				</node>
-				<node name="Indicator" value="Индикатор">
-					<node name="type" value="Внешний вид">
-						<node name="osScrollbar" value="полоса прокрутки"/>
-						<node name="fbIndicator" value="индикатор внизу"/>
-						<node name="none" value="не показывать"/>
-					</node>
-					<node name="height" value="Высота индикатора"/>
-					<node name="offset" value="Отступ от текста"/>
-					<node name="pageNumber" value="Показывать номера страниц"/>
-					<node name="time" value="Показывать текущее время"/>
-					<node name="fontSize" value="Размер шрифта"/>
-					<node name="tocMarks" value="Показывать пометки начала глав"/>
-					<node name="navigation" value="Реагировать на нажатия"/>
-				</node>
-				<node name="Rotation" value="Поворот">
-					<node name="direction" value="Как поворачивать">
-						<node name="disabled" value="Не поворачивать вообще"/>
-						<node name="clockwise" value="На 90 градусов по часовой стрелке"/>
-						<node name="counterclockwise" value="На 90 градусов против часовой стрелки"/>
-						<node name="180" value="На 180 градусов"/>
-						<node name="cycle" value="Переключаться между 4 ориентациями"/>
-					</node>
-				</node>
-				<node name="Keys" value="Клавиши">
-					<node name="grabSystemKeys" value="Перехватывать системные клавиши"/>
-					<node name="separate" value="Свои настройки для каждой ориентации текста"/>
-					<node name="orientation" value="При повороте на:">
-						<node name="degrees0" value="0 градусов"/>
-						<node name="degrees90ccw" value="90 градусов против часовой стрелки"/>
-						<node name="degrees180" value="180 градусов"/>
-						<node name="degrees90cw" value="90 градусов по часовой стрелке"/>
-					</node>
-					<node name="action">
-						<node name="none" value="Никакого действия"/>
-						<node name="library" value="Показать библиотеку"/>
-						<node name="showNetLibrary" value="Сетевые библиотеки"/>
-						<node name="recent" value="Показать прочитанные книги"/>
-						<node name="previousBook" value="Открыть предыдущую книгу"/>
-						<node name="toc" value="Показать оглавление"/>
-						<node name="gotoHome" value="Перейти в начало текста"/>
-						<node name="gotoSectionStart" value="Перейти в начало раздела"/>
-						<node name="gotoSectionEnd" value="Перейти в конец раздела"/>
-						<node name="nextTOCSection" value="Перейти к следующей главе"/>
-						<node name="previousTOCSection" value="Перейти к предыдущей главе"/>
-						<node name="pageForward" value="Пролистнуть страницу вперед"/>
-						<node name="pageBackward" value="Пролистнуть страницу назад"/>
-						<node name="lineForward" value="Пролистнуть строку вперед"/>
-						<node name="lineBackward" value="Пролистнуть строку назад"/>
-						<node name="undo" value="Отменить переход"/>
-						<node name="redo" value="Повторить переход"/>
-						<node name="copyToClipboard" value="Скопировать помеченный текст в буфер"/>
-						<node name="openInDictionary" value="Открыть помеченный текст в словаре"/>
-						<node name="clearSelection" value="Убрать пометку"/>
-						<node name="search" value="Показать диалог поиска"/>
-						<node name="findPrevious" value="Искать назад"/>
-						<node name="findNext" value="Искать вперед"/>
-						<node name="increaseFont" value="Увеличить размер шрифта"/>
-						<node name="decreaseFont" value="Уменьшить размер шрифта"/>
-						<node name="toggleIndicator" value="Показать/спрятать индикатор"/>
-						<node name="toggleFullscreen" value="Включить/выключить полноэкранный режим"/>
-						<node name="rotate" value="Повернуть текст"/>
-						<node name="addBook" value="Добавить файл в библиотеку"/>
-						<node name="cancel" value="Отменить текущий режим"/>
-						<node name="quit" value="Выйти из программы"/>
-						<node name="bookInfo" value="Показать информацию о книге"/>
-						<node name="preferences" value="Показать последний открытый диалог настроек"/>
-					</node>
-					<node name="quitOnCancel" value="Выходить из программы"/>
-					<node name="keyDelay" value="Задержка между нажатиями на клавиши"/>
-				</node>
-			</node>
-		</node>
-		<node name="LookAndFeelOptionsDialog">
-			<node name="title" value="FBReader - Настройки внешнего вида"/>
-			<node name="tab">
-				<node name="CSS" value="CSS">
-					<node name="overrideSpecifiedFonts" value="Всегда использовать собственные шрифты"/>
-				</node>
-				<node name="Margins" value="Отступы">
-					<node name="left" value="Отступ слева"/>
-					<node name="right" value="Отступ справа"/>
-					<node name="top" value="Отступ сверху"/>
-					<node name="bottom" value="Отступ снизу"/>
-				</node>
-				<node name="Format" value="Форматирование">
-					<node name="optionsFor" value="Настройки для"/>
-					<node name="lineSpacing" value="Интервал">
-						<node name="unchanged" value="&lt;не менять&gt;"/>
-					</node>
-					<node name="firstLineIndent" value="Красная строка"/>
-					<node name="alignment" value="Выравнивание">
-						<node name="left" value="левое"/>
-						<node name="right" value="правое"/>
-						<node name="center" value="по центру"/>
-						<node name="justify" value="по краям"/>
-						<node name="unchanged" value="&lt;не менять&gt;"/>
-					</node>
-					<node name="spaceBefore" value="Пропуск перед"/>
-					<node name="spaceAfter" value="Пропуск после"/>
-					<node name="startIndent" value="Отступ в начале строки"/>
-					<node name="endIndent" value="Отступ в конце строки"/>
-				</node>
-				<node name="Styles" value="Стили">
-					<node name="optionsFor" value="Настройки для"/>
-					<node name="fontFamily" value="Шрифт">
-						<node name="unchanged" value="&lt;не менять&gt;"/>
-					</node>
-					<node name="fontSize" value="Размер"/>
-					<node name="fontSizeDifference" value="Размер"/>
-					<node name="bold" value="Жирный"/>
-					<node name="italic" value="Курсив"/>
-					<node name="allowHyphenations" value="Переносы"/>
-					<node name="autoHyphenations" value="Переносы"/>
-				</node>
-				<node name="Colors" value="Цвета">
-					<node name="colorFor" value="Цвет">
-						<node name="background" value="фона"/>
-						<node name="selectionBackground" value="фона пометки"/>
-						<node name="text" value="обычного текста"/>
-						<node name="internalLink" value="ссылки"/>
-						<node name="externalLink" value="внешней ссылки"/>
-						<node name="bookLink" value="ссылки на книгу"/>
-						<node name="highlighted" value="подсвеченного текста"/>
-						<node name="treeLines" value="линий"/>
-						<node name="indicator" value="индикатора"/>
-					</node>
-				</node>
-			</node>
-		</node>
-		<node name="InfoDialog">
-			<node name="title" value="FBReader - Информация о книге"/>
-			<node name="tab">
-				<node name="Common" value="Основная информация">
-					<node name="file" value="Файл"/>
-					<node name="title" value="Название"/>
-					<node name="language" value="Язык"/>
-					<node name="encodingSet" value="Набор кодировок"/>
-					<node name="encoding" value="Кодировка"/>
-				</node>
-				<node name="Authors" value="Авторы">
-					<node name="authorDisplayName" value="Имя автора"/>
-				</node>
-				<node name="Series" value="Серия">
-					<node name="seriesTitle" value="Название серии"/>
-					<node name="bookIndex" value="Номер книги в серии"/>
-				</node>
-				<node name="Tags" value="Категории">
-					<node name="tags" value="Название категории"/>
-				</node>
-				<node name="Text" value="Текст">
-					<node name="breakType" value="Новый параграф по"/>
-					<node name="ignoreIndent" value="Игнорировать отступы меньше"/>
-					<node name="buildTOC" value="Строить оглавление"/>
-					<node name="emptyLines" value="Пустых строк между главами"/>
-				</node>
-				<node name="&lt;PRE&gt;" value="&lt;PRE&gt;">
-					<node name="breakType" value="Новый параграф по"/>
-					<node name="ignoreIndent" value="Игнорировать отступы меньше"/>
-					<node name="buildTOC" value="Строить оглавление"/>
-					<node name="emptyLines" value="Пустых строк между главами"/>
-				</node>
-			</node>
-		</node>
 		<node name="AuthorInfoDialog">
 			<node name="title" value="FBReader - Информация об авторе"/>
 			<node name="name" value="Имя"/>
 			<node name="sortKey" value="Сортировать по"/>
 		</node>
 		<node name="addFileDialog">
-			<node name="title" value="FBReader - Добавление книги в библиотеку"/>
+			<node name="title" value="Добавить книгу"/>
+		</node>
+		<node name="openFileDialog">
+			<node name="title" value="Открыть книгу"/>
 		</node>
 		<node name="textSearchDialog">
 			<node name="title" value="Поиск по тексту"/>

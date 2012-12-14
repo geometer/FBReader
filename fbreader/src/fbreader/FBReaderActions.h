@@ -34,14 +34,8 @@ public:
 	static const std::string RECENT_BOOKS;
 	static const std::string SHOW_NETWORK_LIBRARY;
 	static const std::string SHOW_TOC;
-	static const std::string SHOW_HELP;
-	static const std::string SHOW_OPTIONS_DIALOG;
-	static const std::string SHOW_BOOK_INFO_DIALOG;
-	static const std::string SHOW_LIBRARY_OPTIONS_DIALOG;
-	static const std::string SHOW_NETWORK_OPTIONS_DIALOG;
-	static const std::string SHOW_SYSTEM_OPTIONS_DIALOG;
-	static const std::string SHOW_READING_OPTIONS_DIALOG;
-	static const std::string SHOW_LOOKANDFEEL_OPTIONS_DIALOG;
+	static const std::string ABOUT;
+	static const std::string SHOW_PREFERENCES_DIALOG;
 	static const std::string UNDO;
 	static const std::string REDO;
 
@@ -110,43 +104,13 @@ private:
 	FBReader::ViewMode myModeToSet;
 };
 
-class ShowHelpAction : public ZLApplication::Action {
+class ShowAboutDialogAction : public ZLApplication::Action {
 
 public:
 	void run();
 };
 
 class ShowOptionsDialogAction : public ZLApplication::Action {
-
-public:
-	void run();
-};
-
-class ShowLibraryOptionsDialogAction : public ZLApplication::Action {
-
-public:
-	void run();
-};
-
-class ShowNetworkOptionsDialogAction : public ZLApplication::Action {
-
-public:
-	void run();
-};
-
-class ShowSystemOptionsDialogAction : public ZLApplication::Action {
-
-public:
-	void run();
-};
-
-class ShowReadingOptionsDialogAction : public ZLApplication::Action {
-
-public:
-	void run();
-};
-
-class ShowLookAndFeelOptionsDialogAction : public ZLApplication::Action {
 
 public:
 	void run();
@@ -182,10 +146,10 @@ public:
 	void run();
 };
 
-class ShowBookInfoAction : public ModeDependentAction {
+class ShowPreferencesAction : public ModeDependentAction {
 
 public:
-	ShowBookInfoAction();
+	ShowPreferencesAction();
 	void run();
 };
 

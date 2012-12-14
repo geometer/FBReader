@@ -45,7 +45,7 @@ AddBookAction::AddBookAction(int visibleInModes) :
 }
 
 void AddBookAction::run() {
-	const ZLResourceKey dialogKey("addFileDialog");
+	const ZLResourceKey dialogKey("openFileDialog");
 
 	FileFilter filter;
 	shared_ptr<ZLOpenFileDialog> dialog = ZLDialogManager::Instance().createOpenFileDialog(dialogKey, DirectoryOption.value(), FileOption.value(), filter);

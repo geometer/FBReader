@@ -17,32 +17,51 @@
  * 02110-1301, USA.
  */
 
-#ifndef __BOOKINFODIALOG_H__
-#define __BOOKINFODIALOG_H__
+#ifndef __OPTIONSDIALOG_H__
+#define __OPTIONSDIALOG_H__
 
 #include <string>
 
 #include <ZLOptionEntry.h>
+#include <ZLRunnable.h>
 
-#include "../../formats/FormatPlugin.h"
+#include "../formats/FormatPlugin.h"
 
 class ZLOptionsDialog;
 class ZLDialogContent;
-class AuthorDisplayNameEntry;
-class SeriesTitleEntry;
-class BookIndexEntry;
-class BookTagEntry;
 
-class BookInfoDialog {
+class AuthorDisplayNameEntry;
+class BookTagEntry;
+class OptionsPage;
+class SeriesTitleEntry;
+class SeriesIndexEntry;
+
+class OptionsDialog {
 
 public:
-	BookInfoDialog(shared_ptr<Book> book);
+	class ApplyAction : public ZLRunnable {
+
+	public:
+		ApplyAction(OptionsDialog &dialog);
+		void run();
+
+	private:
+		OptionsDialog &myInfoDialog;
+	};
+
+public:
+	OptionsDialog(shared_ptr<Book> book);
+	~OptionsDialog();
 
 	ZLOptionsDialog &dialog();
 
 private:
 	void initAuthorEntries();
 	void initTagEntries();
+
+private:
+	void createIndicatorTab();
+	void createKeyBindingsTab();
 
 private:
 	shared_ptr<ZLOptionsDialog> myDialog;
@@ -53,7 +72,7 @@ private:
 	ZLComboOptionEntry *myEncodingEntry;
 	ZLComboOptionEntry *myLanguageEntry;
 	SeriesTitleEntry *mySeriesTitleEntry;
-	BookIndexEntry *myBookIndexEntry;
+	SeriesIndexEntry *mySeriesIndexEntry;
 
 	ZLDialogContent *myTagsTab;
 	std::vector<BookTagEntry *> myTagEntries;
@@ -65,9 +84,12 @@ private:
 	std::vector<AuthorDisplayNameEntry *> myAuthorEntries;
 	bool myAuthorsDone;
 
+	shared_ptr<OptionsPage> myFormatPage;
+	shared_ptr<OptionsPage> myStylePage;
+
 friend class AuthorDisplayNameEntry;
 friend class SeriesTitleEntry;
-friend class BookIndexEntry;
+friend class SeriesIndexEntry;
 friend class BookTitleEntry;
 friend class BookEncodingEntry;
 friend class BookLanguageEntry;
@@ -75,6 +97,6 @@ friend class BookTagEntry;
 friend class BookInfoApplyAction;
 };
 
-inline ZLOptionsDialog &BookInfoDialog::dialog() { return *myDialog; }
+inline ZLOptionsDialog &OptionsDialog::dialog() { return *myDialog; }
 
-#endif /* __BOOKINFODIALOG_H__ */
+#endif /* __OPTIONSDIALOG_H__ */

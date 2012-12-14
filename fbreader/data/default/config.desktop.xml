@@ -14,4 +14,7 @@
     <option name="BookPath" value="~/Books:~/FBooks"/>
     <option name="DownloadDirectory" value="~/Books"/>
   </group>
+  <group name="Indicator">
+    <option name="Type" value="2"/>
+  </group>
 </config>

@@ -47,24 +47,17 @@ protected:
 	
 public:
 	virtual ~ZLOptionsDialog();
-	virtual ZLDialogContent &createTab(const ZLResourceKey &key) = 0;
+	virtual ZLDialogContent &createTab(const ZLResourceKey &pageKey, const ZLResourceKey &tabKey) = 0;
 	void createPlatformDependentTabs();
-	virtual bool run();
+	virtual bool run() = 0;
 
 protected:
-	virtual const std::string &selectedTabKey() const = 0;
-	virtual void selectTab(const ZLResourceKey &key) = 0;
-	virtual bool runInternal() = 0;
-
 	void accept();
 
 	const std::string &caption() const;
-	const ZLResource &tabResource(const ZLResourceKey &key) const;
-
-protected:
-	ZLStringOption TabOption;
 
 private:
+protected:
 	const ZLResource &myResource;
 
 protected:

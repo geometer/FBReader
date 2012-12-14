@@ -34,13 +34,7 @@
 #include "FBReaderActions.h"
 #include "BookTextView.h"
 #include "ContentsView.h"
-#include "../optionsDialog/bookInfo/BookInfoDialog.h"
-#include "../optionsDialog/library/LibraryOptionsDialog.h"
-#include "../optionsDialog/network/NetworkOptionsDialog.h"
-#include "../optionsDialog/system/SystemOptionsDialog.h"
-#include "../optionsDialog/reading/ReadingOptionsDialog.h"
-#include "../optionsDialog/lookAndFeel/OptionsPage.h"
-#include "../optionsDialog/lookAndFeel/LookAndFeelOptionsDialog.h"
+#include "../optionsDialog/OptionsDialog.h"
 
 #include "../bookmodel/BookModel.h"
 #include "../options/FBTextStyle.h"
@@ -64,52 +58,8 @@ void SetModeAction::run() {
 	FBReader::Instance().setMode(myModeToSet);
 }
 
-void ShowHelpAction::run() {
-	FBReader &fbreader = FBReader::Instance();
-	shared_ptr<Book> book = BooksDBUtil::getBook(fbreader.helpFileName(ZLibrary::Language()));
-	if (book.isNull()) {
-		book = BooksDBUtil::getBook(fbreader.helpFileName("en"));
-	}
-	if (!book.isNull()) {
-		fbreader.openBook(book);
-		fbreader.setMode(FBReader::BOOK_TEXT_MODE);
-		fbreader.refreshWindow();
-	} else {
-		ZLDialogManager::Instance().errorBox(ZLResourceKey("noHelpBox"));
-	}
-}
-
-void ShowOptionsDialogAction::run() {
-	std::string actionId = FBReader::Instance().LastOpenedPreferencesDialog.value();
-	if (actionId.empty()) {
-		return;
-	}
-	FBReader::Instance().doAction(actionId);
-}
-
-void ShowLibraryOptionsDialogAction::run() {
-	FBReader::Instance().LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_LIBRARY_OPTIONS_DIALOG);
-	LibraryOptionsDialog().dialog().run();
-}
-
-void ShowNetworkOptionsDialogAction::run() {
-	FBReader::Instance().LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_NETWORK_OPTIONS_DIALOG);
-	NetworkOptionsDialog().dialog().run();
-}
-
-void ShowSystemOptionsDialogAction::run() {
-	FBReader::Instance().LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_SYSTEM_OPTIONS_DIALOG);
-	SystemOptionsDialog().dialog().run();
-}
-
-void ShowReadingOptionsDialogAction::run() {
-	FBReader::Instance().LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_READING_OPTIONS_DIALOG);
-	ReadingOptionsDialog().dialog().run();
-}
-
-void ShowLookAndFeelOptionsDialogAction::run() {
-	FBReader::Instance().LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_LOOKANDFEEL_OPTIONS_DIALOG);
-	LookAndFeelOptionsDialog().dialog().run();
+void ShowAboutDialogAction::run() {
+	// TODO: implement
 }
 
 ShowContentsAction::ShowContentsAction() : SetModeAction(FBReader::CONTENTS_MODE, FBReader::BOOK_TEXT_MODE) {
@@ -164,14 +114,13 @@ void ScrollToEndOfTextAction::run() {
 	FBReader::Instance().bookTextView().scrollToEndOfText();
 }
 
-ShowBookInfoAction::ShowBookInfoAction() : ModeDependentAction(FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE | FBReader::FOOTNOTE_MODE) {
+ShowPreferencesAction::ShowPreferencesAction() : ModeDependentAction(FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE | FBReader::FOOTNOTE_MODE) {
 }
 
-void ShowBookInfoAction::run() {
+void ShowPreferencesAction::run() {
 	FBReader &fbreader = FBReader::Instance();
-	fbreader.LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_BOOK_INFO_DIALOG);
 	shared_ptr<Book> book = fbreader.myModel->book();
-	if (BookInfoDialog(book).dialog().run()) {
+	if (OptionsDialog(book).dialog().run()) {
 		fbreader.openBook(book);
 		fbreader.refreshWindow();
 	}

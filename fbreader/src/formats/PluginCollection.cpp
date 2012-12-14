@@ -70,7 +70,6 @@ void PluginCollection::deleteInstance() {
 }
 
 PluginCollection::PluginCollection() :
-	LanguageAutoDetectOption(ZLCategoryKey::CONFIG, "Format", "AutoDetect", true),
 	DefaultLanguageOption(ZLCategoryKey::CONFIG, "Format", "DefaultLanguageS", ZLibrary::Language()),
 	DefaultEncodingOption(ZLCategoryKey::CONFIG, "Format", "DefaultEncoding", "UTF-8") {
 }

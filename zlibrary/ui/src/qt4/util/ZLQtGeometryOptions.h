@@ -17,29 +17,28 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLDESKTOPOPTIONSDIALOG_H__
-#define __ZLDESKTOPOPTIONSDIALOG_H__
+#ifndef __ZLQTGEOMETRYOPTIONS_H__
+#define __ZLQTGEOMETRYOPTIONS_H__
 
 #include <string>
 
-#include <ZLOptionsDialog.h>
+#include <ZLOptions.h>
 
-class ZLDesktopOptionsDialog : public ZLOptionsDialog {
+class QWidget;
 
-protected:
-	ZLDesktopOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction);
+class ZLQtGeometryOptions {
 
 public:
-	bool run();
+	ZLQtGeometryOptions(const std::string &prefix);
 
-protected:
-	virtual void setSize(int width, int height) = 0;
-	virtual int width() const = 0;
-	virtual int height() const = 0;
+	void getFromWidget(const QWidget &widget);
+	void setToWidget(QWidget &widget) const;
 
 private:
-	ZLIntegerRangeOption WidthOption;
-	ZLIntegerRangeOption HeightOption;
+	ZLIntegerRangeOption myX;
+	ZLIntegerRangeOption myY;
+	ZLIntegerRangeOption myWidth;
+	ZLIntegerRangeOption myHeight;
 };
 
-#endif /* __ZLDESKTOPOPTIONSDIALOG_H__ */
+#endif /* __ZLQTGEOMETRYOPTIONS_H__ */

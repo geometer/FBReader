@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2004-2012 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,20 +17,15 @@
  * 02110-1301, USA.
  */
 
-#ifndef __READINGOPTIONSDIALOG_H__
-#define __READINGOPTIONSDIALOG_H__
+#ifndef __ZLQTIMAGEUTIL_H__
+#define __ZLQTIMAGEUTIL_H__
 
-#include "../AbstractOptionsDialog.h"
+#include <QtGui/QPixmap>
 
-
-class ReadingOptionsDialog : public AbstractOptionsDialog {
-
-private:
-	void createIndicatorTab();
-	void createKeyBindingsTab();
+class ZLQtImageUtil {
 
 public:
-	ReadingOptionsDialog();
+	static QPixmap pixmap(const std::string &iconName);
 };
 
-#endif /* __READINGOPTIONSDIALOG_H__ */
+#endif /* __ZLQTIMAGEUTIL_H__ */

@@ -1,35 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <toolbar>
 	<button id="showReading"/>
-	<separator/>
-	<toggleButton id="byAuthor" group="booksOrder" default="yes"/>
-	<toggleButton id="byTag" group="booksOrder"/>
-	<separator/>
 	<button id="library"/>
 	<button id="addBook"/>
 	<button id="networkLibrary"/>
 	<separator/>
-	<button id="advancedSearchOnNetwork"/>
-	<textField id="searchOnNetwork" parameterId="networkSearchPattern" maxWidth="25"/>
-	<separator/>
 	<button id="gotoHome"/>
 	<button id="undo"/>
 	<button id="redo"/>
-	<textField id="gotoPageNumberWithParameter" parameterId="pageIndex" maxWidth="5" symbols="digits"/>
 	<separator/>
 	<button id="toc"/>
 	<separator/>
-	<button id="search"/>
-	<button id="findPrevious"/>
-	<button id="findNext"/>
-	<separator/>
-	<menuButton id="preferences"/>
-	<separator/>
-	<button id="rotate"/>
-	<separator/>
-	<button id="showHelp"/>
-	<!--
-	<fillSeparator/>
-	<searchField id="filterLibrary" parameterId="libraryFilter" maxWidth="15"/>
-	-->
+	<button id="preferences"/>
 </toolbar>

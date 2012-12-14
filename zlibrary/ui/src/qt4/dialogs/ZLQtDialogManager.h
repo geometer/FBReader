@@ -29,6 +29,8 @@ class ZLQtDialogManager : public ZLDialogManager {
 public:
 	static void createInstance() { ourInstance = new ZLQtDialogManager(); }
 
+	static QString qtButtonText(const ZLResourceKey &key);
+
 private:
 	ZLQtDialogManager() : myStoredWindow(0) {}
 
@@ -36,7 +38,7 @@ public:
 	void showSearchBox() const;
 
 	shared_ptr<ZLDialog> createDialog(const ZLResourceKey &key) const;
-	shared_ptr<ZLOptionsDialog> createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const;
+	shared_ptr<ZLOptionsDialog> createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction) const;
 	shared_ptr<ZLOpenFileDialog> createOpenFileDialog(const ZLResourceKey &key, const std::string &directoryPath, const std::string &filePath, const ZLOpenFileDialog::Filter &filter) const;
 	shared_ptr<ZLTreeDialog> createTreeDialog(const std::string &windowName, const ZLResource &resource) const;
 

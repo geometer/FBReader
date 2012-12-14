@@ -21,7 +21,7 @@
 
 #include "ZLOptionsDialog.h"
 
-ZLOptionsDialog::ZLOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction) : TabOption(ZLCategoryKey::LOOK_AND_FEEL, resource.name(), "SelectedTab", ""), myResource(resource), myApplyAction(applyAction) {
+ZLOptionsDialog::ZLOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction) : myResource(resource), myApplyAction(applyAction) {
 }
 
 ZLOptionsDialog::~ZLOptionsDialog() {
@@ -29,20 +29,6 @@ ZLOptionsDialog::~ZLOptionsDialog() {
 
 const std::string &ZLOptionsDialog::caption() const {
 	return myResource[ZLDialogManager::DIALOG_TITLE].value();
-}
-
-const ZLResource &ZLOptionsDialog::tabResource(const ZLResourceKey &key) const {
-	return myResource["tab"][key];
-}
-
-bool ZLOptionsDialog::run() {
-	selectTab(ZLResourceKey(TabOption.value()));
-	bool code = runInternal();
-	if (code) {
-		accept();
-	}
-	TabOption.setValue(selectedTabKey());
-	return code;
 }
 
 void ZLOptionsDialog::accept() {

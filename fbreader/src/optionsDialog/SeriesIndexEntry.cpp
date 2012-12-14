@@ -17,14 +17,20 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLQTUTIL_H__
-#define __ZLQTUTIL_H__
+#include "OptionsDialog.h"
+#include "SeriesIndexEntry.h"
 
-#include <QtCore/QString>
+#include "../library/Book.h"
 
-#include <ZLResource.h>
+SeriesIndexEntry::SeriesIndexEntry(OptionsDialog &dialog) : myInfoDialog(dialog) {
+}
 
-QString qtString(const std::string &text);
-QString qtButtonName(const ZLResourceKey &key);
+const std::string &SeriesIndexEntry::initialValue() const {
+	return myInfoDialog.myBook->indexInSeries().value();
+}
 
-#endif /* __ZLQTUTIL_H__ */
+void SeriesIndexEntry::onAccept(const std::string &value) {
+	Book &book = *myInfoDialog.myBook;
+	//TODO implement validation
+	book.setSeries(book.seriesTitle(), Number(value));
+}

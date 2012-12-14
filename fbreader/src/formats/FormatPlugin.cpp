@@ -41,7 +41,7 @@ bool FormatPlugin::detectEncodingAndLanguage(Book &book, ZLInputStream &stream, 
 	if (encoding.empty()) {
 		encoding = collection.DefaultEncodingOption.value();
 	}
-	if (collection.LanguageAutoDetectOption.value() && stream.open()) {
+	if (stream.open()) {
 		static const int BUFSIZE = 65536;
 		char *buffer = new char[BUFSIZE];
 		const std::size_t size = stream.read(buffer, BUFSIZE);
@@ -77,7 +77,7 @@ bool FormatPlugin::detectLanguage(Book &book, ZLInputStream &stream, const std::
 	if (language.empty()) {
 		language = collection.DefaultLanguageOption.value();
 	}
-	if (collection.LanguageAutoDetectOption.value() && stream.open()) {
+	if (stream.open()) {
 		static const int BUFSIZE = 65536;
 		char *buffer = new char[BUFSIZE];
 		const std::size_t size = stream.read(buffer, BUFSIZE);

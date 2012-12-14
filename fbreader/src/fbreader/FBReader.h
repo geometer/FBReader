@@ -32,6 +32,7 @@
 
 #include "../library/Library.h"
 #include "../external/ProgramCollection.h"
+#include "../optionsDialog/OptionsDialog.h"
 
 class ZLFile;
 class ZLMessageHandler;
@@ -74,8 +75,6 @@ public:
 	ZLBooleanOption UseSeparateBindingsOption;
 
 	ZLBooleanOption EnableSingleClickDictionaryOption;
-
-	ZLStringOption LastOpenedPreferencesDialog;
 
 public:
 	FBReader(const std::string &bookToOpen);
@@ -129,7 +128,7 @@ private:
 	friend class OpenBookRunnable;
 	void rebuildCollectionInternal();
 	friend class RebuildCollectionRunnable;
-	friend class OptionsApplyRunnable;
+	friend class OptionsDialog::ApplyAction;
 
 private:
 	ViewMode myMode;
@@ -142,7 +141,6 @@ private:
 	shared_ptr<ZLView> myLibraryByAuthorView;
 	shared_ptr<ZLView> myLibraryByTagView;
 	shared_ptr<ZLPopupData> myRecentBooksPopupData;
-	shared_ptr<ZLPopupData> myPreferencesPopupData;
 
 	ZLTime myLastScrollingTime;
 
@@ -171,7 +169,7 @@ friend class ShowHelpAction;
 //friend class ShowOptionsDialogAction;
 friend class ShowContentsAction;
 friend class AddBookAction;
-friend class ShowBookInfoAction;
+friend class ShowPreferencesAction;
 //friend class ScrollToHomeAction;
 //friend class ScrollToStartOfTextAction;
 //friend class ScrollToEndOfTextAction;

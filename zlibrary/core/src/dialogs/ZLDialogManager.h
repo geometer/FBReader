@@ -49,7 +49,7 @@ public:
 
 	static const std::string &dialogTitle(const ZLResourceKey &key);
 	static const std::string &dialogMessage(const ZLResourceKey &key);
-	static const std::string &buttonName(const ZLResourceKey &key);
+	static const std::string &buttonText(const ZLResourceKey &key);
 	static const std::string &waitMessageText(const ZLResourceKey &key);
 
 protected:
@@ -71,7 +71,7 @@ public:
 	virtual void showSearchBox() const = 0;
 
 	virtual shared_ptr<ZLDialog> createDialog(const ZLResourceKey &key) const = 0;
-	virtual shared_ptr<ZLOptionsDialog> createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction = 0, bool showApplyButton = false) const = 0;
+	virtual shared_ptr<ZLOptionsDialog> createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction = 0) const = 0;
 	virtual shared_ptr<ZLOpenFileDialog> createOpenFileDialog(const ZLResourceKey &key, const std::string &directoryPath, const std::string &filePath, const ZLOpenFileDialog::Filter &filter) const = 0;
 	virtual shared_ptr<ZLTreeDialog> createTreeDialog(const std::string &windowName, const ZLResource &resource) const = 0;
 

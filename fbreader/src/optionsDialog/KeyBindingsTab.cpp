@@ -24,10 +24,10 @@
 #include <optionEntries/ZLSimpleOptionEntry.h>
 #include <optionEntries/ZLSimpleKeyOptionEntry.h>
 
-#include "ReadingOptionsDialog.h"
+#include "OptionsDialog.h"
 
-#include "../../fbreader/FBReader.h"
-#include "../../fbreader/FBReaderActions.h"
+#include "../fbreader/FBReader.h"
+#include "../fbreader/FBReaderActions.h"
 
 class KeyboardControlEntry : public ZLSimpleBooleanOptionEntry {
 
@@ -140,8 +140,7 @@ MultiKeyOptionEntry::MultiKeyOptionEntry(const ZLResource &resource) :
 	addAction(ActionCode::ROTATE_SCREEN);
 
 	// dialogs
-	addAction(ActionCode::SHOW_OPTIONS_DIALOG);
-	addAction(ActionCode::SHOW_BOOK_INFO_DIALOG);
+	addAction(ActionCode::SHOW_PREFERENCES_DIALOG);
 	addAction(ActionCode::ADD_BOOK);
 
 	// quit
@@ -261,8 +260,8 @@ void UseSeparateOptionsEntry::onStateChanged(bool state) {
 }
 
 
-void ReadingOptionsDialog::createKeyBindingsTab() {
-	ZLDialogContent &dialogTab = dialog().createTab(ZLResourceKey("Keys"));
+void OptionsDialog::createKeyBindingsTab() {
+	ZLDialogContent &dialogTab = myDialog->createTab(ZLResourceKey("lookAndFeel"), ZLResourceKey("Keys"));
 	FBReader &fbreader = FBReader::Instance();
 	if (ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::FULL_KEYBOARD_CONTROL, false).value()) {
 		dialogTab.addOption(ZLResourceKey("grabSystemKeys"), new KeyboardControlEntry());

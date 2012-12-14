@@ -20,33 +20,36 @@
 #ifndef __ZLQTOPTIONSDIALOG_H__
 #define __ZLQTOPTIONSDIALOG_H__
 
-#include <QtGui/QWidget>
-#include <QtGui/QTabWidget>
 #include <QtGui/QDialog>
 
-#include "../../../../core/src/desktop/dialogs/ZLDesktopOptionsDialog.h"
+#include <ZLOptionsDialog.h>
 
-class ZLQtOptionsDialog : public QDialog, public ZLDesktopOptionsDialog {
+#include "../util/ZLQtGeometryOptions.h"
+
+class QListWidget;
+class QStackedLayout;
+
+class ZLQtOptionsDialog : public QDialog, public ZLOptionsDialog {
 	Q_OBJECT
 
 public:
-	ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction, bool showApplyButton);
-	ZLDialogContent &createTab(const ZLResourceKey &key);
+	ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction);
+	ZLDialogContent &createTab(const ZLResourceKey &pageKey, const ZLResourceKey &tabKey);
 
 protected:
-	const std::string &selectedTabKey() const;
-	void selectTab(const ZLResourceKey &key);
-	bool runInternal();
-
-	void setSize(int width, int height) { QDialog::resize(width, height); }
-	int width() const { return QDialog::width(); }
-	int height() const { return QDialog::height(); }
+	void resizeEvent(QResizeEvent* event);
+	bool run();
 
 private Q_SLOTS:
 	void apply();
+	void selectPage(int index);
+	void selectTab(int index);
 
 private:
-	QTabWidget *myTabWidget;
+	QListWidget *myCategoryList;
+	QStackedLayout *myStack;
+	ZLQtGeometryOptions myGeometryOptions;
+	ZLStringOption mySelectedTabOption;
 };
 
 #endif /* __ZLQTOPTIONSDIALOG_H__ */

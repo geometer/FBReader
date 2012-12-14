@@ -17,9 +17,12 @@
  * 02110-1301, USA.
  */
 
-#include <QtCore/QTextCodec>
 #include <QtCore/QFile>
+#include <QtCore/QTextCodec>
+#include <QtCore/QUrl>
 #include <QtGui/QApplication>
+#include <QtGui/QDesktopServices>
+#include <QtGui/QDesktopWidget>
 #include <QtGui/QFileOpenEvent>
 
 #include <ZLApplication.h>
@@ -40,6 +43,7 @@
 #include "../../../../core/src/util/ZLKeyUtil.h"
 #include "../../../../core/src/unix/xmlconfig/XMLConfig.h"
 #include "../../../../core/src/unix/iconv/IConvEncodingConverter.h"
+#include "../util/ZLQtUtil.h"
 
 class ZLQtLibraryImplementation : public ZLibraryImplementation {
 
@@ -92,7 +96,7 @@ void ZLQtLibraryImplementation::init(int &argc, char **&argv) {
 
 void ZLQtLibraryImplementation::setStylesheet(const std::string &filename) {
 	const std::string stylesheetPath = ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + filename;
-	QFile file(QString::fromStdString(ZLFile(stylesheetPath).path()));
+	QFile file(::qtString(ZLFile(stylesheetPath).path()));
 	file.open(QFile::ReadOnly);
 	QString styleSheet = QLatin1String(file.readAll());
 	qApp->setStyleSheet(styleSheet);
@@ -113,4 +117,23 @@ void ZLQtLibraryImplementation::run(ZLApplication *application) {
 	qApp->exec();
 	//delete window;
 	delete application;
+}
+
+bool ZLibrary::openUrl(const std::string &url) {
+	return QDesktopServices::openUrl(QUrl(::qtString(url)));
+}
+
+std::size_t ZLibrary::displayDPI() {
+	// TODO: may be logicalDpiY?
+	return QApplication::desktop()->physicalDpiY();
+}
+
+std::size_t ZLibrary::displayPixelsHeight() {
+	// TODO: may be logicalDpiY?
+	return QApplication::desktop()->height();
+}
+
+std::size_t ZLibrary::displayPixelsWidth() {
+	// TODO: may be logicalDpiY?
+	return QApplication::desktop()->width();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2004-2012 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,22 +17,10 @@
  * 02110-1301, USA.
  */
 
-#ifndef __LOOKANDFEELOPTIONSDIALOG_H__
-#define __LOOKANDFEELOPTIONSDIALOG_H__
+#include <ZLDialogManager.h>
 
-#include "../AbstractOptionsDialog.h"
+#include "ZLQtUtil.h"
 
-class OptionsPage;
-
-
-class LookAndFeelOptionsDialog : public AbstractOptionsDialog {
-
-public:
-	LookAndFeelOptionsDialog();
-
-private:
-	shared_ptr<OptionsPage> myFormatPage;
-	shared_ptr<OptionsPage> myStylePage;
-};
-
-#endif /* __LOOKANDFEELOPTIONSDIALOG_H__ */
+QString qtString(const std::string &text) {
+	return QString::fromUtf8(text.c_str());
+}

@@ -52,7 +52,7 @@ PlainTextInfoPage::PlainTextInfoPage(ZLOptionsDialog &dialog, const ZLFile &file
 		}
 	}
 
-	ZLDialogContent &tab = dialog.createTab(key);
+	ZLDialogContent &tab = dialog.createTab(ZLResourceKey("book"), key);
 
 	BreakTypeOptionEntry *breakEntry = new BreakTypeOptionEntry(*this, myFormat.BreakTypeOption);
 	myIgnoredIndentEntry = new ZLSimpleSpinOptionEntry(myFormat.IgnoredIndentOption, 1);

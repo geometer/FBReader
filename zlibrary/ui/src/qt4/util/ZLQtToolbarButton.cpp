@@ -17,16 +17,13 @@
  * 02110-1301, USA.
  */
 
-#include <ZLibrary.h>
-#include <ZLFile.h>
-
 #include "ZLQtToolbarButton.h"
+#include "../util/ZLQtImageUtil.h"
 
 ZLQtToolbarButton::ZLQtToolbarButton(const std::string &iconName, QWidget *parent) : QPushButton(parent) {
-	static std::string imagePrefix = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
-	myIcon = QPixmap(ZLFile(imagePrefix + iconName + ".png").path().c_str());
-	setIconSize(myIcon.size());
-	setIcon(myIcon);
+	QPixmap pixmap = ZLQtImageUtil::pixmap(iconName + ".png");
+	//setIconSize(pixmap.size());
+	setIcon(pixmap);
 	setAutoDefault(false);
 	setFocusPolicy(Qt::NoFocus);
 	// see https://bugreports.qt-project.org/browse/QTBUG-14591

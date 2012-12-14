@@ -20,11 +20,10 @@
 #include <QtGui/QApplication>
 #include <QtGui/QPushButton>
 
-#include <ZLDialogManager.h>
-
 #include "ZLQtDialog.h"
 #include "ZLQtDialogContent.h"
-#include "ZLQtUtil.h"
+#include "ZLQtDialogManager.h"
+#include "../util/ZLQtUtil.h"
 
 ZLQtDialog::ZLQtDialog(const ZLResource &resource) : QDialog(qApp->activeWindow()), myButtonNumber(0) {
 	setModal(true);
@@ -45,7 +44,7 @@ ZLQtDialog::~ZLQtDialog() {
 
 void ZLQtDialog::addButton(const ZLResourceKey &key, bool accept) {
 	QPushButton *button = new QPushButton(myButtonGroup);
-	button->setText(::qtButtonName(key));
+	button->setText(ZLQtDialogManager::qtButtonText(key));
 	myButtonLayout->addWidget(button, 0, myButtonNumber++);
 	connect(button, SIGNAL(clicked()), this, accept ? SLOT(accept()) : SLOT(reject()));
 }

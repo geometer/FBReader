@@ -32,7 +32,7 @@ class ZLOptionEntry;
 class AbstractOptionsDialog {
 
 public:
-	AbstractOptionsDialog(const ZLResourceKey &key, bool showApplyButton);
+	AbstractOptionsDialog(const ZLResourceKey &key);
 
 	ZLOptionsDialog &dialog();
 

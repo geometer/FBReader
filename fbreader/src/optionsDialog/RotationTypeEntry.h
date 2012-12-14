@@ -17,23 +17,29 @@
  * 02110-1301, USA.
  */
 
-#include "LibraryOptionsDialog.h"
+#ifndef __ROTATIONTYPEENTRY_H__
+#define __ROTATIONTYPEENTRY_H__
 
-#include <ZLDialogManager.h>
-#include <ZLOptionsDialog.h>
+#include <vector>
+#include <string>
 
-#include "../../fbreader/FBReader.h"
+#include <ZLOptionEntry.h>
 
-#include "../../network/NetworkLinkCollection.h"
+class ZLIntegerOption;
+class ZLResource;
 
+class RotationTypeEntry : public ZLComboOptionEntry {
 
-LibraryOptionsDialog::LibraryOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("LibraryOptionsDialog"), true) {
+public:
+	RotationTypeEntry(const ZLResource &resource, ZLIntegerOption &angleOption);
 
-	ZLDialogContent &libraryTab = dialog().createTab(ZLResourceKey("Library"));
+	const std::string &initialValue() const;
+	const std::vector<std::string> &values() const;
+	void onAccept(const std::string &value);
 
-	Library &library = Library::Instance();
-	libraryTab.addOption(ZLResourceKey("bookPath"), library.PathOption);
-	libraryTab.addOption(ZLResourceKey("lookInSubdirectories"), library.ScanSubdirsOption);
-	libraryTab.addOption(ZLResourceKey("collectBooksWithoutMetaInfo"), library.CollectAllBooksOption);
-	libraryTab.addOption(ZLResourceKey("downloadDirectory"), NetworkLinkCollection::Instance().DirectoryOption);
-}
+private:
+	ZLIntegerOption &myAngleOption;
+	std::vector<std::string> myValues;
+};
+
+#endif /* __ROTATIONTYPEENTRY_H__ */

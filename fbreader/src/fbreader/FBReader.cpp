@@ -41,7 +41,6 @@
 #include "FootnoteView.h"
 #include "ContentsView.h"
 #include "RecentBooksPopupData.h"
-#include "PreferencesPopupData.h"
 #include "TimeUpdater.h"
 
 #include "../libraryTree/LibraryView.h"
@@ -92,7 +91,6 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	TapScrollingOnFingerOnlyOption(ZLCategoryKey::CONFIG, "TapScrolling", "FingerOnly", true),
 	UseSeparateBindingsOption(ZLCategoryKey::CONFIG, "KeysOptions", "UseSeparateBindings", false),
 	EnableSingleClickDictionaryOption(ZLCategoryKey::CONFIG, "Dictionary", "SingleClick", false),
-	LastOpenedPreferencesDialog(ZLCategoryKey::CONFIG, "PreferencesDialog", "LastOpened", ""),
 	myBindings0(new ZLKeyBindings("Keys")),
 	myBindings90(new ZLKeyBindings("Keys90")),
 	myBindings180(new ZLKeyBindings("Keys180")),
@@ -107,7 +105,6 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	myLibraryByAuthorView = new LibraryByAuthorView(*context());
 	myLibraryByTagView = new LibraryByTagView(*context());
 	myRecentBooksPopupData = new RecentBooksPopupData();
-	myPreferencesPopupData = new PreferencesPopupData();
 	myMode = UNDEFINED_MODE;
 	myPreviousMode = BOOK_TEXT_MODE;
 	setMode(BOOK_TEXT_MODE);
@@ -115,14 +112,8 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ActionCode::SHOW_READING, new UndoAction(FBReader::ALL_MODES & ~FBReader::BOOK_TEXT_MODE));
 	addAction(ActionCode::SHOW_LIBRARY, new SetModeAction(FBReader::LIBRARY_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE));
 	addAction(ActionCode::SHOW_NETWORK_LIBRARY, new ShowNetworkTreeLibraryAction());
-	addAction(ActionCode::SHOW_OPTIONS_DIALOG, new ShowOptionsDialogAction());
 	addAction(ActionCode::SHOW_TOC, new ShowContentsAction());
-	addAction(ActionCode::SHOW_BOOK_INFO_DIALOG, new ShowBookInfoAction());
-	addAction(ActionCode::SHOW_LIBRARY_OPTIONS_DIALOG, new ShowLibraryOptionsDialogAction());
-	addAction(ActionCode::SHOW_NETWORK_OPTIONS_DIALOG, new ShowNetworkOptionsDialogAction());
-	addAction(ActionCode::SHOW_SYSTEM_OPTIONS_DIALOG, new ShowSystemOptionsDialogAction());
-	addAction(ActionCode::SHOW_READING_OPTIONS_DIALOG, new ShowReadingOptionsDialogAction());
-	addAction(ActionCode::SHOW_LOOKANDFEEL_OPTIONS_DIALOG, new ShowLookAndFeelOptionsDialogAction());
+	addAction(ActionCode::SHOW_PREFERENCES_DIALOG, new ShowPreferencesAction());
 	addAction(ActionCode::ADD_BOOK, new AddBookAction(FBReader::BOOK_TEXT_MODE | FBReader::LIBRARY_MODE | FBReader::CONTENTS_MODE));
 	addAction(ActionCode::UNDO, new UndoAction(FBReader::BOOK_TEXT_MODE));
 	addAction(ActionCode::REDO, new RedoAction());
@@ -150,7 +141,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ActionCode::QUIT, new QuitAction());
 	addAction(ActionCode::FORCE_QUIT, new ForceQuitAction());
 	addAction(ActionCode::OPEN_PREVIOUS_BOOK, new OpenPreviousBookAction());
-	addAction(ActionCode::SHOW_HELP, new ShowHelpAction());
+	addAction(ActionCode::ABOUT, new ShowAboutDialogAction());
 	addAction(ActionCode::GOTO_NEXT_TOC_SECTION, new GotoNextTOCSectionAction());
 	addAction(ActionCode::GOTO_PREVIOUS_TOC_SECTION, new GotoPreviousTOCSectionAction());
 	addAction(ActionCode::COPY_SELECTED_TEXT_TO_CLIPBOARD, new CopySelectedTextAction());
@@ -164,7 +155,6 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ActionCode::FILTER_LIBRARY, new FilterLibraryAction());
 
 	registerPopupData(ActionCode::RECENT_BOOKS, myRecentBooksPopupData);
-	registerPopupData(ActionCode::SHOW_OPTIONS_DIALOG, myPreferencesPopupData);
 
 	myOpenFileHandler = new OpenFileHandler();
 	ZLCommunicationManager::Instance().registerHandler("openFile", myOpenFileHandler);

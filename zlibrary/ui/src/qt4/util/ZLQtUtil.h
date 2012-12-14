@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2004-2012 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,16 +17,13 @@
  * 02110-1301, USA.
  */
 
-#ifndef __LIBRARYOPTIONSDIALOG_H__
-#define __LIBRARYOPTIONSDIALOG_H__
+#ifndef __ZLQTUTIL_H__
+#define __ZLQTUTIL_H__
 
-#include "../AbstractOptionsDialog.h"
+#include <QtCore/QString>
 
+#include <ZLResource.h>
 
-class LibraryOptionsDialog : public AbstractOptionsDialog {
+QString qtString(const std::string &text);
 
-public:
-	LibraryOptionsDialog();
-};
-
-#endif /* __LIBRARYOPTIONSDIALOG_H__ */
+#endif /* __ZLQTUTIL_H__ */

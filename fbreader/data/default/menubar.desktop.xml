@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <menubar>
+	<submenu id="FBReader">
+		<item id="about"/>
+		<separator/>
+		<item id="preferences"/>
+		<separator/>
+		<item id="quit"/>
+	</submenu>
 	<submenu id="books">
 		<submenu id="recent"/>
 		<separator/>
@@ -7,9 +14,6 @@
 		<item id="networkLibrary"/>
 		<separator/>
 		<item id="addBook"/>
-		<separator/>
-		<item id="about"/>
-		<item id="preferences"/>
 	</submenu>
 	<submenu id="view">
 		<item id="toggleFullscreen"/>

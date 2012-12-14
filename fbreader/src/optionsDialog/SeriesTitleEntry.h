@@ -17,17 +17,34 @@
  * 02110-1301, USA.
  */
 
-#include <ZLDialogManager.h>
+#ifndef __SERIESTITLEENTRY_H__
+#define __SERIESTITLEENTRY_H__
 
-#include "ZLQtUtil.h"
+#include <set>
+#include <vector>
+#include <string>
 
-QString qtString(const std::string &text) {
-	return QString::fromUtf8(text.c_str());
-}
+#include <ZLOptionEntry.h>
 
-QString qtButtonName(const ZLResourceKey &key) {
-	if (key.Name.empty()) {
-		return QString::null;
-	}
-	return ::qtString(ZLDialogManager::buttonName(key));
-}
+class OptionsDialog;
+
+class SeriesTitleEntry : public ZLComboOptionEntry {
+
+public:
+	SeriesTitleEntry(OptionsDialog &dialog);
+
+	const std::string &initialValue() const;
+	const std::vector<std::string> &values() const;
+	void onAccept(const std::string &value);
+
+	bool useOnValueEdited() const;
+	void onValueEdited(const std::string &value);
+	void onValueSelected(int index);
+
+private:
+	OptionsDialog &myInfoDialog;
+	std::set<std::string> myOriginalValuesSet;
+	mutable std::vector<std::string> myValues;
+};
+
+#endif /* __SERIESTITLEENTRY_H__ */

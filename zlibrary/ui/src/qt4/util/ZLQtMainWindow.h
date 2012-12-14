@@ -26,6 +26,8 @@
 
 #include <ZLOptions.h>
 
+#include "ZLQtGeometryOptions.h"
+
 class QWidget;
 class QToolBar;
 
@@ -56,10 +58,7 @@ private:
 	const std::string myOptionPrefix;
 
 	ZLIntegerOption myWindowStateOption;
-	ZLIntegerRangeOption myXOption;
-	ZLIntegerRangeOption myYOption;
-	ZLIntegerRangeOption myWidthOption;
-	ZLIntegerRangeOption myHeightOption;
+	ZLQtGeometryOptions myGeometryOptions;
 };
 
 #endif /* __ZLQTMAINWINDOW_H__ */
