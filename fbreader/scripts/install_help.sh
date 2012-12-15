@@ -28,7 +28,6 @@ case "$1" in
 esac;
 installdir=$2;
 
-for file in data/help/MiniHelp.$platform.*.fb2; do
-	lang=`echo $file | cut -d . -f 3`;
-	install -m 0644 $file $installdir/MiniHelp.$lang.fb2
+for file in data/help/new/MiniHelp.*.fb2; do
+	install -m 0644 $file $installdir
 done
