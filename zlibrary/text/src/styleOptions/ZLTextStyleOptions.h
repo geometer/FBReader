@@ -45,28 +45,6 @@ private:
 	const ZLResource &myResource;
 };
 
-// TODO: remove deprecated class
-class ZLTextLineSpacingOptionEntry : public ZLComboOptionEntry {
-
-private:
-	static std::vector<std::string> ourAllValues;
-	static std::vector<std::string> ourAllValuesPlusBase;
-
-public:
-	ZLTextLineSpacingOptionEntry(ZLDoubleOption &option, const ZLResource &resource, bool allowBase);
-	~ZLTextLineSpacingOptionEntry();
-
-	const std::vector<std::string> &values() const;
-	const std::string &initialValue() const;
-
-	void onAccept(const std::string &value);
-
-private:
-	const ZLResource &myResource;
-	ZLDoubleOption &myOption;
-	bool myAllowBase;
-};
-
 class ZLTextLineSpaceOptionEntry : public ZLComboOptionEntry {
 
 private:

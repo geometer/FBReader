@@ -186,19 +186,6 @@ private:
 	const long myDefaultIntValue;
 };
 
-class ZLDoubleOption : public ZLOption {
-
-public:
-	ZLDoubleOption(const ZLCategoryKey &category, const std::string &group, const std::string &optionName, double defaultValue);
-
-	double value() const;
-	void setValue(double value);
-
-private:
-	mutable double myValue;
-	const double myDefaultValue;
-};
-
 class ZLStringOption : public ZLSimpleOption {
 
 public:

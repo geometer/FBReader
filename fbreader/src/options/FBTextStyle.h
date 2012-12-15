@@ -64,7 +64,6 @@ public:
 	ZLBooleanOption BoldOption;
 	ZLBooleanOption ItalicOption;
 	ZLIntegerOption AlignmentOption;
-	ZLDoubleOption LineSpaceOption;
 	ZLIntegerOption LineSpacePercentOption;
 };
 
