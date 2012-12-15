@@ -2,7 +2,7 @@
 <config>
 	<group name="Style">
 		<option name="Base:fontFamily" value="Times"/>
-		<option name="Base:fontSize" value="10"/>
+		<option name="Base:fontSize" value="20"/>
 	</group>
   <group name="Scrollings">
     <option name="Delay" value="0"/>

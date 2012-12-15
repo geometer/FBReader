@@ -10,7 +10,7 @@ BB10_SDK_BIN_FOLDER = $(QNX_HOST)/usr/bin
 #APPIMAGEDIR = $(IMAGEDIR)
 #
 ## ~~ is a macros that will be expanded at runtime into QApplication::applicationDirPath() + "/.."
-#SHAREDIR_MACRO = ~~/Resources
+SHAREDIR_MACRO = app/native/resources
 #IMAGEDIR_MACRO = $(SHAREDIR_MACRO)/icons
 #APPIMAGEDIR_MACRO = $(IMAGEDIR_MACRO)
 #
