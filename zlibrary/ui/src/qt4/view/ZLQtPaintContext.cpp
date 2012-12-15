@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <QtGui/QApplication>
+#include <QtGui/QDesktopWidget>
 #include <QtGui/QPainter>
 #include <QtGui/QPixmap>
 #include <QtGui/QFontMetrics>
@@ -160,7 +162,7 @@ int ZLQtPaintContext::descent() const {
 }
 
 int ZLQtPaintContext::stringHeight() const {
-	return myPainter->font().pointSize() + 2;
+	return QFontMetrics(myPainter->font()).height();
 }
 
 void ZLQtPaintContext::drawString(int x, int y, const char *str, int len, bool rtl) {

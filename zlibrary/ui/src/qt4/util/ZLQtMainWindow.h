@@ -36,29 +36,6 @@ class ZLQtMainWindow : public QMainWindow {
 protected:
 	ZLQtMainWindow(QWidget *parent, const std::string &windowName);
 	virtual ~ZLQtMainWindow();
-
-	void resizeEvent(QResizeEvent* event);
-
-public:
-	void showWithGeometry();
-
-private:
-	void saveWindowGeometry();
-
-	enum WindowSizeState {
-		NORMAL,
-		MAXIMIZED,
-		FULLSCREEN
-	};
-
-protected:
-	QToolBar *myToolbar;
-
-private:
-	const std::string myOptionPrefix;
-
-	ZLIntegerOption myWindowStateOption;
-	ZLQtGeometryOptions myGeometryOptions;
 };
 
 #endif /* __ZLQTMAINWINDOW_H__ */

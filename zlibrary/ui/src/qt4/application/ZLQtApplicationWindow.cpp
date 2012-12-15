@@ -20,7 +20,6 @@
 #include <QtGui/QApplication>
 #include <QtGui/QPixmap>
 #include <QtGui/QIcon>
-#include <QtGui/QToolBar>
 #include <QtGui/QMenuBar>
 #include <QtGui/QMenu>
 #include <QtGui/QLineEdit>
@@ -35,7 +34,6 @@
 #include "../util/ZLQtUtil.h"
 #include "../util/ZLQtKeyUtil.h"
 #include "../util/ZLQtImageUtil.h"
-#include "../util/ZLQtToolbarButton.h"
 #include "../tree/ZLQtSearchField.h"
 
 ZLQtApplicationWindow *ZLQtApplicationWindow::ourInstance = 0;
@@ -61,16 +59,11 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 }
 
 QLineEdit *ZLQtApplicationWindow::searchBox() {
-	if (mySearchBox == 0) {
-		mySearchBox = new ZLQtSearchField(myToolbar);
-		mySearchBoxAction = myToolbar->addWidget(mySearchBox);
-	}
-	return mySearchBox;
+	return 0;
 }
 
 void ZLQtApplicationWindow::hideSearchBox() {
 	if (mySearchBoxAction != 0) {
-		myToolbar->removeAction(mySearchBoxAction);
 		mySearchBoxAction = 0;
 		mySearchBox = 0;
 	}
@@ -96,10 +89,6 @@ void ZLQtApplicationWindow::init() {
 	}
 
 	ZLApplicationWindow::init();
-
-	QWidget* spacer = new QWidget(myToolbar);
-	spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-	myToolbar->addWidget(spacer);
 }
 
 ZLQtApplicationWindow::~ZLQtApplicationWindow() {
@@ -125,24 +114,9 @@ void ZLQtApplicationWindow::closeEvent(QCloseEvent *event) {
 }
 
 void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
-	if (item->isSeparator()) {
-		myToolbarActions[item] = myToolbar->addSeparator();
-	} else {
-		ZLToolbar::ButtonItem& buttonItem = (ZLToolbar::ButtonItem&)*item;
-		QAction *action = getAction(buttonItem.actionId());
-		ZLQtToolbarButton *button = new ZLQtToolbarButton(buttonItem.iconName(), myToolbar);
-		button->setToolTip(::qtString(buttonItem.tooltip()));
-		connect(button, SIGNAL(clicked()), action, SLOT(onActivated()));
-		myToolbarActions[item] = myToolbar->addWidget(button);
-	}
 }
 
 void ZLQtApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled) {
-	QAction *action = myToolbarActions[item];
-	if (action != 0) {
-		action->setEnabled(enabled);
-		action->setVisible(visible);
-	}
 }
 
 ZLViewWidget *ZLQtApplicationWindow::createViewWidget() {
@@ -182,7 +156,6 @@ void ZLQtApplicationWindow::onRefresh() {
 			menu->addAction(action);
 		}
 	}
-	refreshToolbar();
 	qApp->processEvents();
 }
 

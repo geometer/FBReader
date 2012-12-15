@@ -18,60 +18,14 @@
  */
 
 #include <QtGui/QToolBar>
+#include <QtGui/QApplication>
+#include <QtGui/QDesktopWidget>
 
 #include "ZLQtMainWindow.h"
 
-ZLQtMainWindow::ZLQtMainWindow(QWidget *parent, const std::string &windowName) :
-	QMainWindow(parent),
-	myOptionPrefix(windowName.empty() ? windowName : windowName + "_"),
-	myWindowStateOption(ZLCategoryKey::LOOK_AND_FEEL, "Options", myOptionPrefix + "WindowSizeState", NORMAL),
-	myGeometryOptions(myOptionPrefix)
-	{
-	setUnifiedTitleAndToolBarOnMac(true);
-	myToolbar = new QToolBar(this);
-	myToolbar->setFocusPolicy(Qt::NoFocus);
-	myToolbar->setMovable(false);
-	addToolBar(myToolbar);
-
-	myGeometryOptions.setToWidget(*this);
+ZLQtMainWindow::ZLQtMainWindow(QWidget *parent, const std::string &windowName) : QMainWindow(parent) {
+	setGeometry(0, 0, QApplication::desktop()->width(), QApplication::desktop()->height());
 }
 
 ZLQtMainWindow::~ZLQtMainWindow() {
-	saveWindowGeometry();
-}
-
-void ZLQtMainWindow::resizeEvent(QResizeEvent* event) {
-	QMainWindow::resizeEvent(event);
-	if (isFullScreen()) {
-		myToolbar->hide();
-	} else {
-		myToolbar->show();
-	}
-	saveWindowGeometry();
-}
-
-void ZLQtMainWindow::showWithGeometry() {
-	switch (myWindowStateOption.value()) {
-		default:
-		case NORMAL:
-			show();
-			break;
-		case FULLSCREEN:
-			showFullScreen();
-			break;
-		case MAXIMIZED:
-			showMaximized();
-			break;
-	}
-}
-
-void ZLQtMainWindow::saveWindowGeometry() {
-	if (isFullScreen()) {
-		myWindowStateOption.setValue(FULLSCREEN);
-	} else if (isMaximized()) {
-		myWindowStateOption.setValue(MAXIMIZED);
-	} else {
-		myWindowStateOption.setValue(NORMAL);
-		myGeometryOptions.getFromWidget(*this);
-	}
 }

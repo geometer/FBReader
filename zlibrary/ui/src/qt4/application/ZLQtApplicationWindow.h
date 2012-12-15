@@ -30,7 +30,6 @@
 
 #include <ZLOptions.h>
 
-class QToolButton;
 class QLineEdit;
 
 class ZLPopupData;
@@ -110,7 +109,6 @@ private:
 	QAction *mySearchBoxAction;
 
 	std::map<std::string,ZLQtAction*> myActions;
-	std::map<ZLToolbar::ItemPtr,QAction*> myToolbarActions;
 	std::list<ZLQtAction*> myMenuActions;
 	std::list<ZLQtMenu*> mySubmenuList;
 
