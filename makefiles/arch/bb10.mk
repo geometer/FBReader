@@ -1,7 +1,7 @@
 include $(ROOTDIR)/makefiles/arch/unix.mk
 
-QNX_HOST = /Applications/bbndk/host_10_0_9_52/darwin/x86
-QNX_TARGET = /Applications/bbndk/target_10_0_9_386/qnx6
+QNX_HOST = /Applications/bbndk/host_10_0_9_404/darwin/x86
+QNX_TARGET = /Applications/bbndk/target_10_0_9_1673/qnx6
 BB10_SDK_BIN_FOLDER = $(QNX_HOST)/usr/bin
 
 #BINDIR = $(INSTALLDIR)/Contents/MacOS

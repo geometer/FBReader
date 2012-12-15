@@ -75,7 +75,6 @@ public:
 
 	ZLIntegerOption AlignmentOption;
 
-	ZLDoubleOption LineSpaceOption;
 	ZLIntegerOption LineSpacePercentOption;
 };
 

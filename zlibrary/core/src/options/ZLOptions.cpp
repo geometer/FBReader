@@ -254,30 +254,6 @@ long ZLIntegerRangeOption::maxValue() const {
 	return myMaxValue;
 }
 
-ZLDoubleOption::ZLDoubleOption(const ZLCategoryKey &category, const std::string &groupName, const std::string &optionName, double defaultValue) : ZLOption(category, groupName, optionName), myDefaultValue(ZLStringUtil::stringToDouble(getDefaultConfigValue(), defaultValue)) {
-}
-
-double ZLDoubleOption::value() const {
-	if (!myIsSynchronized) {
-		myValue = ZLStringUtil::stringToDouble(getConfigValue(), myDefaultValue);
-		myIsSynchronized = true;
-	}
-	return myValue;
-}
-
-void ZLDoubleOption::setValue(double value) {
-	if (myIsSynchronized && (myValue == value)) {
-		return;
-	}
-	myValue = value;
-	myIsSynchronized = true;
-	if (myValue == myDefaultValue) {
-		unsetConfigValue();
-	} else {
-		setConfigValue(ZLStringUtil::doubleToString(myValue));
-	}
-}
-
 ZLStringOption::ZLStringOption(const ZLCategoryKey &category, const std::string &groupName, const std::string &optionName, const std::string &defaultValue) : ZLSimpleOption(category, groupName, optionName), myDefaultValue(getDefaultConfigValue(defaultValue)) {
 }
 

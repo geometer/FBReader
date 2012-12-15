@@ -3,6 +3,7 @@
 	<group name="Style">
 		<option name="Base:fontFamily" value="Times"/>
 		<option name="Base:fontSize" value="20"/>
+		<option name="Base:lineSpacingPercent" value="120"/>
 	</group>
   <group name="Scrollings">
     <option name="Delay" value="0"/>

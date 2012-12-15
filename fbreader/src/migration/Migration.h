@@ -53,33 +53,6 @@ private:
 friend class Migration_0_11_0_Runnable;
 };
 
-class Migration_0_8_11 : public Migration {
-
-public:
-	Migration_0_8_11();
-
-protected:
-	void doMigrationInternal();
-};
-
-class Migration_0_8_13 : public Migration {
-
-public:
-	Migration_0_8_13();
-
-protected:
-	void doMigrationInternal();
-};
-
-class Migration_0_8_16 : public Migration {
-
-public:
-	Migration_0_8_16();
-
-protected:
-	void doMigrationInternal();
-};
-
 class Migration_0_10_4 : public Migration {
 
 public:

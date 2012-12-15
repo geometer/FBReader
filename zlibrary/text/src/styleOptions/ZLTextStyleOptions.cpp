@@ -32,9 +32,6 @@ static const std::string KEY_JUSTIFY = "justify";
 
 std::vector<std::string> ZLTextFontFamilyWithBaseOptionEntry::ourAllFamilies;
 
-std::vector<std::string> ZLTextLineSpacingOptionEntry::ourAllValues;
-std::vector<std::string> ZLTextLineSpacingOptionEntry::ourAllValuesPlusBase;
-
 std::vector<std::string> ZLTextLineSpaceOptionEntry::ourAllValues;
 std::vector<std::string> ZLTextLineSpaceOptionEntry::ourAllValuesPlusBase;
 
@@ -58,46 +55,6 @@ const std::string &ZLTextFontFamilyWithBaseOptionEntry::initialValue() const {
 
 void ZLTextFontFamilyWithBaseOptionEntry::onAccept(const std::string &value) {
 	ZLFontFamilyOptionEntry::onAccept((value == values()[0]) ? std::string() : value);
-}
-
-ZLTextLineSpacingOptionEntry::ZLTextLineSpacingOptionEntry(ZLDoubleOption &option, const ZLResource &resource, bool allowBase) : myResource(resource), myOption(option), myAllowBase(allowBase) {
-	if (ourAllValuesPlusBase.empty()) {
-		for (int i = 5; i <= 20; ++i) {
-			ourAllValues.push_back(std::string() + (char)(i / 10 + '0') + '.' + (char)(i % 10 + '0'));
-		}
-		ourAllValuesPlusBase.push_back(myResource[KEY_UNCHANGED].value());
-		ourAllValuesPlusBase.insert(ourAllValuesPlusBase.end(), ourAllValues.begin(), ourAllValues.end());
-	}
-}
-
-ZLTextLineSpacingOptionEntry::~ZLTextLineSpacingOptionEntry() {
-}
-
-const std::vector<std::string> &ZLTextLineSpacingOptionEntry::values() const { return myAllowBase ? ourAllValuesPlusBase : ourAllValues; }
-
-const std::string &ZLTextLineSpacingOptionEntry::initialValue() const {
-	int value = (int)(10 * myOption.value() + 0.5);
-	if (value == 0) {
-		return ourAllValuesPlusBase[0];
-	}
-	for (int i = 5; i < 20; ++i) {
-		if (value <= i) {
-			return ourAllValues[i - 5];
-		}
-	}
-	return ourAllValues[15];
-}
-
-void ZLTextLineSpacingOptionEntry::onAccept(const std::string &value) {
-	if (value == ourAllValuesPlusBase[0]) {
-		myOption.setValue(0.0);
-	} else {
-		for (int i = 5; i <= 20; ++i) {
-			if (value == ourAllValues[i - 5]) {
-				myOption.setValue(i / 10.0);
-			}
-		}
-	}
 }
 
 ZLTextLineSpaceOptionEntry::ZLTextLineSpaceOptionEntry(ZLIntegerOption &option, const ZLResource &resource, bool allowBase) : myResource(resource), myOption(option), myAllowBase(allowBase) {

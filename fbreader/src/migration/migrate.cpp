@@ -33,9 +33,6 @@ bool MigrationRunnable::shouldMigrate() const {
 }
 
 void MigrationRunnable::run() {
-	Migration_0_8_11().doMigration();
-	Migration_0_8_13().doMigration();
-	Migration_0_8_16().doMigration();
 	Migration_0_10_4().doMigration();
 	Migration_0_11_0().doMigration();
 	Migration_0_99_0().doMigration();
