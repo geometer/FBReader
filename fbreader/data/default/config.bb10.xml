@@ -12,6 +12,7 @@
     <option name="KeyDelay" value="0"/>
     <option name="BookPath" value="~/FBooks:~/Books"/>
     <option name="DownloadDirectory" value="~/FBooks"/>
+		<option name="IsSelectionEnabled" value="false"/>
   </group>
   <group name="Indicator">
     <option name="Type" value="2"/>
