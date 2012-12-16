@@ -25,6 +25,8 @@
 #include <QtGui/QLineEdit>
 #include <QtGui/QWheelEvent>
 
+#include <bb/multimedia/MediaKeyWatcher.hpp>
+
 #include <ZLibrary.h>
 #include <ZLPopupData.h>
 #include <ZLKeyBindings.h>
@@ -56,6 +58,15 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	menuBar()->hide();
 
 	ourInstance = this;
+
+	bb::multimedia::MediaKeyWatcher *volumeUpKeyWatcher = new bb::multimedia::MediaKeyWatcher(bb::multimedia::MediaKey::VolumeUp);
+	QObject::connect(volumeUpKeyWatcher, SIGNAL(shortPress(bb::multimedia::MediaKey::Type)), this, SLOT(onMediaKeyShortPress()));
+
+	bb::multimedia::MediaKeyWatcher *volumeDownKeyWatcher = new bb::multimedia::MediaKeyWatcher(bb::multimedia::MediaKey::VolumeDown);
+	QObject::connect(volumeDownKeyWatcher, SIGNAL(shortPress(bb::multimedia::MediaKey::Type)), this, SLOT(onMediaKeyShortPress()));
+}
+
+void ZLQtApplicationWindow::onMediaKeyShortPress() {
 }
 
 QLineEdit *ZLQtApplicationWindow::searchBox() {

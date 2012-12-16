@@ -102,6 +102,7 @@ private:
 	void wheelEvent(QWheelEvent *event);
 
 private Q_SLOTS:
+	void onMediaKeyShortPress();
 	void onRefresh();
 
 private:

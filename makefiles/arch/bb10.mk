@@ -29,7 +29,7 @@ LDFLAGS = $(ARCH_FLAGS)
 EXTERNAL_LIBS = -lcpp-ne -liconv
 
 QTINCLUDE = -I $(QNX_TARGET)/usr/include/qt4
-UILIBS = -L $(QNX_TARGET)/armle-v7/usr/lib/qt4/lib -lQtCore -lQtGui -lQtNetwork
+UILIBS = -L $(QNX_TARGET)/armle-v7/usr/lib/qt4/lib -lQtCore -lQtGui -lQtNetwork -lbbmultimedia
 
 #ifeq "$(UI_TYPE)" "qt4"
 #  QTBASEDIR = ~/QtSDK/Desktop/Qt/4.8.1/gcc

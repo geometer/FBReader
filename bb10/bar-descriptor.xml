@@ -14,11 +14,11 @@
     <env value="app/native/imports" var="QML_IMPORT_PATH"/>
     <env value="app/native/plugins:/usr/lib/qt4/plugins" var="QT_PLUGIN_PATH"/>
     <env value="app/native/lib:/usr/lib/qt4/lib/" var="LD_LIBRARY_PATH"/>
-		<env value="/usr/lib/qt4/lib/fonts" var="QT_QPA_FONTDIR"/>
     <action system="true">run_native</action>
     <asset path="../fbreader/FBReader" type="Qnx/Elf" entry="true">FBReader</asset>
     <asset path="../fbreader/data/icons/application/256x256.png">fbreader.png</asset>
     <asset path="../fbreader/data/help/new/MiniHelp.en.fb2">resources/FBReader/help/MiniHelp.en.fb2</asset>
 		<asset path="../fbreader/data/default/styles.bb10.xml">resources/FBReader/default/styles.xml</asset>
 		<asset path="../fbreader/data/default/config.bb10.xml">resources/FBReader/default/config.xml</asset>
+		<asset path="../fbreader/data/default/keymap.bb10.xml">resources/FBReader/default/keymap.xml</asset>
 </qnx>
