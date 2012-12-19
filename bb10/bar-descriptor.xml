@@ -16,9 +16,16 @@
     <env value="app/native/lib:/usr/lib/qt4/lib/" var="LD_LIBRARY_PATH"/>
     <action system="true">run_native</action>
     <asset path="../fbreader/FBReader" type="Qnx/Elf" entry="true">FBReader</asset>
+    <asset path="../zlibrary/text/data/hyphenationPatterns.zip">resources/zlibrary/hyphenationPatterns.zip</asset>
     <asset path="../fbreader/data/icons/application/256x256.png">fbreader.png</asset>
     <asset path="../fbreader/data/help/new/MiniHelp.en.fb2">resources/FBReader/help/MiniHelp.en.fb2</asset>
 		<asset path="../fbreader/data/default/styles.bb10.xml">resources/FBReader/default/styles.xml</asset>
 		<asset path="../fbreader/data/default/config.bb10.xml">resources/FBReader/default/config.xml</asset>
 		<asset path="../fbreader/data/default/keymap.bb10.xml">resources/FBReader/default/keymap.xml</asset>
+		<asset path="../fbreader/data/formats/fb2/FBReaderVersion.ent">resources/FBReader/formats/fb2/FBReaderVersion.ent</asset>
+		<asset path="../fbreader/data/formats/fb2/fb2genres.xml">resources/FBReader/formats/fb2/fb2genres.xml</asset>
+		<asset path="../fbreader/data/formats/html/html.ent">resources/FBReader/formats/html/html.ent</asset>
+		<asset path="../fbreader/data/formats/xhtml/xhtml-lat1.ent">resources/FBReader/formats/xhtml/xhtml-lat1.ent</asset>
+		<asset path="../fbreader/data/formats/xhtml/xhtml-special.ent">resources/FBReader/formats/xhtml/xhtml-special.ent</asset>
+		<asset path="../fbreader/data/formats/xhtml/xhtml-symbol.ent">resources/FBReader/formats/xhtml/xhtml-symbol.ent</asset>
 </qnx>
