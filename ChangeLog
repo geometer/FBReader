@@ -2,7 +2,7 @@
 
 * First public release for MacOS
 * Introduced application menu
-* Shortcuts for popular actions
+* Keyboard shortcuts for popular actions
 * New preferences dialog
 * Page header is shown by default in main window instead of scrollbar
 * Text search does not work in this release
