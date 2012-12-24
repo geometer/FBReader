@@ -38,6 +38,7 @@ public:
 	static const std::string CalibreMetadata;
 	static const std::string Opds;
 	static const std::string DaisyNCX;
+	static const std::string Svg;
 	static const std::string FBReaderCatalogMetadata;
 };
 

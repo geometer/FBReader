@@ -196,6 +196,7 @@ public:
 class SearchAction : public ZLApplication::Action {
 
 public:
+	bool isEnabled() const;
 	bool isVisible() const;
 };
 

@@ -1,4 +1,8 @@
-===== 0.99.5 (Dec ??, 2012) =====
+===== 0.99.6 (Jan ??, 2013) =====
+
+* ePub: fixed SVG namespace processing
+
+===== 0.99.5 (Dec 24, 2012) =====
 
 * First public release for MacOS
 * Introduced application menu
