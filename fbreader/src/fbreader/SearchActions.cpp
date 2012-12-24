@@ -86,6 +86,10 @@ void SearchPatternEntry::onAccept(const std::string &value) {
 	}
 }
 
+bool SearchAction::isEnabled() const {
+	return false;
+}
+
 bool SearchAction::isVisible() const {
 	shared_ptr<ZLView> view = FBReader::Instance().currentView();
 	return
