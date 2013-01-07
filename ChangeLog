@@ -1,6 +1,7 @@
 ===== 0.99.6 (Jan ??, 2013) =====
 
 * ePub: fixed SVG namespace processing
+* ePub (XHTML): nested body tag support
 
 ===== 0.99.5 (Dec 24, 2012) =====
 
