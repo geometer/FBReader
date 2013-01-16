@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2012 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2004-2013 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -84,6 +84,10 @@ void SearchPatternEntry::onAccept(const std::string &value) {
 			}
 		}
 	}
+}
+
+bool SearchAction::isEnabled() const {
+	return false;
 }
 
 bool SearchAction::isVisible() const {

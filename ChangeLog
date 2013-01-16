@@ -1,8 +1,13 @@
-===== 0.99.5 (Dec ??, 2012) =====
+===== 0.99.6 (Jan ??, 2013) =====
+
+* ePub: fixed SVG namespace processing
+* ePub (XHTML): nested body tag support
+
+===== 0.99.5 (Dec 24, 2012) =====
 
 * First public release for MacOS
 * Introduced application menu
-* Shortcuts for popular actions
+* Keyboard shortcuts for popular actions
 * New preferences dialog
 * Page header is shown by default in main window instead of scrollbar
 * Text search does not work in this release
