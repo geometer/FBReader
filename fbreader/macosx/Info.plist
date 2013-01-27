@@ -47,5 +47,9 @@
 	<string>1</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>10.5</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+	<key>NSHighResolutionCapable</key>
+	<true/>
 </dict>
 </plist>
