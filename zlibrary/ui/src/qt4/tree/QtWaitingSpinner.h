@@ -2,8 +2,7 @@
 #define QTWAITINGSPINNER_H
 
 #include <QtCore/QTimer>
-
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 #include <QtGui/QColor>
 
 class QtWaitingSpinner : public QWidget {

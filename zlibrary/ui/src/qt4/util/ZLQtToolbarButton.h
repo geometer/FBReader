@@ -20,8 +20,8 @@
 #ifndef __ZLQTTOOLBARBUTTON_H__
 #define __ZLQTTOOLBARBUTTON_H__
 
-#include <QtGui/QPushButton>
 #include <QtGui/QPixmap>
+#include <QtWidgets/QPushButton>
 
 class QWidget;
 

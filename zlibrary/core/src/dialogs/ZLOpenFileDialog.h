@@ -27,6 +27,9 @@ class ZLFile;
 class ZLOpenFileDialog {
 
 public:
+	~ZLOpenFileDialog();
+
+public:
 	class Filter {
 
 	public:

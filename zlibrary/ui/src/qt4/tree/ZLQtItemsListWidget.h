@@ -20,12 +20,12 @@
 #ifndef __ZLQTITEMSLISTWIDGET_H__
 #define __ZLQTITEMSLISTWIDGET_H__
 
-#include <QtGui/QWidget>
-#include <QtGui/QFrame>
-#include <QtGui/QPushButton>
-#include <QtGui/QLabel>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QScrollArea>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QFrame>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QScrollArea>
 
 #include <ZLTreeTitledNode.h>
 

@@ -19,13 +19,13 @@
 
 #include <algorithm>
 
-#include <QtGui/QApplication>
-#include <QtGui/QLayout>
-#include <QtGui/QStackedLayout>
-#include <QtGui/QListWidget>
-#include <QtGui/QDialogButtonBox>
-#include <QtGui/QPushButton>
 #include <QtGui/QResizeEvent>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QLayout>
+#include <QtWidgets/QStackedLayout>
+#include <QtWidgets/QListWidget>
+#include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets/QPushButton>
 
 #include "ZLQtOptionsDialog.h"
 #include "ZLQtDialogContent.h"

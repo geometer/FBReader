@@ -20,12 +20,12 @@
 #ifndef __ZLQTPREVIEWWIDGET_H__
 #define __ZLQTPREVIEWWIDGET_H__
 
-#include <QtGui/QWidget>
-#include <QtGui/QPushButton>
-#include <QtGui/QLabel>
-#include <QtGui/QScrollArea>
-#include <QtGui/QVBoxLayout>
 #include <QtCore/QSet>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QScrollArea>
+#include <QtWidgets/QVBoxLayout>
 
 #include <ZLTreePageNode.h>
 

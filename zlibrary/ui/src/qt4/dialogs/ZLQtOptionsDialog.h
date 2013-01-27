@@ -20,7 +20,7 @@
 #ifndef __ZLQTOPTIONSDIALOG_H__
 #define __ZLQTOPTIONSDIALOG_H__
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 
 #include <ZLOptionsDialog.h>
 

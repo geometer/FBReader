@@ -17,10 +17,10 @@
  * 02110-1301, USA.
  */
 
-#include <QtGui/QSplitter>
-#include <QtGui/QScrollBar>
 #include <QtGui/QResizeEvent>
-#include <QtGui/QToolBar>
+#include <QtWidgets/QSplitter>
+#include <QtWidgets/QScrollBar>
+#include <QtWidgets/QToolBar>
 
 #include <ZLFile.h>
 #include <ZLibrary.h>

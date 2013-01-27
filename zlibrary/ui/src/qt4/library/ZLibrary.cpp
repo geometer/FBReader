@@ -20,10 +20,10 @@
 #include <QtCore/QFile>
 #include <QtCore/QTextCodec>
 #include <QtCore/QUrl>
-#include <QtGui/QApplication>
 #include <QtGui/QDesktopServices>
-#include <QtGui/QDesktopWidget>
 #include <QtGui/QFileOpenEvent>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QDesktopWidget>
 
 #include <ZLApplication.h>
 #include <ZLibrary.h>
@@ -77,7 +77,7 @@ bool ZLQApplication::event(QEvent *e) {
 void ZLQtLibraryImplementation::init(int &argc, char **&argv) {
 	new ZLQApplication(argc, argv);
 
-	QTextCodec::setCodecForCStrings(QTextCodec::codecForName("utf-8"));
+	//QTextCodec::setCodecForCStrings(QTextCodec::codecForName("utf-8"));
 
 	ZLibrary::parseArguments(argc, argv);
 

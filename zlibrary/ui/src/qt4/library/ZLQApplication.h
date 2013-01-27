@@ -20,7 +20,7 @@
 #ifndef __ZLQAPPLICATION_H__
 #define __ZLQAPPLICATION_H__
 
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 
 class ZLQApplication : public QApplication {
 

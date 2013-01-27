@@ -17,7 +17,7 @@
  * 02110-1301, USA.
  */
 
-#include <QtGui/QToolBar>
+#include <QtWidgets/QToolBar>
 
 #include "ZLQtMainWindow.h"
 

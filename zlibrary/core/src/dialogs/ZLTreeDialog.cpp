@@ -22,6 +22,9 @@
 ZLTreeDialog::ZLTreeDialog(const ZLResource &resource) : myResource(resource) {
 }
 
+ZLTreeDialog::~ZLTreeDialog() {
+}
+
 void ZLTreeDialog::setSearcher(shared_ptr<ZLTreeSearcher> searcher) {
 	mySearcher = searcher;
 }

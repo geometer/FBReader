@@ -30,6 +30,9 @@ protected:
 	ZLTreeDialog(const ZLResource &resource);
 
 public:
+	virtual ~ZLTreeDialog();
+
+public:
 	//TODO maybe run() should return an integer?
 	virtual void run(ZLTreeNode *rootNode) = 0;
 

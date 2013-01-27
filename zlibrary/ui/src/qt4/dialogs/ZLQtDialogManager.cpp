@@ -17,14 +17,14 @@
  * 02110-1301, USA.
  */
 
-#include <QtGui/QApplication>
-#include <QtGui/QMainWindow>
-#include <QtGui/QMessageBox>
-#include <QtGui/QFileDialog>
 #include <QtGui/QClipboard>
-#include <QtGui/QDesktopWidget>
-#include <QtGui/QLineEdit>
-#include <QtGui/QToolBar>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QDesktopWidget>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QToolBar>
 
 #include "ZLQtDialogManager.h"
 #include "ZLQtDialog.h"

@@ -17,14 +17,14 @@
  * 02110-1301, USA.
  */
 
-#include <QtGui/QApplication>
-#include <QtGui/QPixmap>
 #include <QtGui/QIcon>
-#include <QtGui/QToolBar>
-#include <QtGui/QMenuBar>
-#include <QtGui/QMenu>
-#include <QtGui/QLineEdit>
+#include <QtGui/QPixmap>
 #include <QtGui/QWheelEvent>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QToolBar>
+#include <QtWidgets/QMenuBar>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QLineEdit>
 
 #include <ZLibrary.h>
 #include <ZLPopupData.h>

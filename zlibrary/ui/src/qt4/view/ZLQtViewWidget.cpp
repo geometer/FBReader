@@ -19,11 +19,11 @@
 
 #include <algorithm>
 
-#include <QtGui/QLayout>
-#include <QtGui/QScrollBar>
 #include <QtGui/QPainter>
 #include <QtGui/QPixmap>
 #include <QtGui/QMouseEvent>
+#include <QtWidgets/QLayout>
+#include <QtWidgets/QScrollBar>
 
 #include <ZLibrary.h>
 #include <ZLLanguageUtil.h>
@@ -185,11 +185,11 @@ void ZLQtViewWidget::repaint()	{
 
 void ZLQtViewWidget::setScrollbarEnabled(ZLView::Direction direction, bool enabled) {
 	if (direction == ZLView::VERTICAL) {
-		myRightScrollBar->setShown(enabled && myShowScrollBarAtRight);
-		myLeftScrollBar->setShown(enabled && !myShowScrollBarAtRight);
+		myRightScrollBar->setVisible(enabled && myShowScrollBarAtRight);
+		myLeftScrollBar->setVisible(enabled && !myShowScrollBarAtRight);
 	} else {
-		myBottomScrollBar->setShown(enabled && myShowScrollBarAtBottom);
-		myTopScrollBar->setShown(enabled && !myShowScrollBarAtBottom);
+		myBottomScrollBar->setVisible(enabled && myShowScrollBarAtBottom);
+		myTopScrollBar->setVisible(enabled && !myShowScrollBarAtBottom);
 	}
 }
 

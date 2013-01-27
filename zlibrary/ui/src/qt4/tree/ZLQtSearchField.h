@@ -21,8 +21,8 @@
 #define __ZLQTSEARCHFIELD_H__
 
 #include <QtCore/QSet>
-#include <QtGui/QLabel>
-#include <QtGui/QLineEdit>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
 
 #include "QtWaitingSpinner.h"
 #include "ZLQtItemsListWidget.h"

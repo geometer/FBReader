@@ -19,12 +19,12 @@
 
 #include <unistd.h>
 
-#include <QtGui/QApplication>
-#include <QtGui/QDesktopWidget>
-#include <QtGui/QWidget>
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
 #include <QtCore/QThreadPool>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QDesktopWidget>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QLayout>
 
 #include "ZLQtDialogManager.h"
 #include "ZLQtProgressDialog.h"

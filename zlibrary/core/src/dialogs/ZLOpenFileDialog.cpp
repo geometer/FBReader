@@ -19,5 +19,8 @@
 
 #include "ZLOpenFileDialog.h"
 
+ZLOpenFileDialog::~ZLOpenFileDialog() {
+}
+
 ZLOpenFileDialog::Filter::~Filter() {
 }

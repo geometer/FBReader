@@ -22,7 +22,7 @@
 
 #include <string>
 
-#include <QtGui/QMainWindow>
+#include <QtWidgets/QMainWindow>
 
 #include <ZLOptions.h>
 

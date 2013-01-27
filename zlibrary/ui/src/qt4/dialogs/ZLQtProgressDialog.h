@@ -22,12 +22,12 @@
 
 #include <string>
 
-#include <QtGui/QWidget>
-#include <QtGui/QCursor>
-#include <QtGui/QDialog>
-#include <QtGui/QProgressBar>
-#include <QtGui/QLabel>
 #include <QtCore/QRunnable>
+#include <QtGui/QCursor>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QProgressBar>
+#include <QtWidgets/QLabel>
 
 #include <ZLProgressDialog.h>
 

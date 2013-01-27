@@ -306,6 +306,7 @@ std::size_t ZLUnicodeUtil::lastChar(Ucs4Char &ch, const char *utf8String) {
 	while ((*ptr & 0xC0) == 0x80) {
 		--ptr;
 	}
+	firstChar(ch, ptr);
 	return utf8String - ptr;
 }
 

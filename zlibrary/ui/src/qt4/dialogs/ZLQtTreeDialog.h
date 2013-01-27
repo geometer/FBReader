@@ -24,10 +24,10 @@
 #include <QtCore/QSet>
 #include <QtCore/QMap>
 
-#include <QtGui/QScrollArea>
-#include <QtGui/QLabel>
-#include <QtGui/QLineEdit>
-#include <QtGui/QWidget>
+#include <QtWidgets/QScrollArea>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QWidget>
 
 #include <ZLTreeDialog.h>
 

@@ -23,10 +23,10 @@
 #include <map>
 #include <list>
 
-#include <QtGui/QMainWindow>
-#include <QtGui/QAction>
-#include <QtGui/QMenu>
 #include <QtGui/QCursor>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QMenu>
 
 #include <ZLOptions.h>
 
