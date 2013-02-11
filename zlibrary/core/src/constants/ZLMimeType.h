@@ -62,6 +62,7 @@ public:
 	static const shared_ptr<ZLMimeType> APPLICATION_CHM;
 	static const shared_ptr<ZLMimeType> APPLICATION_PALM_DB;
 	static const shared_ptr<ZLMimeType> APPLICATION_ATOM_XML;
+    static const shared_ptr<ZLMimeType> APPLICATION_RSS_XML;
 	static const shared_ptr<ZLMimeType> APPLICATION_LITRES_XML;
 	static const shared_ptr<ZLMimeType> APPLICATION_LITRES_XML_BOOKS;
 	static const shared_ptr<ZLMimeType> APPLICATION_LITRES_XML_AUTHORS;

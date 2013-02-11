@@ -24,6 +24,8 @@
 
 #include "OPDSXMLParser.h"
 
+#include <iostream> //udmv
+
 static const std::string TAG_FEED = "feed";
 static const std::string TAG_ENTRY = "entry";
 static const std::string TAG_AUTHOR = "author";
@@ -229,12 +231,13 @@ void OPDSXMLParser::startElementHandler(const char *tag, const char **attributes
 
 void OPDSXMLParser::endElementHandler(const char *tag) {
 	ZLUnicodeUtil::utf8Trim(myBuffer);
-
+    std::cout << "OPDSXMLParser::endElementHandler tag: " << tag << std::endl;
 	switch (myState) {
 		case START:
 			break;
 		case FEED:
 			if (testTag(ZLXMLNamespace::Atom, TAG_FEED, tag)) {
+                std::cout << "OPDSXMLParser::endElementHandler tag: END " << tag << ", process FEED, " << myFeed->links().size() << std::endl;
 				myFeedReader->processFeedMetadata(myFeed);
 				myFeed.reset();
 				myFeedReader->processFeedEnd();
@@ -243,6 +246,7 @@ void OPDSXMLParser::endElementHandler(const char *tag) {
 			break;
 		case F_ENTRY:
 			if (testTag(ZLXMLNamespace::Atom, TAG_ENTRY, tag)) {
+                std::cout << "OPDSXMLParser::endElementHandler tag: END " << tag << ", process entry, " << myEntry->links().size() << std::endl;
 				myFeedReader->processFeedEntry(myEntry);
 				myEntry.reset();
 				myState = FEED;
@@ -416,6 +420,7 @@ void OPDSXMLParser::endElementHandler(const char *tag) {
 			break;
 		case FE_LINK:
 			if (testTag(ZLXMLNamespace::Atom, TAG_LINK, tag)) {
+                std::cout << "OPDSXMLParser::endElementHandler tag: END " << tag << ", process link, " << myLink->href() << std::endl;
 				myEntry->links().push_back(myLink);
 				myLink.reset();
 				myState = F_ENTRY;

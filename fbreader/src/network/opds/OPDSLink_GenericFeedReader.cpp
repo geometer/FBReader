@@ -28,6 +28,10 @@
 #include "OPDSLink_GenericFeedReader.h"
 #include "OpenSearchXMLReader.h"
 
+#include "../rss/RSSLink.h"
+
+#include <iostream> //udmv
+
 OPDSLink::GenericFeedReader::GenericFeedReader(
 	std::vector<shared_ptr<NetworkLink> >& links
 ) :
@@ -48,6 +52,7 @@ void OPDSLink::GenericFeedReader::processFeedEnd() {
 void OPDSLink::GenericFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) {
 	std::map<std::string,std::string> links;
 	std::string iconURL;
+    shared_ptr<ZLMimeType> specType;
 	for (std::size_t i = 0; i < entry->links().size(); ++i) {
 		ATOMLink &link = *(entry->links()[i]);
 		const std::string &href = link.href();
@@ -57,6 +62,7 @@ void OPDSLink::GenericFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) 
 			links[rel] = OpenSearchXMLReader::convertOpenSearchURL(href);
 		} else if (rel == "") {
 			links[NetworkLink::URL_MAIN] = href;
+            specType = type;
 		} else if (rel == OPDSConstants::REL_LINK_SIGN_IN) {
 			links[NetworkLink::URL_SIGN_IN] = href;
 		} else if (rel == OPDSConstants::REL_LINK_SIGN_OUT) {
@@ -89,25 +95,33 @@ void OPDSLink::GenericFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) 
 	std::string summary = entry->summary();
 	std::string language = entry->dcLanguage();
 
-	shared_ptr<NetworkLink> link = new OPDSLink(id.substr(25)); //why just 25 symbols?
-	link->setTitle(entry->title());
-	link->setSummary(summary);
-	link->setLanguage(language);
-	link->setIcon(iconURL);
-	link->setLinks(links);
-	link->setPredefinedId(id);
-	link->setUpdated(entry->updated());
+    if(!specType.isNull()){
+        shared_ptr<NetworkLink> link;
+        if (specType->weakEquals(*ZLMimeType::APPLICATION_RSS_XML)) {
+            link = new RSSLink(id.substr(25)); //why just 25 symbols?
+        }else{
+            link = new OPDSLink(id.substr(25)); //why just 25 symbols?
+        }
+        std::cout << "  2. GenericFeedReader::processFeedEntry entry->title() " << entry->title() << std::endl;
+        link->setTitle(entry->title());
+        link->setSummary(summary);
+        link->setLanguage(language);
+        link->setIcon(iconURL);
+        link->setLinks(links);
+        link->setPredefinedId(id);
+        link->setUpdated(entry->updated());
 
-	OPDSLink &opdsLink = static_cast<OPDSLink&>(*link);
-	opdsLink.setUrlRewritingRules(myUrlRewritingRules);
-	if (!myAdvancedSearch.isNull()) {
-		opdsLink.setAdvancedSearch(myAdvancedSearch);
-	}
-	opdsLink.setRelationAliases(myRelationAliases);
-	if (myAuthenticationType == "litres") {
-			opdsLink.setAuthenticationManager(new LitResAuthenticationManager(*link));
-	}
-	myLinks.push_back(link);
+        OPDSLink &opdsLink = static_cast<OPDSLink&>(*link);
+        opdsLink.setUrlRewritingRules(myUrlRewritingRules);
+        if (!myAdvancedSearch.isNull()) {
+            opdsLink.setAdvancedSearch(myAdvancedSearch);
+        }
+        opdsLink.setRelationAliases(myRelationAliases);
+        if (myAuthenticationType == "litres") {
+            opdsLink.setAuthenticationManager(new LitResAuthenticationManager(*link));
+        }
+        myLinks.push_back(link);
+    }
 }
 
 void OPDSLink::GenericFeedReader::clear() {

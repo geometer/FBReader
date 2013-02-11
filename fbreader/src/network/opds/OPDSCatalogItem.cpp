@@ -27,6 +27,8 @@
 
 #include "../NetworkOperationData.h"
 
+#include <iostream> //udmv
+
 OPDSCatalogItem::OPDSCatalogItem(
 	const OPDSLink &link,
 	const std::string &title,
@@ -61,6 +63,7 @@ private:
 
 std::string OPDSCatalogItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener) {
 	myLoadingState.clear();
+    std::cout << "OPDSCatalogItem::loadChildren" << std::endl;
 	shared_ptr<ZLNetworkRequest> request = ((OPDSLink&)Link).createNetworkRequest(getCatalogUrl(), myLoadingState);
 	new OPDSCatalogItemRunnable(request, children, myLoadingState, listener);
 	return std::string();

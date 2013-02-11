@@ -174,7 +174,7 @@ private:
 	void run() {
 		std::vector<shared_ptr<NetworkLink> > links;
 		shared_ptr<OPDSFeedReader> feedReader = new OPDSLink::GenericFeedReader(links);
-		shared_ptr<ZLXMLReader> parser = new OPDSLink::GenericXMLParser(feedReader);
+        shared_ptr<ZLXMLReader> parser = new OPDSLink::GenericXMLParser(feedReader);
 		parser->readDocument(*myGenericFile);
 
 		for (std::vector<shared_ptr<NetworkLink> >::iterator it = links.begin(); it != links.end(); ++it) {
@@ -216,7 +216,8 @@ void NetworkLinkCollection::initialize() {
 void NetworkLinkCollection::synchronize() {
 	NetworkDB::Instance().loadNetworkLinks(myLinks);
 	std::sort(myLinks.begin(), myLinks.end(), Comparator());
-	updateLinks("http://data.fbreader.org/catalogs/generic-1.9.xml");
+    //updateLinks("http://data.fbreader.org/catalogs/generic-1.9.xml");
+    updateLinks("http://udmv.net/freebookshub/generic-1.9.xml");
 }
 
 void NetworkLinkCollection::updateLinks(std::string genericUrl) {

@@ -34,6 +34,7 @@ const shared_ptr<ZLMimeType> ZLMimeType::APPLICATION_PALM_DB = ZLMimeType::get("
 const shared_ptr<ZLMimeType> ZLMimeType::APPLICATION_OR_XML = ZLMimeType::get("application/x-orp-bcd1+xml");
 
 const shared_ptr<ZLMimeType> ZLMimeType::APPLICATION_ATOM_XML = ZLMimeType::get("application/atom+xml");
+const shared_ptr<ZLMimeType> ZLMimeType::APPLICATION_RSS_XML = ZLMimeType::get("application/rss+xml");
 const shared_ptr<ZLMimeType> ZLMimeType::APPLICATION_LITRES_XML = ZLMimeType::get("application/litres+xml");
 const shared_ptr<ZLMimeType> ZLMimeType::APPLICATION_LITRES_XML_BOOKS = ZLMimeType::get("application/litres+xml;type=books");
 const shared_ptr<ZLMimeType> ZLMimeType::APPLICATION_LITRES_XML_AUTHORS = ZLMimeType::get("application/litres+xml;type=authors");
