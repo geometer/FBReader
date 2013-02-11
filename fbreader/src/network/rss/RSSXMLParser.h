@@ -2,12 +2,18 @@
 #define RSSXMLPARSER_H
 
 #include <ZLXMLReader.h>
+#include <ZLUnicodeUtil.h>
+#include <ZLXMLNamespace.h>
+
+#include "RSSChannelReader.h"
+#include "RSSMetadata.h"
+
 #include "../NetworkItems.h"
 #include "../NetworkOperationData.h"
 
 class RSSXMLParser : public ZLXMLReader{
 public:
-    RSSXMLParser(const NetworkLink &link, NetworkOperationData &result);
+    RSSXMLParser(shared_ptr<RSSChannelReader> channelReader);
 
 protected:
     void startElementHandler(const char *tag, const char **attributes);
@@ -17,7 +23,9 @@ protected:
 
 protected:
     enum State {
-        START
+        START,
+        RSS, CHANNEL, C_TITLE, C_LINK,
+        ITEM, TITLE, LINK, COMMENTS, PDATE, CATEGORY, GUID, DESCRIPTION, CONTENT, COMMENTS_RSS
     };
 
 protected:
@@ -25,7 +33,12 @@ protected:
 
 private:
     std::string myBuffer;
+    shared_ptr<RSSChannelReader> myChannelReader;
+    shared_ptr<RSSItem> myRSSItem;
 
+    shared_ptr<ATOMId> myId;
+    shared_ptr<ATOMUpdated> myUpdated;
+    shared_ptr<ATOMLink> myLink;
 };
 
 #endif // RSSXMLPARSER_H

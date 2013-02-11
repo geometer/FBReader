@@ -4,6 +4,7 @@
 #include "../opds/OPDSLink.h"
 #include "RSSCatalogItem.h"
 #include "RSSXMLParser.h"
+#include "NetworkRSSChannelReader.h"
 
 class RSSLink : public OPDSLink
 {

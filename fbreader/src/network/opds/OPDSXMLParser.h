@@ -51,7 +51,7 @@ protected:
 		FEL_PRICE, FEL_FORMAT,
 		FEA_NAME, FEA_URI, FEA_EMAIL,
 		OPENSEARCH_TOTALRESULTS, OPENSEARCH_ITEMSPERPAGE, OPENSEARCH_STARTINDEX,
-		FEC_HACK_SPAN,
+        FEC_HACK_SPAN,
 	};
 
 protected:
@@ -69,11 +69,11 @@ private:
 	shared_ptr<ATOMLink> myLink;
 	shared_ptr<ATOMCategory> myCategory;
 	shared_ptr<ATOMUpdated> myUpdated;
-	shared_ptr<ATOMPublished> myPublished;
+    shared_ptr<ATOMPublished> myPublished;
 
-	//shared_ptr<ATOMTitle> myTitle;      // TODO: implement ATOMTextConstruct & ATOMTitle
-	//shared_ptr<ATOMSummary> mySummary;  // TODO: implement ATOMTextConstruct & ATOMSummary
-	bool mySummaryTagFound;
+    //shared_ptr<ATOMTitle> myTitle;      // TODO: implement ATOMTextConstruct & ATOMTitle
+    //shared_ptr<ATOMSummary> mySummary;  // TODO: implement ATOMTextConstruct & ATOMSummary
+    bool mySummaryTagFound;
 };
 
 #endif /* __OPDSXMLPARSER_H__ */

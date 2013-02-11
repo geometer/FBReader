@@ -231,7 +231,15 @@ bool ZLXMLReader::testTag(const std::string &ns, const std::string &name, const 
 
 	if (name == tag) {
 		const nsMap::const_iterator it = nspaces.find(std::string());
-		return it != nspaces.end() && ns == it->second;
+        bool res = (it != nspaces.end() && ns == it->second);
+
+        //in case, when xmlns is missed in a feed find, trying to find xmlns:atom
+        if(!res){
+            const nsMap::const_iterator it = nspaces.find("atom");
+            res = (it != nspaces.end() && ns == it->second);
+        }
+
+        return res;
 	}
 	const int nameLen = name.size();
 	const int tagLen = tag.size();

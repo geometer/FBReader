@@ -22,6 +22,6 @@ shared_ptr<ZLNetworkRequest> RSSLink::createNetworkRequest(const std::string &ur
     if (url.empty()) {
         return 0;
     }
-    std::cout << "-> RSSLink::createNetworkRequest url: " << url << std::endl;
-    return ZLNetworkManager::Instance().createXMLParserRequest(url, new RSSXMLParser(*this, result));
+    std::cout << "-> RSSLink::createNetworkRequest url: " << url << std::endl;//NetworkRSSFeedReader
+    return ZLNetworkManager::Instance().createXMLParserRequest(url, new RSSXMLParser(new NetworkRSSChannelReader(*this, url, result)));
 }
