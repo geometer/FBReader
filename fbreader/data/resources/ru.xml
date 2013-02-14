@@ -285,6 +285,7 @@
 			<node name="read" value="Читать локальную копию"/>
 			<node name="delete" value="Удалить локальную копию"/>
 			<node name="download" value="Скачать"/>
+			<node name="downloadInBrowser" value="Скачать через браузер"/>
 			<node name="readDemo" value="Читать фрагмент"/>
 			<node name="downloadDemo" value="Скачать фрагмент"/>
 			<node name="demo" value="фрагмент"/>

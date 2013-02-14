@@ -154,7 +154,7 @@ void RSSXMLParser::endElementHandler(const char *tag){
         case LINK:
             if (testTag(ZLXMLNamespace::Atom, TAG_LINK, tag)) {
                 std::cout << "[RSSXMLParser] << end TAG = " << tag << ", " << myBuffer << std::endl;
-                myLink = new ATOMLink(myBuffer);
+                myLink = new ATOMLink(myBuffer, OPDSConstants::REL_ACQUISITION_DOWNLOAD_IN_BROWSER);
                 myRSSItem->links().push_back(myLink);
                 myLink.reset();
                 myState = ITEM;

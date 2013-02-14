@@ -73,7 +73,9 @@ static std::vector<shared_ptr<ZLTreeAction> > getBookActions(NetworkBookTree &tr
 		actions.push_back(new NetworkBookBuyDirectlyAction(tree, book));
 	} else if (!book.reference(BookReference::BUY_IN_BROWSER).isNull()) {
 		actions.push_back(new NetworkBookBuyInBrowserAction(book));
-	}
+    } else if (!book.reference(BookReference::DOWNLOAD_IN_BROWSER).isNull()) {
+        actions.push_back(new NetworkBookDownloadInBrowserAction(book));
+    }
 	return actions;
 }
 

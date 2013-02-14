@@ -84,9 +84,19 @@ public:
 	std::string text(const ZLResource &resource) const;
 	void run();
 
-private:
+protected:
 	const NetworkBookItem &myBook;
+    BookReference::Type myType;
 };
+
+class NetworkBookDownloadInBrowserAction : public NetworkBookBuyInBrowserAction {
+
+public:
+    NetworkBookDownloadInBrowserAction(const NetworkBookItem &book);
+    ZLResourceKey key() const;
+};
+
+
 
 class NetworkBookDeleteAction : public ZLRunnableWithKey {
 

@@ -29,6 +29,7 @@ const std::string OPDSConstants::REL_CATALOG_AUTHOR = "http://data.fbreader.org/
 const std::string OPDSConstants::REL_ACQUISITION  = "http://opds-spec.org/acquisition";
 const std::string OPDSConstants::REL_ACQUISITION_OPEN = "http://opds-spec.org/acquisition/open-access";
 const std::string OPDSConstants::REL_ACQUISITION_BUY = "http://opds-spec.org/acquisition/buy";
+const std::string OPDSConstants::REL_ACQUISITION_DOWNLOAD_IN_BROWSER = "http://opds-spec.org/acquisition/downloadInBrowser";
 //const std::string OPDSConstants::REL_ACQUISITION_BORROW = "http://opds-spec.org/acquisition/borrow";
 //const std::string OPDSConstants::REL_ACQUISITION_SUBSCRIBE = "http://opds-spec.org/acquisition/subscribe";
 const std::string OPDSConstants::REL_ACQUISITION_SAMPLE = "http://opds-spec.org/acquisition/sample";

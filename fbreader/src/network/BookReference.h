@@ -32,7 +32,8 @@ public:
 		DOWNLOAD_FULL_OR_DEMO,
 		BUY,
 		BUY_IN_BROWSER,
-		UNKNOWN
+        UNKNOWN,
+        DOWNLOAD_IN_BROWSER
 	};
 
 	enum Format {

@@ -3,11 +3,12 @@
 
 #include "../NetworkItems.h"
 #include "RSSMetadata.h"
+#include "RSSLink.h"
 
 class RSSBookItem : public NetworkBookItem
 {
 public:
-    RSSBookItem(const NetworkLink &link, RSSItem &item, unsigned int index);
+    RSSBookItem(const RSSLink &link, RSSItem &item, unsigned int index);
 
 protected:
     NetworkItem::UrlInfoCollection getUrls(RSSItem &item);

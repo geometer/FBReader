@@ -14,6 +14,8 @@
 #include "RSSChannelReader.h"
 #include "RSSMetadata.h"
 
+#include "../opds/OPDSMetadata.h"
+
 #include "../NetworkItems.h"
 #include "../NetworkOperationData.h"
 

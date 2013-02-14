@@ -302,7 +302,18 @@ void NetworkBookBuyDirectlyAction::finished(const std::string &error) {
 	}
 }
 
+
+
+NetworkBookDownloadInBrowserAction::NetworkBookDownloadInBrowserAction(const NetworkBookItem &book) : NetworkBookBuyInBrowserAction(book) {
+    myType = BookReference::DOWNLOAD_IN_BROWSER;
+}
+
+ZLResourceKey NetworkBookDownloadInBrowserAction::key() const {
+    return ZLResourceKey("downloadInBrowser");
+}
+
 NetworkBookBuyInBrowserAction::NetworkBookBuyInBrowserAction(const NetworkBookItem &book) : myBook(book) {
+    myType = BookReference::BUY_IN_BROWSER;
 }
 
 ZLResourceKey NetworkBookBuyInBrowserAction::key() const {
@@ -314,12 +325,12 @@ bool NetworkBookBuyInBrowserAction::makesSense() const {
 		myBook.localCopyFileName().empty() &&
 		myBook.reference(BookReference::DOWNLOAD_FULL).isNull() &&
 		myBook.reference(BookReference::BUY).isNull() &&
-		!myBook.reference(BookReference::BUY_IN_BROWSER).isNull();
+        !myBook.reference(myType).isNull();
 }
 
 std::string NetworkBookBuyInBrowserAction::text(const ZLResource &resource) const {
 	const std::string text = ZLRunnableWithKey::text(resource);
-	shared_ptr<BookReference> reference = myBook.reference(BookReference::BUY_IN_BROWSER);
+    shared_ptr<BookReference> reference = myBook.reference(myType);
 	if (!reference.isNull()) {
 		return ZLStringUtil::printf(text, ((BuyBookReference&)*reference).Price);
 	}
@@ -327,7 +338,7 @@ std::string NetworkBookBuyInBrowserAction::text(const ZLResource &resource) cons
 }
 
 void NetworkBookBuyInBrowserAction::run() {
-	shared_ptr<BookReference> reference = myBook.reference(BookReference::BUY_IN_BROWSER);
+    shared_ptr<BookReference> reference = myBook.reference(myType);
 	if (!reference.isNull()) {
 		ZLibrary::openUrl(reference->URL);
 	}
