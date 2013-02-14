@@ -102,7 +102,6 @@ void OPDSLink::GenericFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) 
         }else{
             link = new OPDSLink(id.substr(25)); //why just 25 symbols?
         }
-        std::cout << "  2. GenericFeedReader::processFeedEntry entry->title() " << entry->title() << std::endl;
         link->setTitle(entry->title());
         link->setSummary(summary);
         link->setLanguage(language);

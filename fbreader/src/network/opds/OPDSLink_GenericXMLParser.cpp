@@ -23,8 +23,6 @@
 #include "URLRewritingRule.h"
 #include "OPDSLink_AdvancedSearch.h"
 
-#include <iostream> //udmv
-
 static const std::string TAG_ENTRY = "entry";
 static const std::string FBREADER_ADVANCED_SEARCH = "advancedSearch";
 static const std::string FBREADER_AUTHENTICATION = "authentication";
@@ -44,7 +42,6 @@ void OPDSLink::GenericXMLParser::startElementHandler(const char *tag, const char
 	switch (myState) {
 		case FEED:
 			if (testTag(ZLXMLNamespace::Atom, TAG_ENTRY, tag)) {
-                 std::cout << "1. GenericXMLParser::startElementHandler tag " << tag << std::endl;
 				getFeedReader().clear();
 			}
 			break;

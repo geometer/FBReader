@@ -36,8 +36,6 @@
 
 #include "URLRewritingRule.h"
 
-#include <iostream> //udmv
-
 OPDSLink::AdvancedSearch::AdvancedSearch(
 	const std::string &type,
 	const std::string &titleParameter,
@@ -110,7 +108,6 @@ shared_ptr<ZLNetworkRequest> OPDSLink::createNetworkRequest(const std::string &u
 	}
 	std::string modifiedUrl(url);
 	rewriteUrl(modifiedUrl);
-    std::cout << "-> OPDSLink::createNetworkRequest url: " << modifiedUrl << std::endl;
 	return ZLNetworkManager::Instance().createXMLParserRequest(modifiedUrl, new OPDSXMLParser(new NetworkOPDSFeedReader(*this, url, result))	);
 }
 

@@ -36,8 +36,6 @@
 #include "../litres/LitResUtil.h"
 #include "../rss/RSSCatalogItem.h"
 
-#include <iostream> //udmv
-
 NetworkOPDSFeedReader::NetworkOPDSFeedReader(
 	const OPDSLink &link,
 	const std::string &baseURL,
@@ -56,7 +54,6 @@ void NetworkOPDSFeedReader::processFeedStart() {
 void NetworkOPDSFeedReader::processFeedMetadata(shared_ptr<OPDSFeedMetadata> feed) {
 	for (std::size_t i = 0; i < feed->links().size(); ++i) {
 		ATOMLink &link = *(feed->links()[i]);
-        std::cout << "   3. NetworkOPDSFeedReader::processFeedMetadata link " << link.href() << std::endl;
 		const std::string &href = ZLNetworkUtil::url(myBaseURL, link.href());
 		shared_ptr<ZLMimeType> type = ZLMimeType::get(link.type());
 		const std::string &rel = myLink.relation(link.rel(), link.type());
@@ -92,11 +89,9 @@ void NetworkOPDSFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) {
 		return;
 	}
     OPDSEntry &e = *entry;
-    std::cout << "   3. NetworkOPDSFeedReader::processFeedEntry links size " << e.links().size() << std::endl;
 	bool hasBookLink = false;
 	for (std::size_t i = 0; i < e.links().size(); ++i) {
 		ATOMLink &link = *(e.links()[i]);
-        std::cout << "   3. NetworkOPDSFeedReader::processFeedEntry link " << link.href() << std::endl;
 		const std::string &type = link.type();
 		const std::string &rel = myLink.relation(link.rel(), type);
 		if (rel == OPDSConstants::REL_ACQUISITION ||
@@ -110,7 +105,6 @@ void NetworkOPDSFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) {
 			break;
 		}
 	}
-    std::cout << "   3. NetworkOPDSFeedReader::processFeedEntry entry->title() " << entry->title() << std::endl;
 	shared_ptr<NetworkItem> item;
 	if (hasBookLink) {
 		item = new OPDSBookItem(myLink, e, myBaseURL, myIndex++);
@@ -135,7 +129,6 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 		const std::string &href = ZLNetworkUtil::url(myBaseURL, link.href());
 		shared_ptr<ZLMimeType> type = ZLMimeType::get(link.type());
 		const std::string &rel = myLink.relation(link.rel(), link.type());
-        std::cout << "!!! type = " << type->getName() << std::endl;
 		if (ZLMimeType::isImage(type)) {
 			if (rel == OPDSConstants::REL_THUMBNAIL || rel == OPDSConstants::REL_IMAGE_THUMBNAIL) {
 				coverURL = href;
@@ -164,12 +157,10 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 		} else if (type->weakEquals(*ZLMimeType::APPLICATION_LITRES_XML)) {
 			url = href;
 			litresRel = rel;
-            std::cout << "!!! LITRES\n";
             specMimeType = type;
         } else if (type->weakEquals(*ZLMimeType::APPLICATION_RSS_XML)) {
             url = href;
             htmlURL = href;
-            std::cout << "!!! RSS\n";
             specMimeType = type;
         }
 	}
@@ -200,7 +191,6 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
         if (specMimeType->weakEquals(*ZLMimeType::APPLICATION_LITRES_XML)) {
             return LitResUtil::createLitResNode(specMimeType, litresRel, myData.Link, entry.title(), annotation, urlMap, dependsOnAccount);
         } else if (specMimeType->weakEquals(*ZLMimeType::APPLICATION_RSS_XML)) {
-            //RSS
             return new RSSCatalogItem(
                 (OPDSLink&)myData.Link,
                 entry.title(),
