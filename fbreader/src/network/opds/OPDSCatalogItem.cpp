@@ -24,6 +24,7 @@
 #include "OPDSLink.h"
 #include "OPDSXMLParser.h"
 #include "NetworkOPDSFeedReader.h"
+#include "../NetworkErrors.h"
 
 #include "../NetworkOperationData.h"
 
@@ -40,9 +41,9 @@ OPDSCatalogItem::OPDSCatalogItem(
 class OPDSCatalogItemRunnable : public ZLNetworkRequest::Listener {
 public:
 	OPDSCatalogItemRunnable(shared_ptr<ZLNetworkRequest> request, NetworkItem::List &children, NetworkOperationData &data, shared_ptr<ZLNetworkRequest::Listener> listener) :
-		myChildren(children), myLoadingData(data), myListener(listener) {
-		request->setListener(this);
-		ZLNetworkManager::Instance().performAsync(request);
+        myChildren(children), myLoadingData(data), myListener(listener) {
+        request->setListener(this);
+        ZLNetworkManager::Instance().performAsync(request);
 	}
 	void finished(const std::string &error) {
 		myChildren.insert(myChildren.end(), myLoadingData.Items.begin(), myLoadingData.Items.end());
@@ -62,7 +63,11 @@ private:
 std::string OPDSCatalogItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener) {
 	myLoadingState.clear();
 	shared_ptr<ZLNetworkRequest> request = ((OPDSLink&)Link).createNetworkRequest(getCatalogUrl(), myLoadingState);
-	new OPDSCatalogItemRunnable(request, children, myLoadingState, listener);
+    if(!request.isNull()){
+        new OPDSCatalogItemRunnable(request, children, myLoadingState, listener);
+    }else{
+        listener->finished(NetworkErrors::errorMessage(NetworkErrors::ERROR_CANT_DOWNLOAD_BOOKS_LIST));
+    }
 	return std::string();
 }
 

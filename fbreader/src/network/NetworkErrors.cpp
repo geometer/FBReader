@@ -44,6 +44,7 @@ const std::string NetworkErrors::ERROR_SOMETHING_WRONG = "somethingWrongMessage"
 const std::string NetworkErrors::ERROR_UNSUPPORTED_OPERATION = "unsupportedOperation";
 
 const std::string NetworkErrors::ERROR_CANT_DOWNLOAD_LIBRARIES_LIST = "librariesListDownloadingFailed";
+const std::string NetworkErrors::ERROR_CANT_DOWNLOAD_BOOKS_LIST = "booksListDownloadingFailed";
 const std::string NetworkErrors::ERROR_TIMEOUT_EXPIRED = "operationTimedOutMessage";
 
 

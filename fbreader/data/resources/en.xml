@@ -517,6 +517,7 @@
 			<node name="tooManyRegistrations" value="Too many registrations from your IP;&#10;try again in a few minutes"/>
 			<node name="noUserEmail" value="No user was registered&#10;with specified e-mail address"/>
 			<node name="librariesListDownloadingFailed" value="Downloading list of network libraries failed"/>
+			<node name="booksListDownloadingFailed" value="Downloading list of library books failed"/>
 		</node>
 		<node name="downloadError">
 			<node name="title" value="Error while downloading"/>

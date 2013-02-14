@@ -47,7 +47,8 @@ public:
 
 	static const std::string ERROR_SOMETHING_WRONG;
 	static const std::string ERROR_UNSUPPORTED_OPERATION;
-	static const std::string ERROR_CANT_DOWNLOAD_LIBRARIES_LIST;
+    static const std::string ERROR_CANT_DOWNLOAD_LIBRARIES_LIST;
+    static const std::string ERROR_CANT_DOWNLOAD_BOOKS_LIST;
 
 	static const std::string ERROR_TIMEOUT_EXPIRED;
 
