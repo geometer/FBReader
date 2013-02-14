@@ -8,6 +8,8 @@ static const std::string TAG_ITEM = "item";
 static const std::string TAG_TITLE = "title";
 static const std::string TAG_LINK = "link";
 static const std::string TAG_GUID = "guid";
+static const std::string TAG_DESCRIPTION = "description";
+static const std::string TAG_PUBDATE = "pubDate";
 
 RSSXMLParser::RSSXMLParser(shared_ptr<RSSChannelReader> channelReader) : myState(START), myChannelReader(channelReader) {
 }
@@ -52,9 +54,17 @@ void RSSXMLParser::startElementHandler(const char *tag, const char **attributes)
                 std::cout << "[RSSXMLParser] >> start TAG = " << tag << std::endl;
                 myState = LINK;
             }
+            if (testTag(ZLXMLNamespace::Atom, TAG_DESCRIPTION, tag)) {
+                std::cout << "[RSSXMLParser] >> start TAG = " << tag << std::endl;
+                myState = DESCRIPTION;
+            }
             if (testTag(ZLXMLNamespace::Atom, TAG_GUID, tag)) {
                 std::cout << "[RSSXMLParser] >> start TAG = " << tag << std::endl;
                 myState = GUID;
+            }
+            if (testTag(ZLXMLNamespace::Atom, TAG_PUBDATE, tag)) {
+                std::cout << "[RSSXMLParser] >> start TAG = " << tag << std::endl;
+                myState = PUBDATE;
             }
     }
 }
@@ -99,7 +109,22 @@ void RSSXMLParser::endElementHandler(const char *tag){
             }
         case TITLE:
             if (testTag(ZLXMLNamespace::Atom, TAG_TITLE, tag)) {
-                myRSSItem->setTitle(myBuffer);
+
+
+                const std::string mark = "~ by:";
+                unsigned found = myBuffer.find(mark);
+                if (found != std::string::npos){
+                    std::string title = myBuffer.substr(0, found);
+                    myRSSItem->setTitle(title);
+
+                    std::string authorName = myBuffer.substr(found+mark.length());
+                    myAuthor = new ATOMAuthor(authorName);
+                    myRSSItem->authors().push_back(myAuthor);
+                    myAuthor.reset();
+                }else{
+                    myRSSItem->setTitle(myBuffer);
+                }
+
                 std::cout << "[RSSXMLParser] << end TAG = " << tag << ", " << myBuffer << std::endl;
                 myState = ITEM;
             }
@@ -108,8 +133,20 @@ void RSSXMLParser::endElementHandler(const char *tag){
             if (testTag(ZLXMLNamespace::Atom, TAG_GUID, tag)) {
                 myId = new ATOMId(myBuffer);
                 myRSSItem->setId(myId);
-                myUpdated = new ATOMUpdated();
-                myRSSItem->setUpdated(myUpdated);
+                std::cout << "[RSSXMLParser] << end ! TAG = " << tag << ", " << myBuffer << std::endl;
+                myState = ITEM;
+            }
+            break;
+        case DESCRIPTION:
+            if (testTag(ZLXMLNamespace::Atom, TAG_DESCRIPTION, tag)) {
+                myRSSItem->setSummary(myBuffer);
+                std::cout << "[RSSXMLParser] << end ! TAG = " << tag << ", " << myBuffer << std::endl;
+                myState = ITEM;
+            }
+            break;
+        case PUBDATE:
+            if (testTag(ZLXMLNamespace::Atom, TAG_PUBDATE, tag)) {
+                myRSSItem->setUserData("pubdate", myBuffer);
                 std::cout << "[RSSXMLParser] << end ! TAG = " << tag << ", " << myBuffer << std::endl;
                 myState = ITEM;
             }

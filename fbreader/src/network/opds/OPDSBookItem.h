@@ -41,7 +41,7 @@ public:
 protected:
 	static std::string getAnnotation(OPDSEntry &entry);
 	static std::string getDate(OPDSEntry &entry);
-	static std::vector<AuthorData> getAuthors(OPDSEntry &entry);
+    static std::vector<AuthorData> getAuthors(OPDSEntry &entry);
 	static std::vector<std::string> getTags(OPDSEntry &entry);
 	static UrlInfoCollection getUrls(const OPDSLink &networkLink, OPDSEntry &entry, std::string baseUrl);
 	//TODO implement one UrlInfoCollection to not duplicate similar methods

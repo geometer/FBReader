@@ -17,7 +17,6 @@
 RSSCatalogItem::RSSCatalogItem(const OPDSLink &link, const std::string &title, const std::string &summary,
                                const UrlInfoCollection &urlByType, AccessibilityType accessibility, int flags)
                                 : NetworkCatalogItem(link, title, summary, urlByType, accessibility, flags), myLoadingState(Link) {
-    std::cout << "!!!!! RSSCatalogItem\n";
 }
 
 class RSSCatalogItemRunnable : public ZLNetworkRequest::Listener {
@@ -45,8 +44,6 @@ std::string RSSCatalogItem::loadChildren(NetworkItem::List &children, shared_ptr
     myLoadingState.clear();
     std::cout << "RSSCatalogItem::loadChildren" << std::endl;
     shared_ptr<ZLNetworkRequest> request = ((RSSLink&)Link).createNetworkRequest(getCatalogUrl(), myLoadingState);
-    //shared_ptr<ZLNetworkRequest> request = ZLNetworkManager::Instance().createXMLParserRequest(getCatalogUrl(), new RSSXMLParser(new NetworkOPDSFeedReader(((OPDSLink&)Link), getCatalogUrl(), myLoadingState))	);
-    //shared_ptr<ZLNetworkRequest> request = ZLNetworkManager::Instance().createXMLParserRequest(getCatalogUrl(), new RSSXMLParser(Link, children));
     new RSSCatalogItemRunnable(request, children, myLoadingState, listener);
     return std::string();
 }

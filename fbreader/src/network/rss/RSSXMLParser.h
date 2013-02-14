@@ -1,6 +1,12 @@
 #ifndef RSSXMLPARSER_H
 #define RSSXMLPARSER_H
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+#include <ZLStringUtil.h>
 #include <ZLXMLReader.h>
 #include <ZLUnicodeUtil.h>
 #include <ZLXMLNamespace.h>
@@ -25,7 +31,7 @@ protected:
     enum State {
         START,
         RSS, CHANNEL, C_TITLE, C_LINK,
-        ITEM, TITLE, LINK, COMMENTS, PDATE, CATEGORY, GUID, DESCRIPTION, CONTENT, COMMENTS_RSS
+        ITEM, TITLE, LINK, COMMENTS, PUBDATE, CATEGORY, GUID, DESCRIPTION, CONTENT, COMMENTS_RSS
     };
 
 protected:
@@ -39,6 +45,7 @@ private:
     shared_ptr<ATOMId> myId;
     shared_ptr<ATOMUpdated> myUpdated;
     shared_ptr<ATOMLink> myLink;
+    shared_ptr<ATOMAuthor> myAuthor;
 };
 
 #endif // RSSXMLPARSER_H

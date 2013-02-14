@@ -85,7 +85,7 @@ void NetworkBookTree::init() {
 }
 
 std::string NetworkBookTree::title() const {
-	return myBook->Title;
+    return myBook->Title;
 }
 
 std::string NetworkBookTree::subtitle() const {
