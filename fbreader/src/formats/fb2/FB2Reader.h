@@ -45,6 +45,9 @@ private:
 public:
 	enum TagCode {
 		_P,
+		_UL,
+		_OL,
+		_LI,
 		_SUBTITLE,
 		_CITE,
 		_TEXT_AUTHOR,
@@ -87,6 +90,7 @@ protected:
 
 protected:
 	const FullNamePredicate myHrefPredicate;
+	const BrokenNamePredicate myBrokenHrefPredicate;
 };
 
 inline FB2Reader::~FB2Reader() {}

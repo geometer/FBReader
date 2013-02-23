@@ -1,7 +1,8 @@
-===== 0.99.6 (Jan ??, 2013) =====
+===== 0.99.6 (Feb ??, 2013) =====
 
 * ePub: fixed SVG namespace processing
 * ePub (XHTML): nested body tag support
+* Some incorrect FB2 files support (li/i/b tags, href attributes with no namespace and with unknown namespace ids)
 
 ===== 0.99.5 (Dec 24, 2012) =====
 
