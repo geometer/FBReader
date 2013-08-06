@@ -30,8 +30,6 @@
 
 #include "../rss/RSSLink.h"
 
-#include <iostream> //udmv
-
 OPDSLink::GenericFeedReader::GenericFeedReader(
 	std::vector<shared_ptr<NetworkLink> >& links
 ) :

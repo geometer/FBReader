@@ -1,8 +1,26 @@
+/*
+ * Copyright (C) 2009-2013 Geometer Plus <contact@geometerplus.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
+ */
+
 #include "RSSLink.h"
 
 #include <ZLNetworkUtil.h>
 #include <ZLNetworkManager.h>
-#include <iostream> //udmv
 
 RSSLink::RSSLink(const std::string &siteName) : OPDSLink(siteName){
 }
@@ -21,6 +39,5 @@ shared_ptr<ZLNetworkRequest> RSSLink::createNetworkRequest(const std::string &ur
     if (url.empty()) {
         return 0;
     }
-    std::cout << "-> RSSLink::createNetworkRequest url: " << url << std::endl;
     return ZLNetworkManager::Instance().createXMLParserRequest(url, new RSSXMLParser(new NetworkRSSChannelReader(*this, url, result)));
 }

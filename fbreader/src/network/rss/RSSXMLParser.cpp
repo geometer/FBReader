@@ -1,6 +1,23 @@
-#include "RSSXMLParser.h"
+/*
+ * Copyright (C) 2009-2013 Geometer Plus <contact@geometerplus.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
+ */
 
-#include <iostream> //udmv
+#include "RSSXMLParser.h"
 
 static const std::string TAG_RSS = "rss";
 static const std::string TAG_CHANNEL = "channel";
@@ -90,19 +107,7 @@ void RSSXMLParser::endElementHandler(const char *tag){
             }
         case TITLE:
             if (testTag(ZLXMLNamespace::Atom, TAG_TITLE, tag)) {
-                const std::string mark = "~ by:";
-                unsigned found = myBuffer.find(mark);
-                if (found != std::string::npos){
-                    std::string title = myBuffer.substr(0, found);
-                    myRSSItem->setTitle(title);
-
-                    std::string authorName = myBuffer.substr(found+mark.length());
-                    myAuthor = new ATOMAuthor(authorName);
-                    myRSSItem->authors().push_back(myAuthor);
-                    myAuthor.reset();
-                }else{
-                    myRSSItem->setTitle(myBuffer);
-                }
+                parseTitle();
                 myState = ITEM;
             }
             break;
@@ -136,6 +141,35 @@ void RSSXMLParser::endElementHandler(const char *tag){
     }
     myBuffer.clear();
 }
+
+void RSSXMLParser::parseTitle(){
+    std::vector<std::string> marks;
+    marks.push_back("~ by:");
+    marks.push_back("— By");
+    marks.push_back("– By");
+    marks.push_back("By");
+    marks.push_back("by");
+
+    unsigned found = std::string::npos;
+    for(int i=0; i< marks.size(); i++){
+        found = myBuffer.find(marks[i]);
+        if(found != std::string::npos){
+            std::string title = myBuffer.substr(0, found);
+            myRSSItem->setTitle(title);
+
+            std::string authorName = myBuffer.substr(found+marks[i].length());
+            myAuthor = new ATOMAuthor(authorName);
+            myRSSItem->authors().push_back(myAuthor);
+            myAuthor.reset();
+            break;
+        }
+    }
+
+    if(found == std::string::npos){
+        myRSSItem->setTitle(myBuffer);
+    }
+}
+
 
 void RSSXMLParser::characterDataHandler(const char *text, std::size_t len){
     myBuffer.append(text, len);

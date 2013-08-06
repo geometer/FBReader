@@ -29,6 +29,9 @@ protected:
     void characterDataHandler(const char *text, std::size_t len);
     bool processNamespaces() const;
 
+private:
+    void parseTitle();
+
 protected:
     enum State {
         START,
@@ -39,7 +42,7 @@ protected:
 protected:
     State myState;
 
-private:
+protected:
     std::string myBuffer;
     shared_ptr<RSSChannelReader> myChannelReader;
     shared_ptr<RSSItem> myRSSItem;

@@ -24,8 +24,6 @@
 
 #include "OPDSXMLParser.h"
 
-#include <iostream> //udmv
-
 static const std::string TAG_FEED = "feed";
 static const std::string TAG_ENTRY = "entry";
 static const std::string TAG_AUTHOR = "author";
