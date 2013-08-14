@@ -59,6 +59,7 @@ ZLQtItemsListWidget::ZLQtItemsListWidget(QWidget *parent) : QScrollArea(parent),
 }
 
 void ZLQtItemsListWidget::clear() {
+    std::cout << "clear: " << std::endl;
 	if (myLayout != 0) {
 		delete myLayout;
 		qDeleteAll(myContainerWidget->children());
@@ -68,43 +69,36 @@ void ZLQtItemsListWidget::clear() {
 	myLayout->setSpacing(0);
 	myLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
 	myContainerWidget->setLayout(myLayout);
-
-
 	myItems.clear();
-
 }
 
-void ZLQtItemsListWidget::addNode(ZLTreeTitledNode *titledNode) {
+void ZLQtItemsListWidget::addNode(ZLTreeNode *node) {
 	ZLQtTreeItem *item = new ZLQtTreeItem;
-	item->fill(titledNode);
+    item->fill(node);
 	connect(item, SIGNAL(clicked(ZLQtTreeItem*)), this, SLOT(onNodeClicked(ZLQtTreeItem*))); //action ExpandAction used instead
 	connect(item, SIGNAL(doubleClicked(ZLQtTreeItem*)), this, SIGNAL(nodeDoubleClicked(ZLQtTreeItem*)));
 	myLayout->addWidget(item);
 	myItems.push_back(item);
 }
 
-void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *expandNode) {
-	clear();
-
-	foreach(ZLTreeNode* node, expandNode->children()) {
-		if (ZLTreeTitledNode *titledNode = zlobject_cast<ZLTreeTitledNode*>(node)) {
-			addNode(titledNode);
-		}
-	}
+void ZLQtItemsListWidget::clearNodes(){
+    myItems.clear();
 }
 
-void ZLQtItemsListWidget::fillNewNodes(const ZLTreeNode *rootNode) {
-	if (myLayout == 0) {
-		return;
-	}
+void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *rootNode, bool isMore) {
+    if(!isMore){
+        clear();
+    }
+    std::cout << ">>>>>>>>>>>>>>>>>>>>> 1 fillNodes: " << isMore << std::endl;
+    if (myLayout == 0) {
+        return;
+    }
 
-	size_t oldSize = (size_t)myItems.size();
-
-	for (size_t i = oldSize; i < rootNode->children().size(); ++i) {
-		if (ZLTreeTitledNode *titledNode = zlobject_cast<ZLTreeTitledNode*>(rootNode->children().at(i))) {
-			addNode(titledNode);
-		}
-	}
+    size_t oldSize = (size_t)myItems.size();
+    std::cout << "2 fillNodes: " << oldSize << " : " << rootNode->children().size() << std::endl;
+    for (size_t i = oldSize; i < rootNode->children().size(); ++i) {
+            addNode(rootNode->children().at(i));
+    }
 }
 
 QSize ZLQtItemsListWidget::sizeHint() const {
@@ -167,12 +161,14 @@ ZLQtTreeItem::ZLQtTreeItem(QWidget *parent) : QFrame(parent), myNode(0), myImage
 	clear();
 }
 
-void ZLQtTreeItem::fill(ZLTreeTitledNode *node) {
-	clear();
-	myNode = node;
-	myTitle->setText(QString("<b>%1</b>").arg(::qtString(node->title())));
-	mySubtitle->setText(::qtString(node->subtitle()));
-	fillImage();
+void ZLQtTreeItem::fill(ZLTreeNode *node) {
+    if (ZLTreeTitledNode *titledNode = zlobject_cast<ZLTreeTitledNode*>(node)) {
+        clear();
+        myNode = titledNode;
+        myTitle->setText(QString("<b>%1</b>").arg(::qtString(myNode->title())));
+        mySubtitle->setText(::qtString(myNode->subtitle()));
+        fillImage();
+    }
 }
 
 void ZLQtTreeItem::fillImage() {
@@ -181,13 +177,15 @@ void ZLQtTreeItem::fillImage() {
 	if (!myImageRequested) {
 		return;
 	}
-	shared_ptr<const ZLImage> image = myNode->image();
-	if (!image.isNull()) {
-		QPixmap pixmap = ZLQtImageUtils::ZLImageToQPixmapWithSize(image, QSize(ITEM_SIZE,ITEM_SIZE), false, Qt::SmoothTransformation);
-		if (!pixmap.isNull()) {
-			myIcon->setPixmap(pixmap);
-		}
-	}
+
+    shared_ptr<const ZLImage> image = myNode->image();
+    if (!image.isNull()) {
+        QPixmap pixmap = ZLQtImageUtils::ZLImageToQPixmapWithSize(image, QSize(ITEM_SIZE,ITEM_SIZE), false, Qt::SmoothTransformation);
+        if (!pixmap.isNull()) {
+            myIcon->setPixmap(pixmap);
+        }
+    }
+
 }
 
 void ZLQtTreeItem::clear() {
@@ -223,7 +221,7 @@ bool ZLQtTreeItem::isActive() const {
 	return myIsActive;
 }
 
-ZLTreeTitledNode *ZLQtTreeItem::getNode() const {
+ZLTreeNode *ZLQtTreeItem::getNode() const {
 	return myNode;
 }
 

@@ -34,15 +34,17 @@
 #include "../tree/ZLQtItemsListWidget.h"
 #include "../tree/ZLQtPreviewWidget.h"
 #include "../tree/ZLQtSearchField.h"
+#include "../tree/ZLTreeDataProvider.h"
 #include "../util/ZLQtMainWindow.h"
 
 class ZLQtToolbarButton;
+class ZLTreeDataProvider;
 
 class ZLQtTreeDialog : public ZLQtMainWindow, public ZLTreeDialog {
 	Q_OBJECT
 
 public:
-	ZLQtTreeDialog(const std::string &windowName, const ZLResource &resource);
+    ZLQtTreeDialog(const std::string &windowName, const ZLResource &resource, ZLTreeDataProvider *dataProvider);
 
 public:
 	void run(ZLTreeNode *rootNode);
@@ -88,6 +90,7 @@ private Q_SLOTS:
 
 private:
 	ZLTreeNode *myRootNode;
+    ZLTreeDataProvider *myDataProvider;
 
 private:
 	ZLQtToolbarButton *myBackButton;
@@ -108,24 +111,10 @@ private:
 	QMap<ZLTreeNode*, ShowParameter> myShowParameters;
 
 private:
-	class ChildrenRequestListener : public ZLNetworkRequest::Listener {
-		public:
-			ChildrenRequestListener(ZLQtTreeDialog *dialog, ZLTreeNode *node, bool moreMode);
-			void finished(const std::string &error);
-//			const ZLTreeNode *getNode() const;
-
-		private:
-			ZLQtTreeDialog *myTreeDialog;
-			ZLTreeNode *myNode;
-			bool myMoreMode;
-	};
-
 //	QList<shared_ptr<ZLNetworkRequest::Listener> > myListeners;
-	QSet<ZLTreeNode *> myDownloadingNodes;
-	const ZLTreeNode *myLastClickedNode; //used to 'last clicked item shows first after downloading'
-	const ZLTreeNode *myLastClickedSearchNode; //used to 'last clicked item shows first after downloading'
-
-friend class ChildrenRequestListener;
+    QSet<ZLTreeNode *> myDownloadingNodes;
+    const ZLTreeNode *myLastClickedNode; //used to 'last clicked item shows first after downloading'
+    const ZLTreeNode *myLastClickedSearchNode; //used to 'last clicked item shows first after downloading'
 
 };
 

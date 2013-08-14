@@ -31,18 +31,19 @@
 
 #include "QtWaitingSpinner.h"
 
+#include <iostream> //udmv
+
 class ZLQtTreeItem;
 
 class ZLQtItemsListWidget : public QScrollArea {
 	Q_OBJECT
 public:
 	ZLQtItemsListWidget(QWidget *parent = 0);
-	void fillNodes(const ZLTreeNode *rootNode);
-	void fillNewNodes(const ZLTreeNode *rootNode);
+    void clearNodes();
+    void fillNodes(const ZLTreeNode *rootNode, bool isMore = false);
 	QSize sizeHint() const;
 	void setMinimumWidth(int w);
 	QList<ZLQtTreeItem*> getItems() const;
-
 
 Q_SIGNALS:
 	void nodeClicked(ZLQtTreeItem* item);
@@ -55,7 +56,7 @@ public Q_SLOTS:
 
 private:
 	void clear();
-	void addNode(ZLTreeTitledNode *node);
+    void addNode(ZLTreeNode *node);
 
 private:
 	QWidget *myContainerWidget;
@@ -70,12 +71,12 @@ class ZLQtTreeItem : public QFrame {
 
 public:
 	ZLQtTreeItem(QWidget *parent = 0);
-	void fill(ZLTreeTitledNode *node);
+    void fill(ZLTreeNode *node);
 	void setActive(bool active);
 	bool isActive() const;
 
 public:
-	ZLTreeTitledNode *getNode() const;
+    ZLTreeNode *getNode() const;
 	QtWaitingSpinner *getWaitingIcon() const;
 
 Q_SIGNALS:
@@ -92,7 +93,7 @@ protected:
 	 void clear();
 
 private:
-	 ZLTreeTitledNode *myNode;
+     ZLTreeTitledNode *myNode;
 
 	 QLabel *myIcon;
 	 QLabel *myTitle;
