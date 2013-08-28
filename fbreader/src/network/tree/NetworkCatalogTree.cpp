@@ -29,6 +29,8 @@
 #include "../../networkActions/AuthenticationDialogManager.h"
 #include "NetworkTreeNodes.h"
 
+#include <iostream> //udmv
+
 const ZLTypeId NetworkCatalogTree::TYPE_ID(NetworkTree::TYPE_ID);
 
 const ZLTypeId &NetworkCatalogTree::typeId() const {
@@ -45,6 +47,7 @@ NetworkCatalogTree::NetworkCatalogTree(NetworkCatalogTree *parent, shared_ptr<Ne
 }
 
 void NetworkCatalogTree::init() {
+    std::cout << "[NetworkCatalogTree] init" << std::endl;
 //	if (!item().URLByType[NetworkItem::URL_CATALOG].empty()) {
 //		registerAction(new ExpandCatalogAction(*this));
 //	}
@@ -137,6 +140,7 @@ private:
 };
 
 void NetworkCatalogTree::requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener) {
+    std::cout << "[NetworkCatalogTree] requestChildren" << std::endl;
 	myListeners.push_back(listener);
 	if (myListeners.size() > 1) {
 		return;
@@ -185,6 +189,7 @@ void NetworkCatalogTree::requestMoreChildren(shared_ptr<ZLNetworkRequest::Listen
 }
 
 void NetworkCatalogTree::onChildrenReceived(NetworkItem::List &childrens, const std::string &error) {
+    std::cout << "[NetworkCatalogTree] onChildrenReceived " << childrens.size() << std::endl;
 	if (!error.empty()) {
 		//special case for authenticationFailed after 'cancel' button pressed in AuthDialog?
 		//TODO maybe it'll be work wrong at some cases? maybe we should have another error this case?
@@ -225,6 +230,7 @@ void NetworkCatalogTree::onChildrenReceived(NetworkItem::List &childrens, const 
 }
 
 void NetworkCatalogTree::notifyListeners(const std::string &error) {
+    std::cout << "[NetworkCatalogTree] notifyListeners " << error << std::endl;
 	for (std::size_t i = 0; i < myListeners.size(); ++i) {
 		if (!myListeners.at(i).isNull())
 			myListeners.at(i)->finished(error);

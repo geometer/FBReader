@@ -60,6 +60,8 @@
 #include "../networkActions/AuthenticationDialog.h"
 #include "../network/NetworkErrors.h"
 
+#include "../library/tree/LocalLibrary.h"
+
 static const std::string OPTIONS = "Options";
 
 const std::string FBReader::PageIndexParameter = "pageIndex";
@@ -357,7 +359,10 @@ void FBReader::showLibraryView() {
 	if (ZLStringOption(ZLCategoryKey::LOOK_AND_FEEL, "ToggleButtonGroup", "booksOrder", "").value() == ActionCode::ORGANIZE_BOOKS_BY_TAG) {
 		setView(myLibraryByTagView);
 	} else {
-		setView(myLibraryByAuthorView);
+        //setView(myLibraryByAuthorView);
+        LocalLibrary::Instance().showDialog();
+        //shared_ptr<ZLTreeDialog> myDialog = ZLDialogManager::Instance().createTreeDialog("networkLibrary", ZLResource::resource("networkView"));
+        //myDialog->run(0);
 	}
 }
 
@@ -386,8 +391,8 @@ void FBReader::setMode(ViewMode mode) {
 		case LIBRARY_MODE:
 		{
 			shared_ptr<Book> currentBook = myModel->book();
-			((LibraryView&)*myLibraryByAuthorView).showBook(currentBook);
-			((LibraryView&)*myLibraryByTagView).showBook(currentBook);
+            ((LibraryView&)*myLibraryByAuthorView).showBook(currentBook);
+            ((LibraryView&)*myLibraryByTagView).showBook(currentBook);
 			showLibraryView();
 			break;
 		}

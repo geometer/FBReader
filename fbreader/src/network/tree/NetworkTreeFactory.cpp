@@ -23,10 +23,13 @@
 
 #include "../NetworkBookCollection.h"
 
+#include <iostream> //udmv
+
 NetworkTreeFactory::NetworkTreeFactory() {
 }
 
 ZLTreeTitledNode *NetworkTreeFactory::createNetworkTree(NetworkCatalogTree *parent, shared_ptr<NetworkItem> item, std::size_t position) {
+    std::cout << "[NetworkTreeFactory] createNetworkTree " << position << std::endl;
 	if (item->isInstanceOf(NetworkCatalogItem::TYPE_ID)) {
 		NetworkCatalogItem *catalogItem = (NetworkCatalogItem*)(&*item);
 		if (catalogItem->getVisibility() == B3_FALSE) {
@@ -37,7 +40,7 @@ ZLTreeTitledNode *NetworkTreeFactory::createNetworkTree(NetworkCatalogTree *pare
 		return ptr;
 	} else if (item->isInstanceOf(NetworkBookItem::TYPE_ID)) {
 		return new NetworkBookTree(parent, item, NetworkBookTree::AUTHORS);
-	}
+    }
 	return 0;
 }
 

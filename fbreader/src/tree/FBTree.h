@@ -21,6 +21,7 @@
 #define __FBTREE_H__
 
 #include <ZLTreeTitledNode.h>
+#include <ZLTreeDialog.h>
 
 class FBTree : public ZLTreeTitledNode {
 
@@ -57,8 +58,24 @@ private:
 //	mutable shared_ptr<const ZLImage> myStoredCoverImage;
 };
 
+//maybe RootTree should be nested class for NetworkLibrary?
+class RootTree : public ZLTreeNode {
+
+public:
+    static const ZLTypeId TYPE_ID;
+
+private:
+    const ZLTypeId &typeId() const;
+
+public:
+    RootTree();
+    void setDialog(shared_ptr<ZLTreeDialog> dialog);
 
 
+protected:
+    ZLTreeListener *listener() const;
 
-
+private:
+    shared_ptr<ZLTreeDialog> myListener;
+};
 #endif /* __FBTREE_H__ */

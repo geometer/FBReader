@@ -28,6 +28,8 @@
 #include "../library/Book.h"
 #include "../options/FBOptions.h"
 
+#include <iostream> //udmv
+
 LibraryView::LibraryView(ZLPaintContext &context) : ZLBlockTreeView(context), myCollectionRevision(0) {
 }
 
@@ -35,7 +37,7 @@ void LibraryView::paint() {
 	const std::size_t revision = Library::Instance().revision();
 	if (myCollectionRevision < revision) {
 		myCollectionRevision = revision;
-		makeUpToDate();
+        makeUpToDate();
 	}
 
 	ZLBlockTreeView::paint();
@@ -50,7 +52,7 @@ ZLColor LibraryView::backgroundColor() const {
 }
 
 void LibraryView::showBook(shared_ptr<Book> book) {
-	makeUpToDate();
+    makeUpToDate();
 	ZLBlockTreeNode::List bookNodes;
 	std::queue<ZLBlockTreeNode*> nodesQueue;
 	nodesQueue.push(&rootNode());

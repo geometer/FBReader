@@ -102,6 +102,7 @@ void ZLQtTreeDialog::resizeEvent(QResizeEvent *event){
 
 void ZLQtTreeDialog::onExpandRequest(ZLTreeNode *node) {
     myLastClickedNode = node;
+    std::cout << "!!!! ZLQtTreeDialog::onExpandRequest " << std::endl;
     node->requestChildren(myDataProvider->getData(node, false));
     //node->requestChildren(new ChildrenRequestListener(this, node, false));
 }

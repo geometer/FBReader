@@ -24,6 +24,8 @@
 #include "../library/Book.h"
 #include "../library/Author.h"
 
+#include <iostream> //udmv
+
 LibraryByAuthorView::LibraryByAuthorView(ZLPaintContext &context) : LibraryView(context) {
 }
 
@@ -33,6 +35,7 @@ void LibraryByAuthorView::addAuthorSubtree(shared_ptr<Author> author, std::size_
 }
 
 void LibraryByAuthorView::fillAuthorSubtree(AuthorNode *authorNode, const std::set<shared_ptr<Book> > &visibleBooks) {
+    std::cout << "!! LibraryByAuthorView: " << authorNode->author()->name() << std::endl;
 	const BookList &books = Library::Instance().books(authorNode->author());
 	SeriesNode *seriesNode = 0;
 	for (BookList::const_iterator it = books.begin(); it != books.end(); ++it) {
@@ -109,6 +112,7 @@ void LibraryByAuthorView::updateAuthorSubtree(AuthorNode *authorNode) {
 
 void LibraryByAuthorView::makeUpToDate() {
 	ZLBlockTreeNode *topNode = firstVisibleNode();
+
 	AuthorNode *topAuthorNode = 0;
 	if (topNode != &rootNode()) {
 		FBReaderNode *lNode = (FBReaderNode*)topNode;
@@ -120,6 +124,7 @@ void LibraryByAuthorView::makeUpToDate() {
 
 	bool topAuthorNodeIsUpdated = false;
 	const AuthorList &authors = Library::Instance().authors();
+    std::cout << "Make Up to Date: " << authors.size() << std::endl;
 	std::set<ZLBlockTreeNode*> nodesToDelete;
 	ZLBlockTreeNode::List rootChildren = rootNode().children();
 	AuthorComparator comparator;

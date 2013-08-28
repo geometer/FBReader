@@ -13,6 +13,7 @@ ZLNetworkLibraryDataProvider::ChildrenRequestListener::ChildrenRequestListener(Z
 }
 
 void ZLNetworkLibraryDataProvider::ChildrenRequestListener::finished(const std::string &error) {
+    std::cout << "[ZLNetworkLibraryDataProvider] finished " << error << std::endl;
     if (!error.empty()) {
         //TODO show error message?
     }

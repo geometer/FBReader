@@ -30,27 +30,6 @@
 #include "../NetworkLink.h"
 #include "../../tree/FBTree.h"
 
-//maybe RootTree should be nested class for NetworkLibrary?
-class RootTree : public ZLTreeNode {
-
-public:
-	static const ZLTypeId TYPE_ID;
-
-private:
-	const ZLTypeId &typeId() const;
-
-public:
-	RootTree();
-	void setDialog(shared_ptr<ZLTreeDialog> dialog);
-
-
-protected:
-	ZLTreeListener *listener() const;
-
-private:
-	shared_ptr<ZLTreeDialog> myListener;
-};
-
 class NetworkTree : public FBTree {
 
 public:

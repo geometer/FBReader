@@ -29,6 +29,8 @@
 
 #include "../../networkActions/NetworkActions.h"
 
+#include <iostream> //udmv
+
 const ZLTypeId NetworkBookTree::TYPE_ID(ZLTreePageNode::TYPE_ID);
 
 const ZLTypeId &NetworkBookTree::typeId() const {
@@ -78,6 +80,7 @@ static std::vector<shared_ptr<ZLTreeAction> > getBookActions(NetworkBookTree &tr
 }
 
 void NetworkBookTree::init() {
+    std::cout << "[NetworkBookTree] init " << std::endl;
 	std::vector<shared_ptr<ZLTreeAction> > actions = getBookActions(*this);
 	for (std::size_t i = 0; i < actions.size(); ++i) {
 		registerAction(actions.at(i));

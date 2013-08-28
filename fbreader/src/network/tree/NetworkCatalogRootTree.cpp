@@ -33,6 +33,8 @@
 
 #include "NetworkTreeNodes.h"
 
+#include <iostream> //udmv
+
 class NetworkTreeCatalogAuthAction : public ZLTreeAction {
 
 protected:
@@ -113,6 +115,7 @@ NetworkCatalogRootTree::NetworkCatalogRootTree(RootTree *parent, NetworkLink &li
 }
 
 void NetworkCatalogRootTree::init() {
+    std::cout << "[NetworkCatalogRootTree] init()" << std::endl;
 	shared_ptr<NetworkAuthenticationManager> mgr = myLink.authenticationManager();
 	//registerAction(new ExpandCatalogAction(*this));
 	//registerAction(new ReloadAction(*this));

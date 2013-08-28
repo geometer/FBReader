@@ -29,7 +29,7 @@ ifeq "$(TARGET_STATUS)" "release"
 	CFLAGS += -O3
 endif
 ifeq "$(TARGET_STATUS)" "debug"
-	CFLAGS += -O0 -g
+	CFLAGS += -O0 -g -Wall
 endif
 ifeq "$(TARGET_STATUS)" "profile"
 	CFLAGS += -O3 -g -pg
