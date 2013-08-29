@@ -69,8 +69,6 @@ public:
     virtual void onChildrenReceived(const TagList &childrens, const std::string &error);
     virtual void onChildrenReceived(std::vector<shared_ptr<LibraryNode> > &childrens, const std::string &error);
 
-    //NetworkCatalogItem &item();
-
 private:
     const ZLResource &resource() const;
     void notifyListeners(const std::string &error);

@@ -103,5 +103,15 @@ private:
     shared_ptr<Tag> myTag;
 };
 
+class BooksByTitleNode : public LibraryNode{
+public:
+    BooksByTitleNode(std::string title = "");
+    void getChildren(LibraryCatalogTree *tree);
+    std::string getTitle();
+    std::string getSubTitle();
+private:
+    std::string myTitle;
+};
+
 
 #endif // LIBRARYNODES_H

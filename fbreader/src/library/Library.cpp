@@ -36,6 +36,11 @@
 #include "../database/booksdb/BooksDBUtil.h"
 #include "../database/booksdb/BooksDB.h"
 
+#include <iostream> //udmv
+#include <ZLUnicodeUtil.h>
+#include <sstream>
+#include <string>
+
 shared_ptr<Library> Library::ourInstance;
 const std::size_t Library::MaxRecentListSize = 10;
 
@@ -208,6 +213,7 @@ void Library::rebuildMaps() const {
 	myBooksByAuthor.clear();
 	myTags.clear();
 	myBooksByTag.clear();
+    myBooksByTitle.clear();
 
 	for (BookSet::const_iterator it = myBooks.begin(); it != myBooks.end(); ++it) {
 		if ((*it).isNull()) {
@@ -230,7 +236,24 @@ void Library::rebuildMaps() const {
 			for(TagList::const_iterator kt = bookTags.begin(); kt != bookTags.end(); ++kt) {
 				myBooksByTag[*kt].push_back(*it);
 			}
-		}
+        }
+
+        std::stringstream ss;
+        std::string sd;
+        std::string s = (*it)->title();
+        unsigned char c = s[0];
+        if((unsigned char)c >= 0xC0){
+            ZLUnicodeUtil::Ucs2String str;
+            const std::string utf8 = s;
+            ZLUnicodeUtil::utf8ToUcs2(str, utf8.data(), utf8.length());
+            char b[1];
+            int len = ZLUnicodeUtil::ucs2ToUtf8(b, str.at(0));
+            ss << b;
+        }else{
+            ss << c;
+        }
+        ss >> sd;
+        myBooksByTitle[sd].push_back(*it);
 	}
 	for (BooksByAuthor::iterator mit = myBooksByAuthor.begin(); mit != myBooksByAuthor.end(); ++mit) {
 		myAuthors.push_back(mit->first);
@@ -325,6 +348,17 @@ const TagList &Library::tags() const {
 	return myTags;
 }
 
+const std::vector<std::string> Library::bookTitlesFirstLetters() const {
+    synchronize();
+    std::vector<std::string> myFirstLetters;
+    for (BookByTitle::iterator it=myBooksByTitle.begin(); it!=myBooksByTitle.end(); ++it){
+       myFirstLetters.push_back(it->first);
+    }
+    //BookList bookList(myBooks.size());
+    //std::copy(myBooks.begin(), myBooks.end(), bookList.begin());
+    return myFirstLetters;
+}
+
 const BookList &Library::books(shared_ptr<Author> author) const {
 	synchronize();
 	return myBooksByAuthor[author];
@@ -333,6 +367,11 @@ const BookList &Library::books(shared_ptr<Author> author) const {
 const BookList &Library::books(shared_ptr<Tag> tag) const {
 	synchronize();
 	return myBooksByTag[tag];
+}
+
+const BookList &Library::books(std::string title) const {
+    synchronize();
+    return myBooksByTitle[title];
 }
 
 void Library::collectSeriesTitles(shared_ptr<Author> author, std::set<std::string> &titles) const {

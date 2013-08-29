@@ -55,6 +55,13 @@ bool BookByFileNameComparator::operator() (
 	return book0->file() < book1->file();
 }
 
+bool BookTitleComparator::operator() (
+    const std::string title0,
+    const std::string title1
+) const {
+    return title0 < title1;
+}
+
 bool AuthorComparator::operator() (
 	const shared_ptr<Author> author0,
 	const shared_ptr<Author> author1

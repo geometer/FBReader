@@ -126,6 +126,15 @@ public:
 	) const;
 };
 
+class BookTitleComparator {
+
+public:
+    bool operator () (
+        const std::string title0,
+        const std::string title1
+    ) const;
+};
+
 inline const std::string &Book::title() const { return myTitle; }
 inline const ZLFile &Book::file() const { return myFile; }
 inline const std::string &Book::language() const { return myLanguage; }

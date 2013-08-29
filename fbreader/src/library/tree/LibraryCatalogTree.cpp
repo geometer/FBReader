@@ -102,10 +102,10 @@ void LibraryCatalogTree::onChildrenReceived(const TagList &childrens, const std:
 }
 
 void LibraryCatalogTree::onChildrenReceived(std::vector<shared_ptr<LibraryNode> > &childrens, const std::string &error){
-    std::cout << "[LibraryCatalogTree] LibraryNode onChildrenReceived " << childrens.size() << std::endl;
     for (std::size_t i = 0; i < childrens.size(); ++i) {
         new LibraryCatalogTree(this, childrens.at(i), i);
     }
+    notifyListeners(error);
 }
 
 void LibraryCatalogTree::notifyListeners(const std::string &error) {

@@ -83,10 +83,18 @@ void BooksByAuthorNode::getChildren(LibraryCatalogTree *tree){
     tree->onChildrenReceived(bl, "");
 }
 std::string BooksByAuthorNode::getTitle(){
-    return myAuthor->name ();
+    if(!myAuthor.isNull ()){
+        return myAuthor->name ();
+    }else{
+        return "No author";
+    }
 }
 std::string BooksByAuthorNode::getSubTitle(){
-    return myAuthor->name ()+"'s books";
+    if(!myAuthor.isNull ()){
+        return myAuthor->name ();
+    }else{
+        return "No author";
+    }
 }
 std::string BooksByAuthorNode::getImageName(){
     return "booktree-author.png";
@@ -95,7 +103,7 @@ std::string BooksByAuthorNode::getImageName(){
 TagsCatalogNode::TagsCatalogNode() : LibraryNode(){
 }
 void TagsCatalogNode::getChildren(LibraryCatalogTree *tree){
-    const TagList &list = Library::Instance().tags ();
+    const TagList &list = Library::Instance().tags();
     tree->onChildrenReceived(list, "");
 }
 std::string TagsCatalogNode::getTitle(){
@@ -115,11 +123,47 @@ void BooksByTagNode::getChildren(LibraryCatalogTree *tree){
     tree->onChildrenReceived(list, "");
 }
 std::string BooksByTagNode::getTitle(){
-    return myTag->name ();
+    if(!myTag.isNull ()){
+        return myTag->name ();
+    }else{
+        return "No tag";
+    }
 }
 std::string BooksByTagNode::getSubTitle(){
-    return myTag->name ()+"'s books";
+    if(!myTag.isNull ()){
+        return myTag->name ();
+    }else{
+        return "No tag";
+    }
 }
 std::string BooksByTagNode::getImageName(){
     return "booktree-tag.png";
+}
+
+BooksByTitleNode::BooksByTitleNode(std::string title) : LibraryNode(){
+    if(title != ""){
+        myTitle = title;
+    }else{
+        myTitle = "By Title";
+    }
+}
+void BooksByTitleNode::getChildren(LibraryCatalogTree *tree){
+    std::vector<shared_ptr<LibraryNode> > list;
+    if(myTitle == "By Title"){
+        const std::vector<std::string> l = Library::Instance().bookTitlesFirstLetters();
+        for(std::vector<std::string>::const_iterator it = l.begin(); it != l.end(); ++it) {
+           list.push_back (new BooksByTitleNode(*it));
+       }
+        tree->onChildrenReceived(list, "");
+    }else{
+        const BookList &bookList = Library::Instance().books(myTitle);
+        tree->onChildrenReceived(bookList, "");
+    }
+
+}
+std::string BooksByTitleNode::getTitle(){
+    return myTitle;
+}
+std::string BooksByTitleNode::getSubTitle(){
+    return myTitle;
 }

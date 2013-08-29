@@ -53,10 +53,12 @@ private:
 
 public:
 	const AuthorList &authors() const;
-	const TagList &tags() const;
+    const TagList &tags() const;
 	const BookList &books(shared_ptr<Author> author) const;
 	const BookList &books(shared_ptr<Tag> tag) const;
+    const BookList &books(std::string title) const;
 	const BookList &recentBooks() const;
+    const std::vector<std::string> bookTitlesFirstLetters() const;
 
 	enum RemoveType {
 		REMOVE_DONT_REMOVE = 0,
@@ -93,7 +95,7 @@ private:
 	void rebuildBookSet() const;
 	void rebuildMaps() const;
 
-	void insertIntoBookSet(shared_ptr<Book> book) const;
+    void insertIntoBookSet(shared_ptr<Book> book) const;
 
 private:
 	mutable BookSet myBooks;
@@ -106,6 +108,8 @@ private:
 	typedef std::map<shared_ptr<Tag>,BookList,TagComparator> BooksByTag;
 	mutable BooksByTag myBooksByTag;
 	mutable BookList myRecentBooks;
+    typedef std::map<std::string,BookList> BookByTitle;
+    mutable BookByTitle myBooksByTitle;
 
 	mutable std::string myPath;
 	mutable bool myScanSubdirs;

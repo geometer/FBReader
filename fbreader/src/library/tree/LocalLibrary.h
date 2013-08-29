@@ -27,6 +27,7 @@ class RecentBooksNode;
 class FavoritesBooksNode;
 class AuthorsCatalogNode;
 class TagsCatalogNode;
+class BooksByTitleNode;
 
 class LocalLibrary {
 
