@@ -4,7 +4,6 @@ ZLNetworkLibraryDataProvider::ZLNetworkLibraryDataProvider(){
 }
 
 ZLNetworkRequest::Listener *ZLNetworkLibraryDataProvider::getData(ZLTreeNode *node, bool moreMode){
-    std::cout << "This is ZLNetworkLibraryDataProvider::getData()" << std::endl;
     return new ChildrenRequestListener(node, moreMode, this);
 }
 
@@ -13,7 +12,6 @@ ZLNetworkLibraryDataProvider::ChildrenRequestListener::ChildrenRequestListener(Z
 }
 
 void ZLNetworkLibraryDataProvider::ChildrenRequestListener::finished(const std::string &error) {
-    std::cout << "[ZLNetworkLibraryDataProvider] finished " << error << std::endl;
     if (!error.empty()) {
         //TODO show error message?
     }

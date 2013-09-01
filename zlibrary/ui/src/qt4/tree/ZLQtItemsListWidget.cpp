@@ -59,7 +59,6 @@ ZLQtItemsListWidget::ZLQtItemsListWidget(QWidget *parent) : QScrollArea(parent),
 }
 
 void ZLQtItemsListWidget::clear() {
-    std::cout << "clear: " << std::endl;
 	if (myLayout != 0) {
 		delete myLayout;
 		qDeleteAll(myContainerWidget->children());
@@ -89,13 +88,11 @@ void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *rootNode, bool isMore) {
     if(!isMore){
         clear();
     }
-    std::cout << ">>>>>>>>>>>>>>>>>>>>> 1 fillNodes: " << isMore << std::endl;
     if (myLayout == 0) {
         return;
     }
 
     size_t oldSize = (size_t)myItems.size();
-    std::cout << "2 fillNodes: " << oldSize << " : " << rootNode->children().size() << std::endl;
     for (size_t i = oldSize; i < rootNode->children().size(); ++i) {
             addNode(rootNode->children().at(i));
     }

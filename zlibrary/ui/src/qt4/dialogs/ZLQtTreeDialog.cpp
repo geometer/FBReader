@@ -102,16 +102,17 @@ void ZLQtTreeDialog::resizeEvent(QResizeEvent *event){
 
 void ZLQtTreeDialog::onExpandRequest(ZLTreeNode *node) {
     myLastClickedNode = node;
-    std::cout << "!!!! ZLQtTreeDialog::onExpandRequest " << std::endl;
-    node->requestChildren(myDataProvider->getData(node, false));
-    //node->requestChildren(new ChildrenRequestListener(this, node, false));
+    if(node->children ().size ()>0){
+        onChildrenLoaded(node, true, true);
+    }else{
+        node->requestChildren(myDataProvider->getData(node, false));
+    }
 }
 
 void ZLQtTreeDialog::onMoreChildrenRequest(ZLTreeNode *node) {
 	//TODO implement the way to not sending new request for more children
     //TODO don't ask many times
     node->requestMoreChildren(myDataProvider->getData(node, true));
-    //node->requestMoreChildren(new ChildrenRequestListener(this, node, true));
 }
 
 void ZLQtTreeDialog::onChildrenLoaded(ZLTreeNode *node, bool checkLast, bool successLoaded) {
