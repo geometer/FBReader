@@ -1,7 +1,27 @@
+/*
+ * Copyright (C) 2004-2013 Geometer Plus <contact@geometerplus.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
+ */
+
 #include "LibraryTreeNodes.h"
 #include <ZLFileImage.h>
 #include <ZLibrary.h>
 #include "../../formats/FormatPlugin.h"
+#include "../../libraryActions/LibraryBookActions.h"
 
 const ZLTypeId LibraryBookTree::TYPE_ID(ZLTreePageNode::TYPE_ID);
 
@@ -10,6 +30,41 @@ const ZLTypeId &LibraryBookTree::typeId() const {
 }
 
 LibraryBookTree::LibraryBookTree(LibraryTree *parent, shared_ptr<Book> book) : ZLTreePageNode(parent), myBook(book){
+    init();
+}
+
+static std::vector<shared_ptr<ZLTreeAction> > getBookActions(LibraryBookTree &tree) {
+    std::vector<shared_ptr<ZLTreeAction> > actions;
+    const shared_ptr<Book> book = tree.book ();
+    if(!book.isNull ()){
+        actions.push_back(new BookReadAction(book));
+        //actions.push_back(new BookRemoveAction(book));
+    }
+
+    /*const NetworkBookItem &book = tree.book();
+    if (!book.reference(BookReference::DOWNLOAD_FULL).isNull() ||
+            !book.reference(BookReference::DOWNLOAD_FULL_CONDITIONAL).isNull()) {
+        actions.push_back(new NetworkTreeBookReadAction(tree, book, false));
+        actions.push_back(new NetworkBookDownloadAction(tree, book, false));
+        actions.push_back(new NetworkBookDeleteAction(book));
+    }
+    if (!book.reference(BookReference::DOWNLOAD_DEMO).isNull()) {
+        actions.push_back(new NetworkTreeBookReadAction(tree, book, true));
+        actions.push_back(new NetworkBookDownloadAction(tree, book, true, tree.resource()["demo"].value()));
+    }
+    if (!book.reference(BookReference::BUY).isNull()) {
+        actions.push_back(new NetworkBookBuyDirectlyAction(tree, book));
+    } else if (!book.reference(BookReference::BUY_IN_BROWSER).isNull()) {
+        actions.push_back(new NetworkBookBuyInBrowserAction(book));
+    }*/
+    return actions;
+}
+
+void LibraryBookTree::init() {
+    std::vector<shared_ptr<ZLTreeAction> > actions = getBookActions(*this);
+    for (std::size_t i = 0; i < actions.size(); ++i) {
+        registerAction(actions.at(i));
+    }
 }
 
 shared_ptr<ZLTreePageInfo> LibraryBookTree::getPageInfo(){
@@ -27,6 +82,10 @@ std::string LibraryBookTree::title() const{
 }
 std::string LibraryBookTree::subtitle() const{
     return myBook->seriesTitle();
+}
+
+shared_ptr<Book> LibraryBookTree::book() const{
+    return myBook;
 }
 
 shared_ptr<const ZLImage> LibraryBookTree::image() const {
@@ -93,8 +152,7 @@ const std::vector<shared_ptr<ZLTreeAction> > &LibraryBookTree::BookItemWrapper::
 }
 
 std::string LibraryBookTree::BookItemWrapper::actionText(const shared_ptr<ZLTreeAction> &action) const {
-    //return myTree.actionText(action);
-    return "actionText";
+    return myTree.actionText(action);
 }
 
 //class RelatedAction : public ZLTreeAction {

@@ -123,7 +123,7 @@ public:
 	bool isVisible() const;
 };
 
-class ShowNetworkTreeLibraryAction : public ZLApplication::Action {
+class ShowNetworkTreeLibraryAction : public ModeDependentAction {
 
 public:
 	ShowNetworkTreeLibraryAction();
@@ -131,6 +131,15 @@ public:
 protected:
 	void run();
 };
+
+class ShowLocalTreeLibraryAction : public ModeDependentAction {
+
+public:
+    ShowLocalTreeLibraryAction();
+protected:
+    void run();
+};
+
 
 class AddBookAction : public ModeDependentAction {
 
@@ -152,6 +161,7 @@ public:
 	ShowPreferencesAction();
 	void run();
 };
+
 
 class ScrollToHomeAction : public ModeDependentAction {
 

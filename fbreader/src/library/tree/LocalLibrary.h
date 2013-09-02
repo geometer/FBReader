@@ -34,6 +34,7 @@ class LocalLibrary {
 public:
     static LocalLibrary &Instance();
     void showDialog();
+    void hideDialog();
     void synchronize();
     void refresh();
 

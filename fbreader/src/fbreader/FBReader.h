@@ -60,6 +60,7 @@ public:
 		CONTENTS_MODE = 1 << 2,
 		BOOKMARKS_MODE = 1 << 3,
 		LIBRARY_MODE = 1 << 4,
+        NETWORK_LIBRARY_MODE = 1 << 5,
 		ALL_MODES = 0xFF
 	};
 
@@ -93,6 +94,7 @@ private:
 	void restorePreviousMode();
 
 	bool closeView();
+    bool closeDialog();
 	std::string helpFileName(const std::string &language) const;
 
 	void openFile(const ZLFile &file);
@@ -100,8 +102,6 @@ private:
 	void dragFiles(const std::vector<std::string> &filePaths);
 
 	bool isViewFinal() const;
-
-	void showLibraryView();
 
 public:
 	shared_ptr<ZLKeyBindings> keyBindings();

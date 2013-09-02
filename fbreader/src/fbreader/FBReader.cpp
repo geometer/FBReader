@@ -59,8 +59,10 @@
 #include "../library/Book.h"
 #include "../networkActions/AuthenticationDialog.h"
 #include "../network/NetworkErrors.h"
-
+#include "../network/tree/NetworkLibrary.h"
 #include "../library/tree/LocalLibrary.h"
+
+#include <iostream> //udmv
 
 static const std::string OPTIONS = "Options";
 
@@ -111,8 +113,8 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	myPreviousMode = BOOK_TEXT_MODE;
 	setMode(BOOK_TEXT_MODE);
 
-	addAction(ActionCode::SHOW_READING, new UndoAction(FBReader::ALL_MODES & ~FBReader::BOOK_TEXT_MODE));
-	addAction(ActionCode::SHOW_LIBRARY, new SetModeAction(FBReader::LIBRARY_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE));
+    addAction(ActionCode::SHOW_READING, new UndoAction(FBReader::ALL_MODES & ~FBReader::BOOK_TEXT_MODE));
+    addAction(ActionCode::SHOW_LIBRARY, new ShowLocalTreeLibraryAction());
 	addAction(ActionCode::SHOW_NETWORK_LIBRARY, new ShowNetworkTreeLibraryAction());
 	addAction(ActionCode::SHOW_TOC, new ShowContentsAction());
 	addAction(ActionCode::SHOW_PREFERENCES_DIALOG, new ShowPreferencesAction());
@@ -355,23 +357,12 @@ bool FBReader::isViewFinal() const {
 	return myMode == BOOK_TEXT_MODE;
 }
 
-void FBReader::showLibraryView() {
-	if (ZLStringOption(ZLCategoryKey::LOOK_AND_FEEL, "ToggleButtonGroup", "booksOrder", "").value() == ActionCode::ORGANIZE_BOOKS_BY_TAG) {
-		setView(myLibraryByTagView);
-	} else {
-        //setView(myLibraryByAuthorView);
-        LocalLibrary::Instance().showDialog();
-        //shared_ptr<ZLTreeDialog> myDialog = ZLDialogManager::Instance().createTreeDialog("networkLibrary", ZLResource::resource("networkView"));
-        //myDialog->run(0);
-	}
-}
-
 void FBReader::setMode(ViewMode mode) {
 	//TODO remove code for old network library view
 	if (mode == myMode) {
 		return;
 	}
-
+    std::cout << "SET MODE: " << mode << std::endl;
 	myPreviousMode = myMode;
 	myMode = mode;
 
@@ -380,6 +371,11 @@ void FBReader::setMode(ViewMode mode) {
 			setHyperlinkCursor(false);
 			((ZLTextView&)*myBookTextView).forceScrollbarUpdate();
 			setView(myBookTextView);
+            if(myPreviousMode == LIBRARY_MODE){
+                LocalLibrary::Instance ().hideDialog();
+            }else if(myPreviousMode == NETWORK_LIBRARY_MODE){
+                NetworkLibrary::Instance ().hideDialog();
+            }
 			break;
 		case CONTENTS_MODE:
 			((ContentsView&)*myContentsView).gotoReference();
@@ -388,14 +384,13 @@ void FBReader::setMode(ViewMode mode) {
 		case FOOTNOTE_MODE:
 			setView(myFootnoteView);
 			break;
-		case LIBRARY_MODE:
-		{
-			shared_ptr<Book> currentBook = myModel->book();
-            ((LibraryView&)*myLibraryByAuthorView).showBook(currentBook);
-            ((LibraryView&)*myLibraryByTagView).showBook(currentBook);
-			showLibraryView();
+        case LIBRARY_MODE:{
+            LocalLibrary::Instance ().showDialog();
 			break;
 		}
+        case NETWORK_LIBRARY_MODE:
+            NetworkLibrary::Instance().showDialog();
+            break;
 		case BOOKMARKS_MODE:
 			break;
 		case UNDEFINED_MODE:
@@ -426,6 +421,11 @@ bool FBReader::closeView() {
 		restorePreviousMode();
 		return false;
 	}
+}
+
+bool FBReader::closeDialog() {
+    setMode(BOOK_TEXT_MODE);
+    return true;
 }
 
 std::string FBReader::helpFileName(const std::string &language) const {

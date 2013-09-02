@@ -36,10 +36,10 @@
 
 static const std::string SEARCH_PARAMETER_ID = "networkSearchPattern";
 
-ShowNetworkTreeLibraryAction::ShowNetworkTreeLibraryAction()  { }
+ShowNetworkTreeLibraryAction::ShowNetworkTreeLibraryAction() : ModeDependentAction(FBReader::BOOK_TEXT_MODE)  { }
 
 void ShowNetworkTreeLibraryAction::run() {
-	NetworkLibrary::Instance().showDialog();
+    FBReader::Instance().setMode(FBReader::NETWORK_LIBRARY_MODE);
 }
 
 /*

@@ -68,7 +68,7 @@ ZLApplication::ZLApplication(const std::string &name) : ZLApplicationBase(name),
 	myPresentWindowHandler = new PresentWindowHandler();
 	ZLCommunicationManager::Instance().registerHandler("present", myPresentWindowHandler);
 
-	createToolbar();
+    createToolbar();
 	createMenubar();
 }
 
@@ -92,6 +92,10 @@ void ZLApplication::initWindow() {
 bool ZLApplication::closeView() {
 	quit();
 	return true;
+}
+
+bool ZLApplication::closeDialog() {
+    return true;
 }
 
 void ZLApplication::openFile(const ZLFile&) {

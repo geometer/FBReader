@@ -38,7 +38,10 @@ LocalLibrary::LocalLibrary() {
 void LocalLibrary::showDialog() {
     synchronize();
     myDialog->run(&myRootTree);
-    //myDialog->setSearcher(new NetworkSearcher);
+}
+
+void LocalLibrary::hideDialog() {
+    myDialog->onCloseRequest();
 }
 
 void LocalLibrary::refresh() {
@@ -50,21 +53,11 @@ void LocalLibrary::synchronize() {
 }
 
 void LocalLibrary::makeUpToDate() {
-    //TODO rewrite this method
-    /*NetworkLinkCollection::Instance().initialize();
-    NetworkLinkCollection &collection = NetworkLinkCollection::Instance();
-    for (std::size_t i = 0; i < collection.size(); ++i) {
-        NetworkLink &link = collection.link(i);
-        new NetworkCatalogRootTree(&myRootTree, link, i);
-    }*/
-    //for(int i=0; i<3;i++){
-    //    new LibraryCatalogRootTree(&myRootTree, i);
-    //}
-
-    new LibraryCatalogRootTree(&myRootTree, new FavoritesBooksNode(), 0);
-    new LibraryCatalogRootTree(&myRootTree, new RecentBooksNode(), 1);
-    new LibraryCatalogRootTree(&myRootTree, new AuthorsCatalogNode(), 2);
-    new LibraryCatalogRootTree(&myRootTree, new BooksByTitleNode(), 3);
-    new LibraryCatalogRootTree(&myRootTree, new TagsCatalogNode(), 4);
-
+    if(myRootTree.children ().size () <= 0){
+        //new LibraryCatalogRootTree(&myRootTree, new FavoritesBooksNode(), 0);
+        new LibraryCatalogRootTree(&myRootTree, new RecentBooksNode(), 1);
+        new LibraryCatalogRootTree(&myRootTree, new AuthorsCatalogNode(), 2);
+        new LibraryCatalogRootTree(&myRootTree, new BooksByTitleNode(), 3);
+        new LibraryCatalogRootTree(&myRootTree, new TagsCatalogNode(), 4);
+    }
 }

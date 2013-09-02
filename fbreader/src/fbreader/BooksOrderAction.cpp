@@ -24,5 +24,4 @@ BooksOrderAction::BooksOrderAction() : ModeDependentAction(FBReader::LIBRARY_MOD
 }
 
 void BooksOrderAction::run() {
-	FBReader::Instance().showLibraryView();
 }

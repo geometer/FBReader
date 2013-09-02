@@ -17,11 +17,33 @@
  * 02110-1301, USA.
  */
 
+#ifndef ZLGENERALLIBRARYDATAPROVIDER_H
+#define ZLGENERALLIBRARYDATAPROVIDER_H
+
 #include "ZLTreeDataProvider.h"
+#include <iostream> //udmv
 
-ZLTreeDataProvider::ZLTreeDataProvider(){
-}
+class ZLGeneralLibraryDataProvider : public ZLTreeDataProvider
+{
+public:
+    ZLGeneralLibraryDataProvider();
+    ZLNetworkRequest::Listener *getData(ZLTreeNode *node, bool moreMode);
 
-void ZLTreeDataProvider::setParent(ZLQtTreeDialog *dialog){
-    myDialog = dialog;
-}
+private:
+    ZLQtTreeDialog *getParent() {return myDialog;}
+    class ChildrenRequestListener : public ZLNetworkRequest::Listener {
+        public:
+            ChildrenRequestListener(ZLTreeNode *node, bool moreMode, ZLGeneralLibraryDataProvider *dataProvider);
+            void finished(const std::string &error);
+
+        private:
+            ZLTreeNode *myNode;
+            bool myMoreMode;
+            ZLGeneralLibraryDataProvider *myDataProvider;
+    };
+
+friend class ChildrenRequestListener;
+};
+
+
+#endif // ZLGENERALLIBRARYDATAPROVIDER_H

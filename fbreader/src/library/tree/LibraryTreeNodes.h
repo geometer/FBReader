@@ -103,6 +103,7 @@ private:
 
 public:
     LibraryBookTree(LibraryTree *parent, shared_ptr<Book> book);
+    void init();
 
 public:
     shared_ptr<ZLTreePageInfo> getPageInfo();
@@ -110,6 +111,7 @@ public:
     std::string title() const;
     std::string subtitle() const;
     shared_ptr<const ZLImage> image() const;
+    shared_ptr<Book> book() const;
 
 private:
     class BookItemWrapper : public ZLTreePageInfo {

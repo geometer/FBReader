@@ -43,6 +43,7 @@
 #include "../database/booksdb/BooksDB.h"
 #include "../library/Library.h"
 #include "../library/Book.h"
+#include "../library/tree/LocalLibrary.h"
 
 ModeDependentAction::ModeDependentAction(int visibleInModes) : myVisibleInModes(visibleInModes) {
 }
@@ -415,4 +416,11 @@ FilterLibraryAction::FilterLibraryAction() : ModeDependentAction(FBReader::LIBRA
 }
 
 void FilterLibraryAction::run() {
+}
+
+ShowLocalTreeLibraryAction::ShowLocalTreeLibraryAction() : ModeDependentAction(FBReader::BOOK_TEXT_MODE){
+}
+
+void ShowLocalTreeLibraryAction::run(){
+    FBReader::Instance().setMode(FBReader::LIBRARY_MODE);
 }

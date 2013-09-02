@@ -34,6 +34,7 @@ private:
 
 public:
 	void showDialog();
+    void hideDialog();
 	void refresh();
 	RootTree &getFakeCatalogTree();
 

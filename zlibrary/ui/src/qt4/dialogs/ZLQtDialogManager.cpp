@@ -37,7 +37,7 @@
 #include "../application/ZLQtApplicationWindow.h"
 #include "../image/ZLQtImageManager.h"
 #include "../util/ZLQtUtil.h"
-#include "../tree/ZLNetworkLibraryDataProvider.h"
+#include "../tree/ZLGeneralLibraryDataProvider.h"
 
 #include <iostream>
 
@@ -61,8 +61,7 @@ shared_ptr<ZLOpenFileDialog> ZLQtDialogManager::createOpenFileDialog(const ZLRes
 }
 
 shared_ptr<ZLTreeDialog> ZLQtDialogManager::createTreeDialog(const std::string &windowName, const ZLResource &resource) const {
-    std::cout << "[DialogManager] createTreeDialog() " << windowName << std::endl;
-    return new ZLQtTreeDialog(windowName, resource, new ZLNetworkLibraryDataProvider());
+    return new ZLQtTreeDialog(windowName, resource, new ZLGeneralLibraryDataProvider());
 }
 
 void ZLQtDialogManager::informationBox(const std::string &title, const std::string &message) const {

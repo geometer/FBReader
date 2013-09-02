@@ -140,8 +140,8 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 void ZLQtApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled) {
 	QAction *action = myToolbarActions[item];
 	if (action != 0) {
-		action->setEnabled(enabled);
-		action->setVisible(visible);
+        action->setEnabled(enabled);
+        action->setVisible(visible);
 	}
 }
 

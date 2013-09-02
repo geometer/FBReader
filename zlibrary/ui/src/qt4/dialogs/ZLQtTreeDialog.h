@@ -50,7 +50,8 @@ public:
 	void run(ZLTreeNode *rootNode);
 
 protected:
-	void resizeEvent(QResizeEvent *event);
+    void resizeEvent(QResizeEvent *event);
+    void closeEvent(QCloseEvent *event);
 
 public: //listener methods
 	void onExpandRequest(ZLTreeNode *node);

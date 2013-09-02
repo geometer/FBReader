@@ -149,6 +149,7 @@ public:
 
 	void quit();
 	virtual bool closeView();
+    virtual bool closeDialog();
 	virtual void openFile(const ZLFile &file);
 	virtual bool canDragFiles(const std::vector<std::string> &filePaths) const;
 	virtual void dragFiles(const std::vector<std::string> &filePaths);

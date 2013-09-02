@@ -58,6 +58,10 @@ void NetworkLibrary::showDialog() {
 	myDialog->setSearcher(new NetworkSearcher);
 }
 
+void NetworkLibrary::hideDialog() {
+    myDialog->onCloseRequest();
+}
+
 void NetworkLibrary::refresh() {
 	myDialog->onRefresh();
 }

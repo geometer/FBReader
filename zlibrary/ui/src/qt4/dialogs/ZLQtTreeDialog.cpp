@@ -89,7 +89,15 @@ void ZLQtTreeDialog::run(ZLTreeNode *rootNode) {
 }
 
 void ZLQtTreeDialog::onCloseRequest() {
-	hide();
+    hide();
+}
+
+void ZLQtTreeDialog::closeEvent(QCloseEvent *event){
+    if (ZLApplication::Instance().closeDialog()) {
+        event->accept();
+    } else {
+        event->ignore();
+    }
 }
 
 void ZLQtTreeDialog::resizeEvent(QResizeEvent *event){
