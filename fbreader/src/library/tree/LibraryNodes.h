@@ -42,9 +42,19 @@ public:
 
     LibraryNode();
     virtual void getChildren(LibraryCatalogTree *tree) = 0;
+    virtual void getMoreChildren(LibraryCatalogTree *tree);
     virtual std::string getTitle();
     virtual std::string getSubTitle();
     virtual std::string getImageName();
+protected:
+    template <class T>
+    void getSubChildren(const T &a, T &b);
+
+protected:
+    std::size_t count;
+
+private:
+    const static std::size_t NEXT = 10;
 };
 
 class FavoritesBooksNode : public LibraryNode{

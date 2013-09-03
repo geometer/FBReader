@@ -64,10 +64,10 @@ public:
 
     void requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener);
     void requestMoreChildren(shared_ptr<ZLNetworkRequest::Listener> listener);
-    virtual void onChildrenReceived(const BookList &childrens, const std::string &error);
-    virtual void onChildrenReceived(const AuthorList &childrens, const std::string &error);
-    virtual void onChildrenReceived(const TagList &childrens, const std::string &error);
-    virtual void onChildrenReceived(std::vector<shared_ptr<LibraryNode> > &childrens, const std::string &error);
+    virtual void onChildrenReceived(const BookList &childrens, const std::string &error, const std::size_t startIndex = 0);
+    virtual void onChildrenReceived(const AuthorList &childrens, const std::string &error, const std::size_t startIndex = 0);
+    virtual void onChildrenReceived(const TagList &childrens, const std::string &error, const std::size_t startIndex = 0);
+    virtual void onChildrenReceived(std::vector<shared_ptr<LibraryNode> > &childrens, const std::string &error, const std::size_t startIndex = 0);
 
 private:
     const ZLResource &resource() const;

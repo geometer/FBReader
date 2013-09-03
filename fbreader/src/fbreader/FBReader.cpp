@@ -361,8 +361,7 @@ void FBReader::setMode(ViewMode mode) {
 	//TODO remove code for old network library view
 	if (mode == myMode) {
 		return;
-	}
-    std::cout << "SET MODE: " << mode << std::endl;
+    }
 	myPreviousMode = myMode;
 	myMode = mode;
 

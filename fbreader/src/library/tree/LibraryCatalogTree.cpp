@@ -77,33 +77,42 @@ void LibraryCatalogTree::requestChildren(shared_ptr<ZLNetworkRequest::Listener> 
 }
 
 void LibraryCatalogTree::requestMoreChildren(shared_ptr<ZLNetworkRequest::Listener> listener){
-
+    myListeners.push_back(listener);
+    if (myListeners.size() > 1) {
+        return;
+    }
+    if(!myNode.isNull()){
+        myNode->getMoreChildren(this);
+    }
 }
 
-void LibraryCatalogTree::onChildrenReceived(const BookList &childrens, const std::string &error) {
+void LibraryCatalogTree::onChildrenReceived(const BookList &childrens, const std::string &error, const std::size_t startIndex) {
     for (std::size_t i = 0; i < childrens.size(); ++i) {
         new LibraryBookTree(this, childrens.at(i));
     }
     notifyListeners(error);
 }
 
-void LibraryCatalogTree::onChildrenReceived(const AuthorList &childrens, const std::string &error) {
+void LibraryCatalogTree::onChildrenReceived(const AuthorList &childrens, const std::string &error, const std::size_t startIndex) {
+    std::size_t index = startIndex;
     for (std::size_t i = 0; i < childrens.size(); ++i) {
-        new LibraryCatalogTree(this, new BooksByAuthorNode(childrens.at(i)), i);
+        new LibraryCatalogTree(this, new BooksByAuthorNode(childrens.at(i)), index++);
     }
     notifyListeners(error);
 }
 
-void LibraryCatalogTree::onChildrenReceived(const TagList &childrens, const std::string &error) {
+void LibraryCatalogTree::onChildrenReceived(const TagList &childrens, const std::string &error, const std::size_t startIndex) {
+    std::size_t index = startIndex;
     for (std::size_t i = 0; i < childrens.size(); ++i) {
-        new LibraryCatalogTree(this, new BooksByTagNode(childrens.at(i)), i);
+        new LibraryCatalogTree(this, new BooksByTagNode(childrens.at(i)), index++);
     }
     notifyListeners(error);
 }
 
-void LibraryCatalogTree::onChildrenReceived(std::vector<shared_ptr<LibraryNode> > &childrens, const std::string &error){
+void LibraryCatalogTree::onChildrenReceived(std::vector<shared_ptr<LibraryNode> > &childrens, const std::string &error, const std::size_t startIndex){
+    std::size_t index = startIndex;
     for (std::size_t i = 0; i < childrens.size(); ++i) {
-        new LibraryCatalogTree(this, childrens.at(i), i);
+        new LibraryCatalogTree(this, childrens.at(i), index++);
     }
     notifyListeners(error);
 }

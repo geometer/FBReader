@@ -126,7 +126,7 @@ void FB2MetaInfoReader::endElementHandler(int tag) {
 			break;
 		case _BOOK_TITLE:
 			if (myReadState == READ_TITLE) {
-				myBook.setTitle(myBuffer);
+                myBook.setTitle(myBuffer);
 				myBuffer.erase();
 				myReadState = READ_SOMETHING;
 			}

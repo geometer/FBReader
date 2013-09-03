@@ -253,7 +253,9 @@ void Library::rebuildMaps() const {
             ss << c;
         }
         ss >> sd;
-        myBooksByTitle[sd].push_back(*it);
+        if(sd != ""){
+            myBooksByTitle[sd].push_back(*it);
+        }
 	}
 	for (BooksByAuthor::iterator mit = myBooksByAuthor.begin(); mit != myBooksByAuthor.end(); ++mit) {
 		myAuthors.push_back(mit->first);

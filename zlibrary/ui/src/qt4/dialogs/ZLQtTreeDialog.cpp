@@ -120,6 +120,7 @@ void ZLQtTreeDialog::onExpandRequest(ZLTreeNode *node) {
 void ZLQtTreeDialog::onMoreChildrenRequest(ZLTreeNode *node) {
 	//TODO implement the way to not sending new request for more children
     //TODO don't ask many times
+    std::cout << "[ZLQtTreeDialog] onMoreChildrenRequest" << std::endl;
     node->requestMoreChildren(myDataProvider->getData(node, true));
 }
 
