@@ -229,6 +229,8 @@
 			<node name="read" value="Читать"/>
 			<node name="edit" value="Информация"/>
 			<node name="delete" value="Удалить"/>
+			<node name="favorite" value="Добавить в избранное"/>
+			<node name="favorite_remove" value="Удалить из избранных"/>
 		</node>
 	</node>
 	<node name="networkView" value="Сетевая библиотека">

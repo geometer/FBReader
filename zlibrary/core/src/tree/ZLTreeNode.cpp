@@ -22,6 +22,7 @@
 #include "ZLTreeListener.h"
 #include "../resources/ZLResource.h"
 
+#include <iostream> //udmv
 
 //const ZLTypeId ZLTreeAction::TYPE_ID(ZLNetworkRequest::TYPE_ID);
 
@@ -116,6 +117,7 @@ std::size_t ZLTreeNode::childIndex() const {
 }
 
 void ZLTreeNode::requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener) {
+    std::cout << "@@@ ZLTreeNode::requestChildren" << std::endl;
 	if (!listener.isNull()) {
 		listener->finished();
 	}
@@ -153,9 +155,12 @@ void ZLTreeNode::close() const {
 }
 
 void ZLTreeNode::insert(ZLTreeNode *node, std::size_t index) {
-	if (myChildren.end() != std::find(myChildren.begin(), myChildren.end(), node))
-		return;
-	index = std::min(index, myChildren.size());
+    if(myChildren.end() != std::find(myChildren.begin(), myChildren.end(), node)){
+        std::cout << "@@@ ZLTreeNode::update" << std::endl;
+        return;
+    }
+    index = std::min(index, myChildren.size());
+    std::cout << "@@@ ZLTreeNode::insert " << index << std::endl;
 	node->myChildIndex = index;
 	node->myParent = this;
 	ZLTreeListener * const handler = listener();
@@ -184,6 +189,7 @@ void ZLTreeNode::remove(ZLTreeNode *node) {
 void ZLTreeNode::remove(std::size_t index) {
 	if (index >= myChildren.size())
 		return;
+    std::cout << "@@@ ZLTreeNode::remove " << index << std::endl;
 	ZLTreeListener * const handler = listener();
 	if (handler) {
 		handler->onNodeBeginRemove(this, index);

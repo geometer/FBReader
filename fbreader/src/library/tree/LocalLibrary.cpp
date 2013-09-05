@@ -54,7 +54,7 @@ void LocalLibrary::synchronize() {
 
 void LocalLibrary::makeUpToDate() {
     if(myRootTree.children ().size () <= 0){
-        //new LibraryCatalogRootTree(&myRootTree, new FavoritesBooksNode(), 0);
+        new LibraryCatalogRootTree(&myRootTree, new FavoritesBooksNode(), 0);
         new LibraryCatalogRootTree(&myRootTree, new RecentBooksNode(), 1);
         new LibraryCatalogRootTree(&myRootTree, new AuthorsCatalogNode(), 2);
         new LibraryCatalogRootTree(&myRootTree, new BooksByTitleNode(), 3);

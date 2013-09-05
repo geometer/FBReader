@@ -70,6 +70,20 @@ bool BooksDBUtil::getRecentBooks(BookList &books) {
 	return true;
 }
 
+bool BooksDBUtil::getFavoriteBooks(BookList &books) {
+    std::vector<std::string> fileNames;
+    if (!BooksDB::Instance().loadFavoriteBooks(fileNames)) {
+        return false;
+    }
+    for (std::vector<std::string>::const_iterator it = fileNames.begin(); it != fileNames.end(); ++it) {
+        shared_ptr<Book> book = getBook(*it /*, true OR false ? */); // TODO: check file ???
+        if (!book.isNull()) {
+            books.push_back(book);
+        }
+    }
+    return true;
+}
+
 bool BooksDBUtil::getBooks(std::map<std::string, shared_ptr<Book> > &booksmap, bool checkFile) {
 	BookList books;
 	if (!BooksDB::Instance().loadBooks(books)) {

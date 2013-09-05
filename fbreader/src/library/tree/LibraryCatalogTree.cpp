@@ -58,6 +58,10 @@ std::string LibraryCatalogTree::subtitle() const{
     }
 }
 
+shared_ptr<LibraryNode> LibraryCatalogTree::getNode() const{
+    return myNode;
+}
+
 shared_ptr<const ZLImage> LibraryCatalogTree::image() const {
     if(!myNode.isNull ()){
         return FBTree::defaultCoverImage(myNode->getImageName ());
@@ -87,6 +91,9 @@ void LibraryCatalogTree::requestMoreChildren(shared_ptr<ZLNetworkRequest::Listen
 }
 
 void LibraryCatalogTree::onChildrenReceived(const BookList &childrens, const std::string &error, const std::size_t startIndex) {
+    if(startIndex == 0){
+        this->clear ();
+    }
     for (std::size_t i = 0; i < childrens.size(); ++i) {
         new LibraryBookTree(this, childrens.at(i));
     }
@@ -94,6 +101,9 @@ void LibraryCatalogTree::onChildrenReceived(const BookList &childrens, const std
 }
 
 void LibraryCatalogTree::onChildrenReceived(const AuthorList &childrens, const std::string &error, const std::size_t startIndex) {
+    if(startIndex == 0){
+        this->clear ();
+    }
     std::size_t index = startIndex;
     for (std::size_t i = 0; i < childrens.size(); ++i) {
         new LibraryCatalogTree(this, new BooksByAuthorNode(childrens.at(i)), index++);
@@ -102,6 +112,9 @@ void LibraryCatalogTree::onChildrenReceived(const AuthorList &childrens, const s
 }
 
 void LibraryCatalogTree::onChildrenReceived(const TagList &childrens, const std::string &error, const std::size_t startIndex) {
+    if(startIndex == 0){
+        this->clear ();
+    }
     std::size_t index = startIndex;
     for (std::size_t i = 0; i < childrens.size(); ++i) {
         new LibraryCatalogTree(this, new BooksByTagNode(childrens.at(i)), index++);
@@ -110,6 +123,9 @@ void LibraryCatalogTree::onChildrenReceived(const TagList &childrens, const std:
 }
 
 void LibraryCatalogTree::onChildrenReceived(std::vector<shared_ptr<LibraryNode> > &childrens, const std::string &error, const std::size_t startIndex){
+    if(startIndex == 0){
+        this->clear ();
+    }
     std::size_t index = startIndex;
     for (std::size_t i = 0; i < childrens.size(); ++i) {
         new LibraryCatalogTree(this, childrens.at(i), index++);

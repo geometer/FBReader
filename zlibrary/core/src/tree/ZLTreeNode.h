@@ -95,7 +95,7 @@ public:
 	void insert(ZLTreeNode *node, std::size_t index);
 	void append(ZLTreeNode *node);
 	void remove(ZLTreeNode *node);
-	void remove(std::size_t index);
+    void remove(std::size_t index);
 	void updated();
 
 	void notifyDownloadStarted();

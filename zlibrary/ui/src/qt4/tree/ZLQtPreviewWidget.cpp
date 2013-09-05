@@ -21,6 +21,7 @@
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QScrollBar>
 #include <QtGui/QGraphicsDropShadowEffect>
+#include <QtGui/QPushButton>
 
 #include <QtCore/QDebug>
 
@@ -164,7 +165,6 @@ void ZLQtPreviewWidget::fillWaitingIcon() {
 void ZLQtPreviewWidget::clear() {
 	myCurrentNode = 0;
 	qDeleteAll(children());
-
 }
 
 ZLTreeNode *ZLQtPreviewWidget::getCurrentNode() const {
@@ -181,7 +181,7 @@ ZLQtAbstractPageWidget::ZLQtAbstractPageWidget(QWidget *parent) : QWidget(parent
 
 void ZLQtAbstractPageWidget::onActionActivated() {
 	foreach(QPushButton* button, myButtonActions) {
-		button->setEnabled(false);
+        button->setEnabled(false);
 	}
 }
 

@@ -229,6 +229,8 @@
 			<node name="read" value="Read book"/>
 			<node name="edit" value="Edit information"/>
 			<node name="delete" value="Remove book"/>
+			<node name="favorite" value="Add to favorite"/>
+			<node name="favorite_remove" value="Remove from favorite"/>
 		</node>
 	</node>
 	<node name="networkView" value="Network library">

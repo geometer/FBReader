@@ -70,6 +70,9 @@ public:
 	bool loadRecentBooks(std::vector<std::string> &fileNames);
 	bool saveRecentBooks(const BookList &books);
 
+    bool loadFavoriteBooks(std::vector<std::string> &fileNames);
+    bool saveFavoriteBooks(const BookList &books);
+
 	bool loadBooks(BookList &books);
 
 	bool loadBookStateStack(const Book &book, std::deque<ReadingState> &stack);
@@ -124,6 +127,9 @@ private:
 
 	shared_ptr<LoadRecentBooksRunnable> myLoadRecentBooks;
 	shared_ptr<SaveRecentBooksRunnable> mySaveRecentBooks;
+
+    shared_ptr<LoadFavoriteBooksRunnable> myLoadFavoriteBooks;
+    shared_ptr<SaveFavoriteBooksRunnable> mySaveFavoriteBooks;
 
 	shared_ptr<SaveBookStateStackRunnable> mySaveBookStateStack;
 

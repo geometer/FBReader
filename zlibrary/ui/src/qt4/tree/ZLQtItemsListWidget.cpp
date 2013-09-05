@@ -84,6 +84,11 @@ void ZLQtItemsListWidget::clearNodes(){
     myItems.clear();
 }
 
+void ZLQtItemsListWidget::refresh(){
+    //clear();
+    emit reloadChildren();
+}
+
 void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *rootNode, bool isMore) {
     if(!isMore){
         clear();
@@ -94,7 +99,7 @@ void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *rootNode, bool isMore) {
 
     size_t oldSize = (size_t)myItems.size();
     for (size_t i = oldSize; i < rootNode->children().size(); ++i) {
-            addNode(rootNode->children().at(i));
+        addNode(rootNode->children().at(i));
     }
 }
 

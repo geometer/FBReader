@@ -71,6 +71,7 @@ ZLQtTreeDialog::ZLQtTreeDialog(const std::string &windowName, const ZLResource &
 
 	setCentralWidget(splitter);
 
+    connect(myListWidget, SIGNAL(reloadChildren()), this, SLOT(reloadChildren()));
 	connect(myListWidget, SIGNAL(nodeClicked(ZLQtTreeItem*)), this, SLOT(onNodeClicked(ZLQtTreeItem*)));
 	connect(myListWidget, SIGNAL(nodeDoubleClicked(ZLQtTreeItem*)), this, SLOT(onNodeDoubleClicked(ZLQtTreeItem*)));
 	connect(myBackButton, SIGNAL(clicked()), this, SLOT(onBackButton()));
@@ -110,18 +111,17 @@ void ZLQtTreeDialog::resizeEvent(QResizeEvent *event){
 
 void ZLQtTreeDialog::onExpandRequest(ZLTreeNode *node) {
     myLastClickedNode = node;
-    if(node->children ().size ()>0){
-        onChildrenLoaded(node, true, true);
-    }else{
-        node->requestChildren(myDataProvider->getData(node, false));
-    }
+    node->requestChildren(myDataProvider->getData(node));
 }
 
 void ZLQtTreeDialog::onMoreChildrenRequest(ZLTreeNode *node) {
 	//TODO implement the way to not sending new request for more children
     //TODO don't ask many times
-    std::cout << "[ZLQtTreeDialog] onMoreChildrenRequest" << std::endl;
-    node->requestMoreChildren(myDataProvider->getData(node, true));
+    node->requestMoreChildren(myDataProvider->getMoreData(node));
+}
+
+void ZLQtTreeDialog::onRefreshRequest(ZLTreeNode *node) {
+    node->requestChildren(myDataProvider->getRefreshedData(node));
 }
 
 void ZLQtTreeDialog::onChildrenLoaded(ZLTreeNode *node, bool checkLast, bool successLoaded) {
@@ -154,6 +154,16 @@ void ZLQtTreeDialog::onMoreChildrenLoaded(bool successLoaded) {
         myListWidget->fillNodes(myBackHistory.top(), true);
 	}
 	updateAll();
+}
+
+void ZLQtTreeDialog::onRefreshChildrenLoaded(bool successLoaded) {
+    if (!successLoaded){
+        return;
+    }
+    if (!myBackHistory.empty()) {
+        myListWidget->fillNodes(myBackHistory.top());
+    }
+    updateAll();
 }
 
 void ZLQtTreeDialog::updateAll() {
@@ -213,8 +223,9 @@ void ZLQtTreeDialog::onSearchStopped(ZLTreeNode *node) {
 }
 
 void ZLQtTreeDialog::onRefresh() {
-	myPreviewWidget->refresh();
-	//TODO maybe add other refreshes? (list widget, for i.e.)
+    std::cout << "[ZLQtTreeDialog] onRefresh()" << std::endl;
+    myPreviewWidget->refresh();
+    myListWidget->refresh();
 }
 
 void ZLQtTreeDialog::updateNavigationButtons() {
@@ -268,7 +279,7 @@ void ZLQtTreeDialog::onNodeDoubleClicked(ZLQtTreeItem* item) {
 		//TODO maybe use different kind of check
 		//isExpandable method for i.e.
 		return;
-	}
+    }
 	onExpandRequest(item->getNode());
 }
 
@@ -277,8 +288,8 @@ void ZLQtTreeDialog::onBackButton() {
 		return;
 	}
 	saveShowParameters();
-	myLastClickedNode = 0;
-	myForwardHistory.push(myBackHistory.pop());
+    myLastClickedNode = 0;
+    myForwardHistory.push(myBackHistory.pop());
 	myListWidget->fillNodes(myBackHistory.top());
 	updateAll();
 	setupShowParameters();
@@ -292,7 +303,7 @@ void ZLQtTreeDialog::onForwardButton() {
 	myLastClickedNode = 0;
 	myBackHistory.push(myForwardHistory.pop());
 	if (!myBackHistory.empty()) {
-		myListWidget->fillNodes(myBackHistory.top());
+        myListWidget->fillNodes(myBackHistory.top());
 	}
 	updateAll();
 	setupShowParameters();
@@ -312,4 +323,11 @@ void ZLQtTreeDialog::onMoreChildren() {
 	if (!myBackHistory.empty()) {
 		onMoreChildrenRequest(myBackHistory.top());
 	}
+}
+
+void ZLQtTreeDialog::reloadChildren() {
+    std::cout << Q_FUNC_INFO << std::endl;
+    if (!myBackHistory.empty()) {
+        onRefreshRequest(myBackHistory.top());
+    }
 }

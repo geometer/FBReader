@@ -37,6 +37,7 @@ public:
 	static bool getBooks(std::map<std::string, shared_ptr<Book> > &booksmap, bool checkFile = true);
 
 	static bool getRecentBooks(BookList &books);
+    static bool getFavoriteBooks(BookList &books);
 
 public:
 	static void addTag(shared_ptr<Book> book, shared_ptr<Tag> tag);

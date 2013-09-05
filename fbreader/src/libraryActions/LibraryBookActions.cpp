@@ -25,6 +25,7 @@
 
 #include "LibraryBookActions.h"
 #include "../library/Book.h"
+#include "../library/tree/LocalLibrary.h"
 #include "../fbreader/FBReader.h"
 
 BookReadAction::BookReadAction(shared_ptr<Book> book) : myBook(book) {
@@ -132,3 +133,28 @@ void BookEditInfoAction::run() {
 ZLResourceKey BookEditInfoAction::key() const {
 	return ZLResourceKey("edit");
 }
+
+BookAddToFavoriteAction::BookAddToFavoriteAction(shared_ptr<Book> book) : myBook(book) {
+}
+
+void BookAddToFavoriteAction::run() {
+    Library::Instance().addBookToFavoriteList(myBook);
+}
+
+ZLResourceKey BookAddToFavoriteAction::key() const {
+    return ZLResourceKey("favorite");
+}
+
+BookRemoveFromFavoriteAction::BookRemoveFromFavoriteAction(shared_ptr<Book> book) : myBook(book) {
+}
+
+void BookRemoveFromFavoriteAction::run() {
+    if(Library::Instance().removeFromFavoriteList(myBook)){
+        LocalLibrary::Instance().refresh();
+    }
+}
+
+ZLResourceKey BookRemoveFromFavoriteAction::key() const {
+    return ZLResourceKey("favorite_remove");
+}
+

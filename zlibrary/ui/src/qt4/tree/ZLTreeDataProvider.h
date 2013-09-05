@@ -29,7 +29,9 @@ class ZLQtTreeDialog;
 class ZLTreeDataProvider{
 public:
     ZLTreeDataProvider();
-    virtual ZLNetworkRequest::Listener *getData(ZLTreeNode *node, bool moreMode) = 0;
+    virtual ZLNetworkRequest::Listener *getData(ZLTreeNode *node) = 0;
+    virtual ZLNetworkRequest::Listener *getMoreData(ZLTreeNode *node) = 0;
+    virtual ZLNetworkRequest::Listener *getRefreshedData(ZLTreeNode *node) = 0;
     void setParent(ZLQtTreeDialog *dialog);
 
 protected:

@@ -33,7 +33,7 @@
 
 const std::string Book::AutoEncoding = "auto";
 
-Book::Book(const ZLFile &file, int id) : myBookId(id), myFile(file) {
+Book::Book(const ZLFile &file, int id) : myBookId(id), myFile(file), myFavorite(false) {
 }
 
 Book::~Book() {
@@ -236,6 +236,10 @@ bool Book::replaceAuthor(shared_ptr<Author> from, shared_ptr<Author> to) {
 
 void Book::setTitle(const std::string &title) {
 	myTitle = title;
+}
+
+void Book::setFavorite(const bool favorite) {
+    myFavorite = favorite;
 }
 
 void Book::setLanguage(const std::string &language) {

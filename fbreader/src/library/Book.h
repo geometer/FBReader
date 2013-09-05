@@ -67,12 +67,14 @@ public: // unmodifiable book methods
 
 	const TagList &tags() const;
 	const AuthorList &authors() const;
+    const bool favorite() const;
 
 public: // modifiable book methods
 	void setTitle(const std::string &title);
 	void setLanguage(const std::string &language);
 	void setEncoding(const std::string &encoding);
 	void setSeries(const std::string &title, const Number &index);
+    void setFavorite(const bool favorite);
 
 public:
 	bool addTag(shared_ptr<Tag> tag);
@@ -102,6 +104,7 @@ private:
 	Number myIndexInSeries;
 	TagList myTags;
 	AuthorList myAuthors;
+    bool myFavorite;
 
 private: // disable copying
 	Book(const Book &);
@@ -147,5 +150,6 @@ inline const AuthorList &Book::authors() const { return myAuthors; }
 
 inline int Book::bookId() const { return myBookId; }
 inline void Book::setBookId(int bookId) { myBookId = bookId; }
+inline const bool Book::favorite() const {return myFavorite; }
 
 #endif /* __BOOK_H__ */

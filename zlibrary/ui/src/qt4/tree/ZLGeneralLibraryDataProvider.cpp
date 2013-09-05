@@ -22,22 +22,33 @@
 ZLGeneralLibraryDataProvider::ZLGeneralLibraryDataProvider(){
 }
 
-ZLNetworkRequest::Listener *ZLGeneralLibraryDataProvider::getData(ZLTreeNode *node, bool moreMode){
-    return new ChildrenRequestListener(node, moreMode, this);
+ZLNetworkRequest::Listener *ZLGeneralLibraryDataProvider::getData(ZLTreeNode *node){
+    return new ChildrenRequestListener(node, 0, this);
 }
 
-ZLGeneralLibraryDataProvider::ChildrenRequestListener::ChildrenRequestListener(ZLTreeNode *node, bool moreMode, ZLGeneralLibraryDataProvider *dataProvider) :
-    myNode(node), myMoreMode(moreMode), myDataProvider(dataProvider) {
+ZLNetworkRequest::Listener *ZLGeneralLibraryDataProvider::getMoreData(ZLTreeNode *node){
+    return new ChildrenRequestListener(node, 1, this);
+}
+
+ZLNetworkRequest::Listener *ZLGeneralLibraryDataProvider::getRefreshedData(ZLTreeNode *node){
+    return new ChildrenRequestListener(node, 2, this);
+}
+
+ZLGeneralLibraryDataProvider::ChildrenRequestListener::ChildrenRequestListener(ZLTreeNode *node, int mode, ZLGeneralLibraryDataProvider *dataProvider) :
+    myNode(node), myMoreMode(mode), myDataProvider(dataProvider) {
 }
 
 void ZLGeneralLibraryDataProvider::ChildrenRequestListener::finished(const std::string &error) {
     if (!error.empty()) {
         //TODO show error message?
     }
-    if(!myMoreMode){
+    std::cout << "@@@ ChildrenRequestListener::finished " << myMoreMode << std::endl;
+    if(myMoreMode == 0){
         myDataProvider->getParent()->onChildrenLoaded(myNode, true, error.empty());
-    }else{
+    }else if(myMoreMode == 1){
         myDataProvider->getParent()->onMoreChildrenLoaded(error.empty());
+    }else{
+        myDataProvider->getParent()->onRefreshChildrenLoaded(error.empty());
     }
 }
 

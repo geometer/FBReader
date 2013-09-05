@@ -69,6 +69,10 @@ public:
 	static const std::string CLEAR_RECENT_BOOKS;
 	static const std::string INSERT_RECENT_BOOKS;
 
+    static const std::string LOAD_FAVORITE_BOOKS;
+    static const std::string CLEAR_FAVORITE_BOOKS;
+    static const std::string INSERT_FAVORITE_BOOKS;
+
 	static const std::string FIND_FILE_NAME;
 
 	static const std::string LOAD_BOOKS;

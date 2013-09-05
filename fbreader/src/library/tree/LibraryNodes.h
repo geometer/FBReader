@@ -41,26 +41,24 @@ public:
     typedef std::vector<shared_ptr<LibraryNode> > List;
 
     LibraryNode();
-    virtual void getChildren(LibraryCatalogTree *tree) = 0;
+    virtual void getChildren(LibraryCatalogTree *tree, size_t start = 0) = 0;
     virtual void getMoreChildren(LibraryCatalogTree *tree);
     virtual std::string getTitle();
     virtual std::string getSubTitle();
     virtual std::string getImageName();
 protected:
     template <class T>
-    void getSubChildren(const T &a, T &b);
+    void getSubChildren(const T &a, T &b, size_t start = 0);
 
 protected:
     std::size_t count;
-
-private:
     const static std::size_t NEXT = 10;
 };
 
 class FavoritesBooksNode : public LibraryNode{
 public:
     FavoritesBooksNode();
-    void getChildren(LibraryCatalogTree *tree);
+    void getChildren(LibraryCatalogTree *tree, size_t start = 0);
     std::string getTitle();
     std::string getSubTitle();
 };
@@ -68,7 +66,7 @@ public:
 class RecentBooksNode : public LibraryNode{
 public:
     RecentBooksNode();
-    void getChildren(LibraryCatalogTree *tree);
+    void getChildren(LibraryCatalogTree *tree, size_t start = 0);
     std::string getTitle();
     std::string getSubTitle();
 };
@@ -76,7 +74,7 @@ public:
 class AuthorsCatalogNode : public LibraryNode{
 public:
     AuthorsCatalogNode();
-    void getChildren(LibraryCatalogTree *tree);
+    void getChildren(LibraryCatalogTree *tree, size_t start = 0);
     std::string getTitle();
     std::string getSubTitle();
     std::string getImageName();
@@ -85,7 +83,7 @@ public:
 class BooksByAuthorNode : public LibraryNode{
 public:
     BooksByAuthorNode(shared_ptr<Author> author);
-    void getChildren(LibraryCatalogTree *tree);
+    void getChildren(LibraryCatalogTree *tree, size_t start = 0);
     std::string getTitle();
     std::string getSubTitle();
     std::string getImageName();
@@ -96,7 +94,7 @@ private:
 class TagsCatalogNode : public LibraryNode{
 public:
     TagsCatalogNode();
-    void getChildren(LibraryCatalogTree *tree);
+    void getChildren(LibraryCatalogTree *tree, size_t start = 0);
     std::string getTitle();
     std::string getSubTitle();
     std::string getImageName();
@@ -105,7 +103,7 @@ public:
 class BooksByTagNode : public LibraryNode{
 public:
     BooksByTagNode(shared_ptr<Tag> tag);
-    void getChildren(LibraryCatalogTree *tree);
+    void getChildren(LibraryCatalogTree *tree, size_t start = 0);
     std::string getTitle();
     std::string getSubTitle();
     std::string getImageName();
@@ -116,11 +114,13 @@ private:
 class BooksByTitleNode : public LibraryNode{
 public:
     BooksByTitleNode(std::string title = "");
-    void getChildren(LibraryCatalogTree *tree);
+    void getChildren(LibraryCatalogTree *tree, size_t start = 0);
+    void getMoreChildren(LibraryCatalogTree *tree);
     std::string getTitle();
     std::string getSubTitle();
 private:
     std::string myTitle;
+    std::size_t innerCount;
 };
 
 

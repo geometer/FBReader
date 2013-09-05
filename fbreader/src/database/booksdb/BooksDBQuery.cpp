@@ -87,6 +87,11 @@ const std::string BooksDBQuery::INIT_DATABASE = \
 	"	book_id INTEGER UNIQUE REFERENCES Books (book_id) " \
 	"); " \
 	" " \
+    "CREATE TABLE IF NOT EXISTS State.FavoriteBooks ( " \
+    "	book_index INTEGER PRIMARY KEY, " \
+    "	book_id INTEGER UNIQUE REFERENCES Books (book_id) " \
+    "); " \
+    " " \
 	"CREATE TABLE IF NOT EXISTS State.BookStateStack ( " \
 	"	book_id INTEGER NOT NULL REFERENCES Books (book_id), " \
 	"	position INTEGER NOT NULL, " \
@@ -120,6 +125,7 @@ const std::string BooksDBQuery::SECOND_INIT_DATABASE = \
 	"	DELETE FROM StackPosition WHERE book_id = OLD.book_id; " \
 	"	DELETE FROM BookStateStack WHERE book_id = OLD.book_id; " \
 	"	DELETE FROM RecentBooks WHERE book_id = OLD.book_id; " \
+    "	DELETE FROM FavoriteBooks WHERE book_id = OLD.book_id; " \
 	"	DELETE FROM BookList WHERE book_id = OLD.book_id; " \
 	"END; " \
 	" " \
@@ -194,6 +200,7 @@ const std::string BooksDBQuery::CLEAR_DATABASE = \
 	"DROP TABLE PalmType; " \
 	"DROP TABLE State.BookStateStack; " \
 	"DROP TABLE State.RecentBooks; " \
+    "DROP TABLE State.FavoriteBooks; " \
 	"DROP TABLE BookTag; " \
 	"DROP TABLE BookSeries; " \
 	"DROP TABLE BookAuthor; " \
@@ -295,6 +302,16 @@ const std::string BooksDBQuery::LOAD_RECENT_BOOKS = \
 const std::string BooksDBQuery::CLEAR_RECENT_BOOKS = "DELETE FROM RecentBooks; ";
 
 const std::string BooksDBQuery::INSERT_RECENT_BOOKS = "INSERT INTO RecentBooks (book_id) VALUES (@book_id); ";
+
+const std::string BooksDBQuery::LOAD_FAVORITE_BOOKS = \
+    "SELECT b.file_id " \
+    "FROM Books AS b " \
+    "	INNER JOIN FavoriteBooks AS rb ON b.book_id = rb.book_id " \
+    "ORDER BY rb.book_index; ";
+
+const std::string BooksDBQuery::CLEAR_FAVORITE_BOOKS = "DELETE FROM FavoriteBooks; ";
+
+const std::string BooksDBQuery::INSERT_FAVORITE_BOOKS = "INSERT INTO FavoriteBooks (book_id) VALUES (@book_id); ";
 
 const std::string BooksDBQuery::FIND_FILE_NAME = "SELECT name, parent_id FROM Files WHERE file_id = @file_id; ";
 

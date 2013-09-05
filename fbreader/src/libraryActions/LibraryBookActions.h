@@ -64,4 +64,27 @@ private:
 	const shared_ptr<Book> myBook;
 };
 
+class BookAddToFavoriteAction : public ZLRunnableWithKey {
+
+public:
+    BookAddToFavoriteAction(shared_ptr<Book> book);
+    void run();
+    ZLResourceKey key() const;
+
+private:
+    const shared_ptr<Book> myBook;
+};
+
+class BookRemoveFromFavoriteAction : public ZLRunnableWithKey {
+
+public:
+    BookRemoveFromFavoriteAction(shared_ptr<Book> book);
+    void run();
+    ZLResourceKey key() const;
+
+private:
+    const shared_ptr<Book> myBook;
+};
+
+
 #endif /* __LIBRARYBOOKACTIONS_H__ */

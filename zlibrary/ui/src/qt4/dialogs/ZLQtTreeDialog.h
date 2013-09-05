@@ -66,11 +66,13 @@ public: //listener methods
 
 	void onRefresh();
 
-	void onMoreChildrenRequest(ZLTreeNode *node);
+    void onMoreChildrenRequest(ZLTreeNode *node);
+    void onRefreshRequest(ZLTreeNode *node);
 
 public:
 	void onChildrenLoaded(ZLTreeNode *node, bool checkLast, bool success);
 	void onMoreChildrenLoaded(bool success);
+    void onRefreshChildrenLoaded(bool success);
 
 private:
 	void updateAll();
@@ -88,6 +90,7 @@ private Q_SLOTS:
 	void onForwardButton();
 	void onSearchField();
 	void onMoreChildren();
+    void reloadChildren();
 
 private:
 	ZLTreeNode *myRootNode;

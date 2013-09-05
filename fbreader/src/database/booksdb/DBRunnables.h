@@ -187,6 +187,20 @@ private:
 	shared_ptr<DBCommand> myInsertRecentBooks;
 };
 
+class SaveFavoriteBooksRunnable : public DBRunnable {
+
+public:
+    SaveFavoriteBooksRunnable(DBConnection &connection);
+    bool run();
+    void setBooks(const BookList &books);
+
+private:
+    BookList myBooks;
+
+    shared_ptr<DBCommand> myClearFavoriteBooks;
+    shared_ptr<DBCommand> myInsertFavoriteBooks;
+};
+
 class SaveBookStateStackRunnable : public DBRunnable {
 
 public:
@@ -306,6 +320,19 @@ private:
 	std::vector<int> myFileIds;
 
 	shared_ptr<DBCommand> myLoadRecentBooks;
+};
+
+class LoadFavoriteBooksRunnable : public DBRunnable {
+
+public:
+    LoadFavoriteBooksRunnable(DBConnection &connection);
+    bool run();
+    void collectFileIds(std::vector<int> &fileIds);
+
+private:
+    std::vector<int> myFileIds;
+
+    shared_ptr<DBCommand> myLoadFavoriteBooks;
 };
 
 #endif /* __DBRUNNABLES_H__ */

@@ -42,6 +42,7 @@ public:
 private:
 	static shared_ptr<Library> ourInstance;
 	static const std::size_t MaxRecentListSize;
+    static const std::size_t MaxFavoriteListSize;
 
 public:
 	ZLStringOption PathOption;
@@ -58,6 +59,7 @@ public:
 	const BookList &books(shared_ptr<Tag> tag) const;
     const BookList &books(std::string title) const;
 	const BookList &recentBooks() const;
+    const BookList &favoriteBooks() const;
     const std::vector<std::string> bookTitlesFirstLetters() const;
 
 	enum RemoveType {
@@ -77,6 +79,9 @@ public:
 	void removeBook(shared_ptr<Book> book);
 	void updateBook(shared_ptr<Book> book);
 	void addBookToRecentList(shared_ptr<Book> book);
+    bool addBookToFavoriteList(shared_ptr<Book> book);
+    bool removeFromFavoriteList(shared_ptr<Book> book);
+    bool isBookInFavoriteList(shared_ptr<Book> book);
 
 	void replaceAuthor(shared_ptr<Author> from, shared_ptr<Author> to);
 
@@ -108,6 +113,7 @@ private:
 	typedef std::map<shared_ptr<Tag>,BookList,TagComparator> BooksByTag;
 	mutable BooksByTag myBooksByTag;
 	mutable BookList myRecentBooks;
+    mutable BookList myFavoriteBooks;
     typedef std::map<std::string,BookList> BookByTitle;
     mutable BookByTitle myBooksByTitle;
 

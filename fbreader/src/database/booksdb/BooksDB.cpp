@@ -122,6 +122,9 @@ void BooksDB::initCommands() {
 	myLoadRecentBooks = new LoadRecentBooksRunnable(connection());
 	mySaveRecentBooks = new SaveRecentBooksRunnable(connection());
 
+    myLoadFavoriteBooks = new LoadFavoriteBooksRunnable(connection());
+    mySaveFavoriteBooks = new SaveFavoriteBooksRunnable(connection());
+
 	mySaveBookStateStack = new SaveBookStateStackRunnable(connection());
 
 	myDeleteBook = new DeleteBookRunnable(connection());
@@ -287,6 +290,28 @@ bool BooksDB::saveRecentBooks(const BookList &books) {
 	}
 	mySaveRecentBooks->setBooks(books);
 	return executeAsTransaction(*mySaveRecentBooks);
+}
+
+bool BooksDB::loadFavoriteBooks(std::vector<std::string> &fileNames) {
+    std::vector<int> fileIds;
+    if (!myLoadFavoriteBooks->run()) {
+        return false;
+    }
+    myLoadFavoriteBooks->collectFileIds(fileIds);
+    for (std::vector<int>::const_iterator it = fileIds.begin(); it != fileIds.end(); ++it) {
+        const int fileId = *it;
+        const std::string fileName = getFileName(fileId);
+        fileNames.push_back(fileName);
+    }
+    return true;
+}
+
+bool BooksDB::saveFavoriteBooks(const BookList &books) {
+    if (!isInitialized()) {
+        return false;
+    }
+    mySaveFavoriteBooks->setBooks(books);
+    return executeAsTransaction(*mySaveFavoriteBooks);
 }
 
 std::string BooksDB::getFileName(int fileId) {

@@ -40,6 +40,7 @@ class ZLQtItemsListWidget : public QScrollArea {
 public:
 	ZLQtItemsListWidget(QWidget *parent = 0);
     void clearNodes();
+    void refresh();
     void fillNodes(const ZLTreeNode *rootNode, bool isMore = false);
 	QSize sizeHint() const;
 	void setMinimumWidth(int w);
@@ -49,6 +50,7 @@ Q_SIGNALS:
 	void nodeClicked(ZLQtTreeItem* item);
 	void nodeDoubleClicked(ZLQtTreeItem* item);
 	void wantMoreChildren();
+    void reloadChildren();
 
 public Q_SLOTS:
 	void onNodeClicked(ZLQtTreeItem* item);

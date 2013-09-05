@@ -35,9 +35,14 @@ LibraryBookTree::LibraryBookTree(LibraryTree *parent, shared_ptr<Book> book) : Z
 
 static std::vector<shared_ptr<ZLTreeAction> > getBookActions(LibraryBookTree &tree) {
     std::vector<shared_ptr<ZLTreeAction> > actions;
-    const shared_ptr<Book> book = tree.book ();
+    const shared_ptr<Book> book = tree.book();
     if(!book.isNull ()){
         actions.push_back(new BookReadAction(book));
+        if(Library::Instance().isBookInFavoriteList(book)){
+            actions.push_back(new BookRemoveFromFavoriteAction(book));
+        }else{
+            actions.push_back(new BookAddToFavoriteAction(book));
+        }
         //actions.push_back(new BookRemoveAction(book));
     }
 
@@ -75,7 +80,7 @@ shared_ptr<ZLTreePageInfo> LibraryBookTree::getPageInfo(){
 }
 
 const ZLResource &LibraryBookTree::resource() const{
-    return ZLResource::resource("networkView")["bookNode"];
+    return ZLResource::resource("libraryView")["bookNode"];
 }
 std::string LibraryBookTree::title() const{
     return myBook->title();
@@ -155,35 +160,6 @@ std::string LibraryBookTree::BookItemWrapper::actionText(const shared_ptr<ZLTree
     return myTree.actionText(action);
 }
 
-//class RelatedAction : public ZLTreeAction {
-//public:
-//    RelatedAction(shared_ptr<Book> item) : myTitle(item->title()) {
-        //myNode = new LibraryCatalogTree(&NetworkLibrary::Instance().getFakeCatalogTree(), item);
-        //myNode = NetworkTreeFactory::createNetworkTree(0, item);
-//    }
-//    ZLResourceKey key() const { return ZLResourceKey(""); }
-//    std::string text(const ZLResource &/*resource*/) const {
-//        return myTitle;
-//    }
-//    void run() {
-        //if (NetworkCatalogTree *tree = zlobject_cast<NetworkCatalogTree*>(&*myNode)){
-        //    tree->expand();
-        //}
-//    }
-
-//private:
-//    shared_ptr<ZLTreeTitledNode> myNode;
-//    std::string myTitle;
-//};
-
 const std::vector<shared_ptr<ZLTreeAction> > LibraryBookTree::BookItemWrapper::relatedActions() const {
-    if (!myRelatedActions.empty()) {
-        return myRelatedActions;
-    }
-    /*std::vector<shared_ptr<NetworkItem> > catalogItems;// =  static_cast<NetworkBookItem&>(*myBookItem).getRelatedCatalogsItems();
-    for (std::size_t i = 0; i < catalogItems.size(); ++i) {
-        shared_ptr<Book> item = catalogItems.at(i);
-        myRelatedActions.push_back(new RelatedAction(item));
-    }*/
     return myRelatedActions;
 }

@@ -27,18 +27,20 @@ class ZLGeneralLibraryDataProvider : public ZLTreeDataProvider
 {
 public:
     ZLGeneralLibraryDataProvider();
-    ZLNetworkRequest::Listener *getData(ZLTreeNode *node, bool moreMode);
+    ZLNetworkRequest::Listener *getData(ZLTreeNode *node);
+    ZLNetworkRequest::Listener *getMoreData(ZLTreeNode *node);
+    ZLNetworkRequest::Listener *getRefreshedData(ZLTreeNode *node);
 
 private:
     ZLQtTreeDialog *getParent() {return myDialog;}
     class ChildrenRequestListener : public ZLNetworkRequest::Listener {
         public:
-            ChildrenRequestListener(ZLTreeNode *node, bool moreMode, ZLGeneralLibraryDataProvider *dataProvider);
+            ChildrenRequestListener(ZLTreeNode *node, int mode, ZLGeneralLibraryDataProvider *dataProvider);
             void finished(const std::string &error);
 
         private:
             ZLTreeNode *myNode;
-            bool myMoreMode;
+            int myMoreMode;
             ZLGeneralLibraryDataProvider *myDataProvider;
     };
 

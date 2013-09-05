@@ -68,7 +68,7 @@ public:
     virtual void onChildrenReceived(const AuthorList &childrens, const std::string &error, const std::size_t startIndex = 0);
     virtual void onChildrenReceived(const TagList &childrens, const std::string &error, const std::size_t startIndex = 0);
     virtual void onChildrenReceived(std::vector<shared_ptr<LibraryNode> > &childrens, const std::string &error, const std::size_t startIndex = 0);
-
+    shared_ptr<LibraryNode> getNode() const;
 private:
     const ZLResource &resource() const;
     void notifyListeners(const std::string &error);

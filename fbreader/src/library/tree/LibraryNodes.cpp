@@ -33,18 +33,18 @@ std::string LibraryNode::getImageName(){
     return "booktree-catalog.png";
 }
 void LibraryNode::getMoreChildren(LibraryCatalogTree *tree){
-    getChildren(tree);
+    getChildren(tree, count);
 }
 
 template <class T>
-void LibraryNode::getSubChildren(const T &a, T &b){
-    if(count >= a.size ()) return;
+void LibraryNode::getSubChildren(const T &a, T &b, size_t start){
+    if(start >= a.size ()) return;
 
-    std::size_t total = count+NEXT;
+    std::size_t total = start+NEXT;
     if(total > a.size ()){
         total = a.size ();
     }
-    for (std::size_t i = count; i < total; ++i) {
+    for (std::size_t i = start; i < total; ++i) {
         b.push_back(a.at(i));
     }
     count = total;
@@ -52,9 +52,11 @@ void LibraryNode::getSubChildren(const T &a, T &b){
 
 FavoritesBooksNode::FavoritesBooksNode() : LibraryNode(){
 }
-void FavoritesBooksNode::getChildren(LibraryCatalogTree *tree){
-    const BookList &bl =  Library::Instance().recentBooks();
-    tree->onChildrenReceived(bl, "");
+void FavoritesBooksNode::getChildren(LibraryCatalogTree *tree, size_t start){
+    const BookList &bl =  Library::Instance().favoriteBooks();
+    BookList l;
+    getSubChildren(bl, l, start);
+    tree->onChildrenReceived(l, "", start);
 }
 std::string FavoritesBooksNode::getTitle(){
     return "Favorites";
@@ -65,9 +67,11 @@ std::string FavoritesBooksNode::getSubTitle(){
 
 RecentBooksNode::RecentBooksNode() : LibraryNode(){
 }
-void RecentBooksNode::getChildren(LibraryCatalogTree *tree){
+void RecentBooksNode::getChildren(LibraryCatalogTree *tree, size_t start){
     const BookList &bl =  Library::Instance().recentBooks();
-    tree->onChildrenReceived(bl, "");
+    BookList l;
+    getSubChildren(bl, l, start);
+    tree->onChildrenReceived(l, "", start);
 }
 std::string RecentBooksNode::getTitle(){
     return "Recent";
@@ -78,11 +82,11 @@ std::string RecentBooksNode::getSubTitle(){
 
 AuthorsCatalogNode::AuthorsCatalogNode() : LibraryNode(){
 }
-void AuthorsCatalogNode::getChildren(LibraryCatalogTree *tree){
+void AuthorsCatalogNode::getChildren(LibraryCatalogTree *tree, size_t start){
     const AuthorList &bl = Library::Instance().authors();
     AuthorList l;
-    getSubChildren(bl, l);
-    tree->onChildrenReceived(l, "", count);
+    getSubChildren(bl, l, start);
+    tree->onChildrenReceived(l, "", start);
 }
 std::string AuthorsCatalogNode::getTitle(){
     return "By Author";
@@ -96,11 +100,11 @@ std::string AuthorsCatalogNode::getImageName(){
 
 BooksByAuthorNode::BooksByAuthorNode(shared_ptr<Author> author) : LibraryNode(), myAuthor(author){
 }
-void BooksByAuthorNode::getChildren(LibraryCatalogTree *tree){
+void BooksByAuthorNode::getChildren(LibraryCatalogTree *tree, size_t start){
     const BookList &bookList =  Library::Instance().books(myAuthor);
     BookList l;
-    getSubChildren(bookList, l);
-    tree->onChildrenReceived(bookList, "", count);
+    getSubChildren(bookList, l, start);
+    tree->onChildrenReceived(bookList, "", start);
 }
 std::string BooksByAuthorNode::getTitle(){
     if(!myAuthor.isNull ()){
@@ -122,11 +126,11 @@ std::string BooksByAuthorNode::getImageName(){
 
 TagsCatalogNode::TagsCatalogNode() : LibraryNode(){
 }
-void TagsCatalogNode::getChildren(LibraryCatalogTree *tree){
+void TagsCatalogNode::getChildren(LibraryCatalogTree *tree, size_t start){
     const TagList &bl = Library::Instance().tags();
     TagList l;
-    getSubChildren(bl, l);
-    tree->onChildrenReceived(l, "", count);
+    getSubChildren(bl, l, start);
+    tree->onChildrenReceived(l, "", start);
 }
 std::string TagsCatalogNode::getTitle(){
     return "By Tag";
@@ -140,11 +144,11 @@ std::string TagsCatalogNode::getImageName(){
 
 BooksByTagNode::BooksByTagNode(shared_ptr<Tag> tag) : LibraryNode(), myTag(tag){
 }
-void BooksByTagNode::getChildren(LibraryCatalogTree *tree){
+void BooksByTagNode::getChildren(LibraryCatalogTree *tree, size_t start){
     const BookList &bookList =  Library::Instance().books(myTag);
     BookList l;
-    getSubChildren(bookList, l);
-    tree->onChildrenReceived(l, "", count);
+    getSubChildren(bookList, l, start);
+    tree->onChildrenReceived(l, "", start);
 }
 std::string BooksByTagNode::getTitle(){
     if(!myTag.isNull ()){
@@ -171,26 +175,33 @@ BooksByTitleNode::BooksByTitleNode(std::string title) : LibraryNode(){
         myTitle = "By Title";
     }
 }
-void BooksByTitleNode::getChildren(LibraryCatalogTree *tree){   
+void BooksByTitleNode::getChildren(LibraryCatalogTree *tree, size_t start){
     if(myTitle == "By Title"){
         std::vector<shared_ptr<LibraryNode> > list;
         const std::vector<std::string> bl = Library::Instance().bookTitlesFirstLetters();
 
-        if(count >= bl.size ()) return;
-
-        std::size_t total = count+10;
+        std::size_t total = start+NEXT;
         if(total > bl.size ()){
             total = bl.size ();
         }
         std::string s;
-        for (std::size_t i = count; i < total; ++i) {
+        for (std::size_t i = start; i < total; ++i) {
             list.push_back(new BooksByTitleNode(bl.at(i)));
         }
-        tree->onChildrenReceived(list, "", count);
-        count = total;
+        tree->onChildrenReceived(list, "", start);
+        innerCount = total;
     }else{
         const BookList &bookList = Library::Instance().books(myTitle);
-        tree->onChildrenReceived(bookList, "");
+        BookList l;
+        getSubChildren(bookList, l, start);
+        tree->onChildrenReceived(l, "", start);
+    }
+}
+void BooksByTitleNode::getMoreChildren(LibraryCatalogTree *tree){
+    if(myTitle == "By Title"){
+        getChildren(tree, innerCount);
+    }else{
+        getChildren(tree, count);
     }
 }
 std::string BooksByTitleNode::getTitle(){

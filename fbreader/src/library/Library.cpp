@@ -43,6 +43,7 @@
 
 shared_ptr<Library> Library::ourInstance;
 const std::size_t Library::MaxRecentListSize = 10;
+const std::size_t Library::MaxFavoriteListSize = 20;
 
 Library &Library::Instance() {
 	if (ourInstance.isNull()) {
@@ -60,6 +61,7 @@ Library::Library() :
 	myBuildMode(BUILD_ALL),
 	myRevision(0) {
 	BooksDBUtil::getRecentBooks(myRecentBooks);
+    BooksDBUtil::getFavoriteBooks(myFavoriteBooks);
 }
 
 void Library::collectBookFileNames(std::set<std::string> &bookFileNames) const {
@@ -337,6 +339,18 @@ void Library::removeBook(shared_ptr<Book> book) {
 		if (recentListChanged) {
 			BooksDB::Instance().saveRecentBooks(myRecentBooks);
 		}
+        bool favoriteListChanged = false;
+        for (BookList::iterator it = myFavoriteBooks.begin(); it != myFavoriteBooks.end();) {
+            if ((*it)->file() == book->file()) {
+                it = myFavoriteBooks.erase(it);
+                favoriteListChanged = true;
+            } else {
+                ++it;
+            }
+        }
+        if (favoriteListChanged) {
+            BooksDB::Instance().saveFavoriteBooks(myFavoriteBooks);
+        }
 	}
 }
 
@@ -356,8 +370,6 @@ const std::vector<std::string> Library::bookTitlesFirstLetters() const {
     for (BookByTitle::iterator it=myBooksByTitle.begin(); it!=myBooksByTitle.end(); ++it){
        myFirstLetters.push_back(it->first);
     }
-    //BookList bookList(myBooks.size());
-    //std::copy(myBooks.begin(), myBooks.end(), bookList.begin());
     return myFirstLetters;
 }
 
@@ -463,6 +475,7 @@ void Library::addBookToRecentList(shared_ptr<Book> book) {
 	if (book.isNull()) {
 		return;
 	}
+    std::cout << "                   1. addBookToRecentList: " << myRecentBooks.size ()<< std::endl;
 	for (BookList::iterator it = myRecentBooks.begin(); it != myRecentBooks.end(); ++it) {
 		if ((*it)->file() == book->file()) {
 			if (it == myRecentBooks.begin()) {
@@ -476,5 +489,61 @@ void Library::addBookToRecentList(shared_ptr<Book> book) {
 	if (myRecentBooks.size() > MaxRecentListSize) {
 		myRecentBooks.erase(myRecentBooks.begin() + MaxRecentListSize, myRecentBooks.end());
 	}
+    std::cout << "                   2. addBookToRecentList: " << myRecentBooks.size ()<< std::endl;
 	BooksDB::Instance().saveRecentBooks(myRecentBooks);
 }
+
+const BookList &Library::favoriteBooks() const {
+    return myFavoriteBooks;
+}
+
+bool Library::addBookToFavoriteList(shared_ptr<Book> book) {
+    if (book.isNull()) {
+        return false;
+    }
+    for (BookList::iterator it = myFavoriteBooks.begin(); it != myFavoriteBooks.end(); ++it) {
+        if ((*it)->file() == book->file()) {
+            if (it == myFavoriteBooks.begin()) {
+                return false;
+            }
+            myFavoriteBooks.erase(it);
+            break;
+        }
+    }
+    myFavoriteBooks.insert(myFavoriteBooks.begin(), book);
+    if (myFavoriteBooks.size() > MaxFavoriteListSize) {
+        myFavoriteBooks.erase(myFavoriteBooks.begin() + MaxFavoriteListSize, myFavoriteBooks.end());
+    }
+    BooksDB::Instance().saveFavoriteBooks(myFavoriteBooks);
+    return true;
+}
+
+bool Library::removeFromFavoriteList(shared_ptr<Book> book) {
+    if (book.isNull()) {
+        return false;
+    }
+    std::cout << "                   1. removeFromFavoriteList: " << myFavoriteBooks.size ()<< std::endl;
+    for (BookList::iterator it = myFavoriteBooks.begin(); it != myFavoriteBooks.end(); ++it) {
+        if ((*it)->file() == book->file()) {
+            myFavoriteBooks.erase(it);
+            std::cout << "                   1.1 FOUND: " << myFavoriteBooks.size () << std::endl;
+            BooksDB::Instance().saveFavoriteBooks(myFavoriteBooks);
+            return true;
+        }
+    }
+    std::cout << "                   2. removeFromFavoriteList: " << myFavoriteBooks.size ()<< std::endl;
+    return false;
+}
+
+bool Library::isBookInFavoriteList(shared_ptr<Book> book) {
+    if (book.isNull()) {
+        return false;
+    }
+    for (BookList::iterator it = myFavoriteBooks.begin(); it != myFavoriteBooks.end(); ++it) {
+        if ((*it)->file() == book->file()) {
+            return true;
+        }
+    }
+    return false;
+}
+
