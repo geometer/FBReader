@@ -88,6 +88,7 @@ public:
 	
 	virtual const ZLResource &resource() const;
 	void registerAction(shared_ptr<ZLTreeAction> action);
+    virtual void clearActions();
 	const std::vector<shared_ptr<ZLTreeAction> > &actions() const;
 	std::string actionText(const shared_ptr<ZLTreeAction> &action) const;
 	

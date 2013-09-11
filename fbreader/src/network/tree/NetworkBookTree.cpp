@@ -143,6 +143,9 @@ bool NetworkBookTree::BookItemWrapper::isPageInfoLoaded() {
 	return myIsInitialized;
 }
 
+void NetworkBookTree::BookItemWrapper::updateActions() const{
+}
+
 class BookItemWrapperScope : public ZLUserData {
 public:
 	shared_ptr<ZLNetworkRequest::Listener> listener;

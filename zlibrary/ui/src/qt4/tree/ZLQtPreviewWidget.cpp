@@ -34,6 +34,8 @@
 
 #include "ZLQtPreviewWidget.h"
 
+#include <iostream> //udmv
+
 class ZLQtLabelAction : public QLabel {
 
 public:
@@ -264,6 +266,8 @@ void ZLQtPageWidget::createElements() {
 }
 
 void ZLQtPageWidget::setInfo(const ZLTreePageInfo &info) {
+    std::cout << "--->> UPDATED ZLQtPageWidget setInfo" << std::endl;
+    info.updateActions();
 	shared_ptr<const ZLImage> image = info.image();
 	if (!image.isNull()) {
 		QPixmap pixmap = ZLQtImageUtils::ZLImageToQPixmap(image);
@@ -372,6 +376,7 @@ void ZLQtCatalogPageWidget::createElements() {
 }
 
 void ZLQtCatalogPageWidget::setInfo(const ZLTreeTitledNode *node) {
+    std::cout << "--->> UPDATED ZLQtCatalogPageWidget setInfo" << std::endl;
 	shared_ptr<const ZLImage> image = node->image();
 	if (!image.isNull()) {
 
@@ -393,7 +398,6 @@ void ZLQtCatalogPageWidget::setInfo(const ZLTreeTitledNode *node) {
 	if (!node->subtitle().empty()) {
 		mySubtitleLabel->setText(::qtString(node->subtitle()));
 	}
-
 	foreach(shared_ptr<ZLTreeAction> action, node->actions()) {
 		if (!action->makesSense()) {
 			continue;

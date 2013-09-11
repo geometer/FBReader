@@ -23,6 +23,8 @@
 #include "../../formats/FormatPlugin.h"
 #include "../../libraryActions/LibraryBookActions.h"
 
+#include <iostream> //udmv
+
 const ZLTypeId LibraryBookTree::TYPE_ID(ZLTreePageNode::TYPE_ID);
 
 const ZLTypeId &LibraryBookTree::typeId() const {
@@ -112,6 +114,12 @@ LibraryBookTree::BookItemWrapper::BookItemWrapper(LibraryBookTree &tree, shared_
 
 bool LibraryBookTree::BookItemWrapper::isPageInfoLoaded() {
     return myIsInitialized;
+}
+
+void LibraryBookTree::BookItemWrapper::updateActions() const{
+    std::cout << "!!! updateActions" << std::endl;
+    myTree.clearActions();
+    myTree.init();
 }
 
 class BookItemWrapperScope : public ZLUserData {

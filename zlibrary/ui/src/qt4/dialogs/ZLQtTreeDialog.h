@@ -64,7 +64,7 @@ public: //listener methods
 	void onSearchStarted(ZLTreeNode *node);
 	void onSearchStopped(ZLTreeNode *node);
 
-	void onRefresh();
+    void onRefresh();
 
     void onMoreChildrenRequest(ZLTreeNode *node);
     void onRefreshRequest(ZLTreeNode *node);

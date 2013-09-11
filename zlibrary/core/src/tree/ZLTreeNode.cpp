@@ -140,6 +140,10 @@ void ZLTreeNode::registerAction(shared_ptr<ZLTreeAction> action) {
 	}
 }
 
+void ZLTreeNode::clearActions() {
+    myActions.clear();
+}
+
 const std::vector<shared_ptr<ZLTreeAction> > &ZLTreeNode::actions() const {
 	return myActions;
 }
@@ -156,11 +160,9 @@ void ZLTreeNode::close() const {
 
 void ZLTreeNode::insert(ZLTreeNode *node, std::size_t index) {
     if(myChildren.end() != std::find(myChildren.begin(), myChildren.end(), node)){
-        std::cout << "@@@ ZLTreeNode::update" << std::endl;
         return;
     }
     index = std::min(index, myChildren.size());
-    std::cout << "@@@ ZLTreeNode::insert " << index << std::endl;
 	node->myChildIndex = index;
 	node->myParent = this;
 	ZLTreeListener * const handler = listener();
@@ -189,7 +191,7 @@ void ZLTreeNode::remove(ZLTreeNode *node) {
 void ZLTreeNode::remove(std::size_t index) {
 	if (index >= myChildren.size())
 		return;
-    std::cout << "@@@ ZLTreeNode::remove " << index << std::endl;
+
 	ZLTreeListener * const handler = listener();
 	if (handler) {
 		handler->onNodeBeginRemove(this, index);

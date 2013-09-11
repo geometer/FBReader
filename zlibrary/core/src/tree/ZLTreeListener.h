@@ -43,7 +43,7 @@ public:
 	virtual void onSearchStarted(ZLTreeNode *node) = 0;
 	virtual void onSearchStopped(ZLTreeNode *node) = 0;
 
-	virtual void onRefresh() = 0;
+    virtual void onRefresh() = 0;
 };
 
 #endif /* __ZLTREELISTENER_H__ */

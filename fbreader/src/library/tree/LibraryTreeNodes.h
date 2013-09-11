@@ -127,7 +127,8 @@ private:
         std::vector<std::string> authors() const;
         std::vector<std::string> tags() const;
         std::string summary() const;
-        shared_ptr<const ZLImage> image() const;
+        shared_ptr<const ZLImage> image() const;    
+        void updateActions() const;
 
         //TODO maybe store actions in other place?
         const std::vector<shared_ptr<ZLTreeAction> > &actions() const;

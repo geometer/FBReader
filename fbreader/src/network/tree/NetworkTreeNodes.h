@@ -206,7 +206,7 @@ public:
 	shared_ptr<const ZLImage> image() const;
 	shared_ptr<const ZLImage> fullImage() const;
 	std::string title() const;
-	std::string subtitle() const;
+    std::string subtitle() const;
 
 	shared_ptr<ZLTreePageInfo> getPageInfo();
 
@@ -227,6 +227,7 @@ private:
 		std::vector<std::string> tags() const;
 		std::string summary() const;
 		shared_ptr<const ZLImage> image() const;
+        void updateActions() const;
 
 		//TODO maybe store actions in other place?
 		const std::vector<shared_ptr<ZLTreeAction> > &actions() const;

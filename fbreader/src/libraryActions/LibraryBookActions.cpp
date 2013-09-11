@@ -138,7 +138,9 @@ BookAddToFavoriteAction::BookAddToFavoriteAction(shared_ptr<Book> book) : myBook
 }
 
 void BookAddToFavoriteAction::run() {
-    Library::Instance().addBookToFavoriteList(myBook);
+    if(Library::Instance().addBookToFavoriteList(myBook)){
+         LocalLibrary::Instance().refresh();
+    }
 }
 
 ZLResourceKey BookAddToFavoriteAction::key() const {
