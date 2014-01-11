@@ -24,7 +24,7 @@
 #include "Migration.h"
 #include "../fbreader/FBReaderActions.h"
 
-static void changeActionNames(const std::map<std::string,std::string> map, const std::string &group) {
+static void changeActionNames(const std::map<std::string,std::string> &map, const std::string &group) {
 	const int length = ZLIntegerOption(ZLCategoryKey::CONFIG, group, "Number", 0).value();
 	for (int i = 0; i < length; ++i) {
 		std::string optionName = "Action";

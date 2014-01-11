@@ -39,7 +39,7 @@ class HtmlBookReader : public HtmlReader {
 public:
 	HtmlBookReader(const std::string &baseDirectoryPath, BookModel &model, const PlainTextFormat &format, const std::string &encoding);
 	~HtmlBookReader();
-	void setFileName(const std::string fileName);
+	void setFileName(const std::string &fileName);
 
 protected:
 	virtual shared_ptr<HtmlTagAction> createAction(const std::string &tag);

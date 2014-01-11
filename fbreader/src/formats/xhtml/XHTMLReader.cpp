@@ -506,7 +506,7 @@ bool XHTMLReader::readFile(const ZLFile &file, const std::string &referenceName)
 	return readDocument(file);
 }
 
-void XHTMLReader::addStyleEntry(const std::string tag, const std::string aClass) {
+void XHTMLReader::addStyleEntry(const std::string &tag, const std::string &aClass) {
 	shared_ptr<ZLTextStyleEntry> entry = myStyleSheetTable.control(tag, aClass);
 	if (!entry.isNull()) {
 		myModelReader.addControl(*entry);

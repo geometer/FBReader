@@ -85,7 +85,7 @@ protected:
 
 private:
 	struct LessFrequency {
-		bool operator() (const std::pair<ZLCharSequence, size_t> a, const std::pair<ZLCharSequence, size_t> b) {
+		bool operator() (const std::pair<ZLCharSequence, size_t> &a, const std::pair<ZLCharSequence, size_t> &b) {
 			return (a.second < b.second);
 		}
 	};

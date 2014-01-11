@@ -578,6 +578,6 @@ void HtmlBookReader::endDocumentHandler() {
 	myBookReader.endParagraph();
 }
 
-void HtmlBookReader::setFileName(const std::string fileName) {
+void HtmlBookReader::setFileName(const std::string &fileName) {
 	myFileName = fileName;
 }
