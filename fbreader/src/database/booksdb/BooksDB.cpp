@@ -203,7 +203,7 @@ bool BooksDB::saveTags(const shared_ptr<Book> book) {
 	return executeAsTransaction(*mySaveTags);
 }
 
-int BooksDB::getFileSize(const std::string fileName) {
+int BooksDB::getFileSize(const std::string &fileName) {
 	if (!isInitialized()) {
 		return -1;
 	}
@@ -227,7 +227,7 @@ int BooksDB::getFileSize(const std::string fileName) {
 	return ((DBIntValue&)*fileSize).value();
 }
 
-bool BooksDB::setFileSize(const std::string fileName, int size) {
+bool BooksDB::setFileSize(const std::string &fileName, int size) {
 	if (!isInitialized()) {
 		return false;
 	}

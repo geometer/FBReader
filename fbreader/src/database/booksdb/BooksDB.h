@@ -59,8 +59,8 @@ public:
 	bool saveSeries(const shared_ptr<Book> book);
 	bool saveTags(const shared_ptr<Book> book);
 
-	int getFileSize(const std::string fileName);
-	bool setFileSize(const std::string fileName, int size);
+	int getFileSize(const std::string &fileName);
+	bool setFileSize(const std::string &fileName, int size);
 
 	bool setEncoding(const Book &book, const std::string &encoding);
 
