@@ -20,6 +20,8 @@
 #ifndef __ZLBZIP2INPUTSTREAM_H__
 #define __ZLBZIP2INPUTSTREAM_H__
 
+#ifndef NO_BZIP2_SUPPORT
+
 #include <bzlib.h>
 
 #ifdef WIN32
@@ -57,5 +59,7 @@ private:
 
 friend class ZLFile;
 };
+
+#endif /* NO_BZIP2_SUPPORT */
 
 #endif /* __ZLBZIP2INPUTSTREAM_H__ */
