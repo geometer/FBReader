@@ -25,6 +25,7 @@
 
 class ZLTreePageInfo {
 public:
+	virtual ~ZLTreePageInfo() {}
 
 	virtual bool isPageInfoLoaded() = 0;
 	virtual void loadAll(shared_ptr<ZLNetworkRequest::Listener> listener) = 0;

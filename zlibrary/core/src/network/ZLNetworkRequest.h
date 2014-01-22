@@ -49,6 +49,8 @@ protected:
 	ZLNetworkRequest(const std::string &url);
 
 public:
+	virtual ~ZLNetworkRequest();
+
 	virtual bool handleHeader(void *ptr, std::size_t size);
 	virtual bool handleContent(void *ptr, std::size_t size) = 0;
 

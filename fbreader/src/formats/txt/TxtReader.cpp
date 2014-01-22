@@ -27,6 +27,7 @@ class TxtReaderCore {
 
 public:
 	TxtReaderCore(TxtReader &reader);
+	virtual ~TxtReaderCore();
 	virtual void readDocument(ZLInputStream &stream);
 
 protected:
@@ -88,6 +89,9 @@ void TxtReader::readDocument(ZLInputStream &stream) {
 }
 
 TxtReaderCore::TxtReaderCore(TxtReader &reader) : myReader(reader) {
+}
+
+TxtReaderCore::~TxtReaderCore() {
 }
 
 TxtReaderCoreUtf16::TxtReaderCoreUtf16(TxtReader &reader) : TxtReaderCore(reader) {
