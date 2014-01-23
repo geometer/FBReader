@@ -57,6 +57,7 @@ public:
 	const BookList &books(shared_ptr<Author> author) const;
 	const BookList &books(shared_ptr<Tag> tag) const;
 	const BookList &recentBooks() const;
+	const BookSet &books() const;
 
 	enum RemoveType {
 		REMOVE_DONT_REMOVE = 0,
