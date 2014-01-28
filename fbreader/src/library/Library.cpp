@@ -418,6 +418,11 @@ const BookList &Library::recentBooks() const {
 	return myRecentBooks;
 }
 
+const BookSet &Library::books() const {
+	synchronize();
+	return myBooks;
+}
+
 void Library::addBookToRecentList(shared_ptr<Book> book) {
 	if (book.isNull()) {
 		return;

@@ -23,7 +23,9 @@
 #include "ZLFSPluginManager.h"
 
 #include "zip/ZLFSCompressorGzip.h"
-#include "bzip2/ZLFSCompressorBzip2.h"
+#ifndef NO_BZIP2_SUPPORT
+# include "bzip2/ZLFSCompressorBzip2.h"
+#endif
 #include "zip/ZLFSArchiverZip.h"
 #include "tar/ZLFSArchiverTar.h"
 
@@ -31,7 +33,9 @@ static const char ARCHIVERS_SEPARATOR = '.';
 
 ZLFSPluginManager::ZLFSPluginManager() {
 	registerPlugin(new ZLFSCompressorGzip);
+#ifndef NO_BZIP2_SUPPORT
 	registerPlugin(new ZLFSCompressorBzip2);
+#endif
 	registerPlugin(new ZLFSArchiverZip);
 	registerPlugin(new ZLFSArchiverTar);
 }
