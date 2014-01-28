@@ -36,6 +36,7 @@ class ZLTreeResource : public ZLResource {
 private:
 	class Condition {
 	public:
+		virtual ~Condition() {}
 		virtual bool accepts(int number) = 0;
 	};
 

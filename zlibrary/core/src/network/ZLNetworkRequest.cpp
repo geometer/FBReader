@@ -27,6 +27,9 @@ ZLNetworkRequest::ZLNetworkRequest(const std::string &url) :
 	ZLLogger::Instance().println("URL", url);
 }
 
+ZLNetworkRequest::~ZLNetworkRequest() {
+}
+
 const std::string &ZLNetworkRequest::errorMessage() const {
 	return myErrorMessage;
 }

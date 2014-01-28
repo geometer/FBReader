@@ -27,6 +27,8 @@
 class ZLTreeListener {
 
 public:
+	virtual ~ZLTreeListener() {}
+
 	virtual void onExpandRequest(ZLTreeNode *node) = 0;
 	virtual void onCloseRequest() = 0;
 	// Parent has new or remove child at index

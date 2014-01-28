@@ -24,6 +24,7 @@
 
 class ZLTreeSearcher {
 public:
+	virtual ~ZLTreeSearcher() {}
 	virtual void simpleSearch(const std::string &pattern) = 0;
 };
 

@@ -26,6 +26,9 @@
 OleStreamReader::OleStreamReader() : myNextPieceNumber(0) {
 }
 
+OleStreamReader::~OleStreamReader() {
+}
+
 bool OleStreamReader::readDocument(shared_ptr<ZLInputStream> inputStream, bool doReadFormattingData) {
 	static const std::string WORD_DOCUMENT = "WordDocument";
 

@@ -35,6 +35,7 @@ public:
 	};
 
 public:
+	virtual ~ZLOpenFileDialog() {}
 	virtual bool run() = 0;
 	virtual std::string filePath() const = 0;
 	virtual std::string directoryPath() const = 0;
