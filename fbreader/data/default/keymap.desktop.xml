@@ -3,8 +3,10 @@
 	<binding key="&lt;L&gt;" action="showLibrary"/>
 	<binding key="&lt;W&gt;" action="showNetLibrary"/>
 	<binding key="&lt;O&gt;" action="preferences"/>
-	<binding key="&lt;LeftArrow&gt;" action="undo"/>
-	<binding key="&lt;RightArrow&gt;" action="redo"/>
+	<binding key="&lt;Alt&gt;+&lt;LeftArrow&gt;" action="undo"/>
+	<binding key="&lt;Alt&gt;+&lt;RightArrow&gt;" action="redo"/>
+	<binding key="&lt;LeftArrow&gt;" action="pageBackward"/>
+	<binding key="&lt;RightArrow&gt;" action="pageForward"/>
 	<binding key="&lt;C&gt;" action="toc"/>
 	<binding key="&lt;Ctrl&gt;+&lt;F&gt;" action="search"/>
 	<binding key="&lt;F&gt;" action="search"/>
