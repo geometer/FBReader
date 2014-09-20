@@ -14,7 +14,6 @@
 	<binding key="&lt;F3&gt;" action="findNext"/>
 	<binding key="&lt;N&gt;" action="findNext"/>
 	<binding key="&lt;PageDown&gt;" action="pageForward"/>
-	<binding key="&lt;Space&gt;" action="pageForward"/>
 	<binding key="&lt;PageUp&gt;" action="pageBackward"/>
 	<binding key="&lt;DownArrow&gt;" action="lineForward"/>
 	<binding key="&lt;UpArrow&gt;" action="lineBackward"/>
