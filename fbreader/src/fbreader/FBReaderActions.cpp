@@ -352,20 +352,8 @@ bool GotoPreviousTOCSectionAction::isEnabled() const {
 	}
 	const ContentsModel &contentsModel = (const ContentsModel&)*model;
 	int tocIndex = contentsView.currentTextViewParagraph(false);
-	if (tocIndex > 0) {
+	if (tocIndex >= 0) {
 		return true;
-	}
-	if (tocIndex == 0) {
-		const ZLTextWordCursor &cursor = fbreader.bookTextView().textArea().startCursor();
-		if (cursor.isNull()) {
-			return false;
-		}
-		if (cursor.elementIndex() > 0) {
-			return true;
-		}
-		return
-			contentsModel.reference(((const ZLTextTreeParagraph*)contentsModel[0])) >
-			(int)cursor.paragraphCursor().index();
 	}
 	return false;
 }
@@ -376,7 +364,8 @@ void GotoPreviousTOCSectionAction::run() {
 	size_t current = contentsView.currentTextViewParagraph(false);
 	const ContentsModel &contentsModel = (const ContentsModel&)*contentsView.textArea().model();
 
-	int reference = contentsModel.reference(((const ZLTextTreeParagraph*)contentsModel[current]));
+	int oldReference = contentsModel.reference(((const ZLTextTreeParagraph*)contentsModel[current]));
+	int reference = oldReference;
 	const ZLTextWordCursor &cursor = fbreader.bookTextView().textArea().startCursor();
 	if (!cursor.isNull() &&
 			(cursor.elementIndex() == 0)) {
@@ -391,7 +380,7 @@ void GotoPreviousTOCSectionAction::run() {
 			}
 		}
 	}
-	if (reference != -1) {
+	if (reference != -1 && reference <= oldReference) {
 		((ZLTextView&)*fbreader.myBookTextView).gotoParagraph(reference);
 		fbreader.refreshWindow();
 	}
