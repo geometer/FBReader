@@ -238,13 +238,11 @@ void Book::setTitle(const std::string &title) {
 }
 
 void Book::setLanguage(const std::string &language) {
-	if (!myLanguage.empty()) {
+	if (!language.empty()) {
 		const std::vector<std::string> &codes = ZLLanguageList::languageCodes();
 		std::vector<std::string>::const_iterator it =
-			std::find(codes.begin(), codes.end(), myLanguage);
-		std::vector<std::string>::const_iterator jt =
 			std::find(codes.begin(), codes.end(), language);
-		if (it != codes.end() && jt == codes.end()) {
+		if (it == codes.end()) {
 			return;
 		}
 	}
