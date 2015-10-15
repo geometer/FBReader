@@ -23,6 +23,7 @@
 
 void ZLZipDir::collectFiles(std::vector<std::string> &names, bool) {
 	shared_ptr<ZLInputStream> stream = ZLFile(path()).inputStream();
+	if (stream == 0) return;
 	const ZLZipEntryCache &cache = ZLZipEntryCache::cache(*stream);
 	cache.collectFileNames(names);
 }
