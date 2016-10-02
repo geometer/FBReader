@@ -30,6 +30,8 @@
 	<binding key="&lt;R&gt;" action="rotate"/>
 	<binding key="&lt;Ctrl&gt;+&lt;DownArrow&gt;" action="nextTOCSection"/>
 	<binding key="&lt;Ctrl&gt;+&lt;UpArrow&gt;" action="previousTOCSection"/>
+	<binding key="&lt;Command&gt;+&lt;Q&gt;" action="forceQuit"/>
+	<binding key="&lt;Command&gt;+&lt;W&gt;" action="quit"/>
 	<binding key="&lt;Ctrl&gt;+&lt;C&gt;" action="copyToClipboard"/>
 	<binding key="&lt;G&gt;" action="gotoPageNumber"/>
 	<binding key="&lt;Z&gt;" action="debugNL"/>
