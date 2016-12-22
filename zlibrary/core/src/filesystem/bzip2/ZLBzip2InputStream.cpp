@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#ifndef NO_BZIP2_SUPPORT
+
 #include <algorithm>
 
 #include "ZLBzip2InputStream.h"
@@ -115,3 +117,5 @@ size_t ZLBzip2InputStream::sizeOfOpened() {
 	// TODO: implement
 	return 0;
 }
+
+#endif /* NO_BZIP2_SUPPORT */

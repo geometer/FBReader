@@ -90,9 +90,11 @@ shared_ptr<ZLInputStream> ZLFile::envelopeCompressedStream(shared_ptr<ZLInputStr
 		if (myArchiveType & GZIP) {
 			return new ZLGzipInputStream(base);
 		}
+#ifndef NO_BZIP2_SUPPORT
 		if (myArchiveType & BZIP2) {
 			return new ZLBzip2InputStream(base);
 		}
+#endif /* NO_BZIP2_SUPPORT */
 	}
 	return base;
 }
