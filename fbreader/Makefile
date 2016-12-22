@@ -60,8 +60,8 @@ do_install:
 	@install -d $(FBSHAREDIR)/resources
 	@install -m 0644 $(wildcard data/resources/*.xml) $(FBSHAREDIR)/resources
 	@install -d $(DESTDIR)$(APPIMAGEDIR_REAL)
-	@install -m 0644 $(wildcard data/icons/toolbar/$(VARIANT)/*.*) $(DESTDIR)$(APPIMAGEDIR_REAL)
-	@install -m 0644 $(wildcard data/icons/filetree/$(VARIANT)/*.*) $(DESTDIR)$(APPIMAGEDIR_REAL)
+	@install -m 0644 $(wildcard data/icons/toolbar/$(TARGET_ARCH)/*.*) $(DESTDIR)$(APPIMAGEDIR_REAL)
+	@install -m 0644 $(wildcard data/icons/filetree/$(TARGET_ARCH)/*.*) $(DESTDIR)$(APPIMAGEDIR_REAL)
 	@install -m 0644 $(wildcard data/icons/booktree/new/*.*) $(DESTDIR)$(APPIMAGEDIR_REAL)
 	@make -C $(TARGET_ARCH) RESOLUTION=$(RESOLUTION) install
 
