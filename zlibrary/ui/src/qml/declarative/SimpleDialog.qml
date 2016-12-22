@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2011 Ruslan Nigmatullin <euroelessar@ya.ru>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,16 +17,39 @@
  * 02110-1301, USA.
  */
 
-#include <cctype>
+import QtQuick 1.0
+import com.nokia.meego 1.0
 
-#include <QtGui/QKeyEvent>
+Dialog {
+	id: root
+	property variant handler;
+	
+	title: handler.title
+	content: DialogContent {
+		id: dialogContent
+		handler: handler.content
+	}
 
-#include <ZLUnicodeUtil.h>
-
-#include "ZLQtKeyUtil.h"
-
-std::string ZLQtKeyUtil::keyName(QKeyEvent *keyEvent) {
-	const QString s = keyEvent->text();
-	const int unicode = s.isEmpty() ? 0 : s[0].unicode();
-	return ZLKeyUtil::keyName(unicode, keyEvent->key(), keyEvent->modifiers());
+	buttons: ButtonRow {
+		anchors.horizontalCenter: parent.horizontalCenter
+		Repeater {
+			model: root.handler.buttonNames
+			Button {
+				text: modelData
+				onClicked: {
+					var names = root.handler.acceptButtons;
+					for (var i = 0; i < names.length; ++i) {
+						if (names[i] == text) {
+							accept();
+							return;
+						}
+					}
+					reject();
+				}
+			}
+		}
+	}
+	MouseArea { anchors.fill: parent }
+	onAccepted: root.handler.accept()
+	onRejected: root.handler.reject()
 }

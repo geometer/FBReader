@@ -17,16 +17,47 @@
  * 02110-1301, USA.
  */
 
-#include <cctype>
+#ifndef __ZLQTWAITMESSAGE_H__
+#define __ZLQTWAITMESSAGE_H__
 
-#include <QtGui/QKeyEvent>
+#include <string>
 
-#include <ZLUnicodeUtil.h>
+#include <QtGui/QWidget>
+#include <QtGui/QCursor>
 
-#include "ZLQtKeyUtil.h"
+#include <ZLProgressDialog.h>
 
-std::string ZLQtKeyUtil::keyName(QKeyEvent *keyEvent) {
-	const QString s = keyEvent->text();
-	const int unicode = s.isEmpty() ? 0 : s[0].unicode();
-	return ZLKeyUtil::keyName(unicode, keyEvent->key(), keyEvent->modifiers());
-}
+class QLabel;
+class QLayout;
+
+class ZLQtWaitMessage;
+
+class ZLQtProgressDialog : public ZLProgressDialog {
+
+public:
+	ZLQtProgressDialog(const ZLResourceKey &key);
+
+private:
+	void run(ZLRunnable &runnable);
+	void setMessage(const std::string &message);
+
+private:
+	ZLQtWaitMessage *myWaitMessage;
+};
+
+class ZLQtWaitMessage : public QWidget {
+
+public:
+	ZLQtWaitMessage(const std::string &message);
+	~ZLQtWaitMessage();
+
+private:
+	QCursor myStoredCursor;
+	QWidget *myMainWidget;
+	QLayout *myLayout;
+	QLabel *myLabel;
+
+friend class ZLQtProgressDialog;
+};
+
+#endif /* __ZLQTWAITMESSAGE_H__ */

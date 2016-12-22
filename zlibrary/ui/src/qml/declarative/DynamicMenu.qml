@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2011 Ruslan Nigmatullin <euroelessar@ya.ru>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,16 +17,22 @@
  * 02110-1301, USA.
  */
 
-#include <cctype>
+import QtQuick 1.0
+import com.nokia.meego 1.0
 
-#include <QtGui/QKeyEvent>
-
-#include <ZLUnicodeUtil.h>
-
-#include "ZLQtKeyUtil.h"
-
-std::string ZLQtKeyUtil::keyName(QKeyEvent *keyEvent) {
-	const QString s = keyEvent->text();
-	const int unicode = s.isEmpty() ? 0 : s[0].unicode();
-	return ZLKeyUtil::keyName(unicode, keyEvent->key(), keyEvent->modifiers());
+Menu {
+	id: root
+	property variant item
+	MenuLayout {
+		id: menuLayout
+		Repeater {
+			id: repeater
+			model: root.item ? root.item.items : null
+			MenuItem {
+				parent: menuLayout
+				text: modelData
+				onClicked: root.item.activate(index);
+			}
+		}
+	}
 }
