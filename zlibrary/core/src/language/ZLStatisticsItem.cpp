@@ -38,9 +38,9 @@ void ZLMapBasedStatisticsItem::next() {
 
 ZLArrayBasedStatisticsItem::ZLArrayBasedStatisticsItem(size_t sequenceLength, char* sequencePtr, unsigned short* frequencyPtr, size_t index) :
 	ZLStatisticsItem(index),
-	mySequenceLength(sequenceLength),
 	mySequencePtr(sequencePtr), 
-	myFrequencyPtr(frequencyPtr) {
+	myFrequencyPtr(frequencyPtr),
+	mySequenceLength(sequenceLength) {
 }
 
 ZLCharSequence ZLArrayBasedStatisticsItem::sequence() const {
