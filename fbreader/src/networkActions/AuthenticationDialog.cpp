@@ -123,12 +123,6 @@ bool AuthenticationDialog::run(NetworkAuthenticationManager &mgr) {
 			return false;
 		}
 
-		if (mgr.UserNameOption.value().empty()) {
-			const ZLResource &resource = ZLResource::resource("dialog")["AuthenticationDialog"];
-			errorMessage = resource["loginIsEmpty"].value();
-			continue;
-		}
-
 		AuthoriseRunnable authoriser(mgr, password);
 		authoriser.executeWithUI();
 		if (authoriser.hasErrors()) {
