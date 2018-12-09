@@ -285,9 +285,11 @@ std::string ZLCurlNetworkManager::perform(const ZLExecutionData::Vector &dataLis
 #endif
 					errors.insert(ZLStringUtil::printf(errorResource["peerFailedVerificationMessage"].value(), ZLNetworkUtil::hostFromUrl(url)));
 					break;
+#if LIBCURL_VERSION_NUM < 0x073e00
 				case CURLE_SSL_CACERT:
 					errors.insert(ZLStringUtil::printf(errorResource["sslCertificateAuthorityMessage"].value(), ZLNetworkUtil::hostFromUrl(url)));
 					break;
+#endif
 				case CURLE_SSL_CACERT_BADFILE:
 					errors.insert(ZLStringUtil::printf(errorResource["sslBadCertificateFileMessage"].value(), request.sslCertificate().Path));
 					break;
