@@ -25,5 +25,5 @@ Exec=FBReader %F
 StartupNotify=true
 Terminal=false
 Type=Application
-Icon=FBReader.png
+Icon=FBReader
 Categories=Office;Viewer;Literature;
