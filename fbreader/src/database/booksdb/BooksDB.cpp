@@ -62,7 +62,7 @@ bool BooksDB::initDatabase() {
 
 	if (!open()) {
 		return false;
-	} 
+	}
 
 	myInitialized = true;
 
@@ -145,7 +145,7 @@ shared_ptr<Book> BooksDB::loadBook(const std::string &fileName) {
 
 	myFindFileId->setFileName(fileName);
 	if (!myFindFileId->run()) {
-		return false;
+		return 0;
 	}
 	((DBIntValue&)*myLoadBook->parameter("@file_id").value()) = myFindFileId->fileId();
 	shared_ptr<DBDataReader> reader = myLoadBook->executeReader();
@@ -440,7 +440,7 @@ bool BooksDB::setNetFile(const std::string &url, const std::string &fileName) {
 		"INSERT OR REPLACE INTO NetFiles (url, file_id) VALUES (@url, @file_id);",
 		connection(), "@file_id", DBValue::DBINT, "@url", DBValue::DBTEXT
 	);
-	
+
 	myFindFileId->setFileName(fileName, true);
 	if (!myFindFileId->run()) {
 		return false;
