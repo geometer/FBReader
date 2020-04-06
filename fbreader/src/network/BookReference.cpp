@@ -25,6 +25,9 @@
 BookReference::BookReference(const std::string &url, Format format, Type type) : URL(url), BookFormat(format), ReferenceType(type) {
 }
 
+BookReference::~BookReference(){
+}
+
 const std::string &BookReference::cleanURL() const {
 	return URL;
 }

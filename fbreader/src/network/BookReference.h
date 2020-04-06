@@ -44,6 +44,7 @@ public:
 
 public:
 	BookReference(const std::string &url, Format format, Type type);
+	virtual ~BookReference();
 
 public:
 	const std::string URL;
